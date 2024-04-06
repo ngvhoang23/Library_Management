@@ -28,12 +28,25 @@ function LogicWrapper() {
           .post(`http://10.0.2.2:5000/auth/login`, payload, config)
           .then((result) => {
             const { user_info, access_token } = result.data;
-            return new Promise((resolve, reject) => {
+
+            const storeAT = new Promise((resolve, reject) => {
               _storeData("ACCESS_TOKEN", access_token)
                 .then(resolve({ user_info, access_token }))
                 .catch((err) => {
                   reject(err);
                 });
+            });
+
+            const storeUI = new Promise((resolve, reject) => {
+              _storeData("USER_INFO", JSON.stringify(user_info))
+                .then(resolve({ user_info, access_token }))
+                .catch((err) => {
+                  reject(err);
+                });
+            });
+
+            return Promise.all([storeAT, storeUI]).then(([resolve1, resolve2]) => {
+              return { user_info, access_token };
             });
           })
           .then(({ user_info, access_token }) => {
@@ -61,7 +74,7 @@ function LogicWrapper() {
   };
 
   const render = () => {
-    if (auth === "admin" || 1) {
+    if (auth === "admin") {
       return (
         <NavigationContainer theme={MyTheme}>
           <AdminDrawerNavigator />

@@ -7,7 +7,8 @@ import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
 import ReaderItem from "../../components/ReaderItem";
 import SearchBar from "../../components/SearchBar";
-import { _retrieveData } from "../../defined_function";
+import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
+import { ScrollView } from "react-native-gesture-handler";
 
 function ReaderManDashboard({ navigation }) {
   const [readers, setReaders] = useState([]);
@@ -54,61 +55,52 @@ function ReaderManDashboard({ navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
-      <View style={styles.readersContainer}>
-        <FlatList
-          style={styles.contentContainerStyle}
-          numColumns={2}
-          keyExtractor={(item) => item.user_id}
-          data={readers}
-          renderItem={({ item }) => (
-            <ReaderItem
-              _style={styles.readerItem}
-              data={item}
-              onPress={() =>
-                navigation.navigate("Reader Detail", {
-                  reader_info: item,
-                })
-              }
-            />
-          )}
-        />
-      </View>
-      <FlatButton
-        text="Add reader"
-        _styles={styles.addReaderBtn}
-        fontSize={14}
-        onPress={() => navigation.navigate("Add Readers")}
-      />
+
+      <ScrollView>
+        <View style={styles.readerList}>
+          {readers.map((reader, index) => {
+            return (
+              <ReaderItem
+                key={index}
+                _style={[styles.readerItem]}
+                data={reader}
+                onPress={() =>
+                  navigation.navigate("Reader Detail", {
+                    reader_info: reader,
+                  })
+                }
+              />
+            );
+          })}
+        </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
+    width: "100%",
     flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "center",
   },
-  readersContainer: {
-    marginTop: 10,
-  },
-  contentContainerStyle: {
-    height: 580,
-    flexGrow: 0,
-    marginBottom: 20,
+  readerList: {
+    width: SCREEN_WIDTH,
+    flex: 1,
+    paddingVertical: normalize(14),
+    paddingHorizontal: normalize(6),
+    overflow: "scroll",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
   },
   readerItem: {
+    width: "40%",
+    padding: normalize(10),
     margin: 10,
-  },
-  addReaderBtn: {
-    width: 300,
-    height: 40,
-    marginBottom: 14,
-    paddingVertical: 0,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1e74fd",
+    borderRadius: normalize(10),
   },
 });
 

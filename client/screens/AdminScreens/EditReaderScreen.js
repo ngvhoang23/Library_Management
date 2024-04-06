@@ -306,7 +306,8 @@ const styles = StyleSheet.create({
 
   submitBtn: {
     width: "100%",
-    height: normalize(28),
+    height: normalize(32),
+
     marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",

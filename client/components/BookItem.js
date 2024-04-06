@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { StyleSheet, View, Text, Button, Image, TouchableOpacity } from "react-native";
+import { normalize } from "../defined_function";
 
 function BookItem({ _style, data, onPress, have_position, status }) {
   const { position, book_name, cover_photo, author_name } = data;
@@ -27,16 +28,22 @@ function BookItem({ _style, data, onPress, have_position, status }) {
       <View style={[styles.container]}>
         <Image style={styles.coverPhoto} source={{ uri: `http://10.0.2.2:5000${cover_photo}` }} />
         <View style={styles.bookInfo}>
-          <Text style={styles.bookName}>{book_name}</Text>
+          <Text style={styles.bookName} numberOfLines={2}>
+            {book_name}
+          </Text>
           {status && (
             <Text style={[styles.status, { color: status ? "#6ec531" : "#f02849" }]}>
               {status ? "available" : "unavailable"}
             </Text>
           )}
           {!have_position ? (
-            <Text style={styles.authorName}>{author_name}</Text>
+            <Text style={styles.authorName} numberOfLines={1}>
+              {author_name}
+            </Text>
           ) : (
-            <Text style={styles.authorName}>Position: {renderPosition()}</Text>
+            <Text style={styles.position} numberOfLines={1}>
+              Position: {renderPosition()}
+            </Text>
           )}
         </View>
       </View>
@@ -55,36 +62,48 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: 10,
-    borderWidth: 0.5,
-    borderColor: "red",
-    borderRadius: 8,
+    padding: normalize(6),
+    borderBottomWidth: 0,
+    borderColor: "#ced0d4",
   },
 
   bookInfo: {
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    flex: 1,
     position: "relative",
+    marginLeft: normalize(10),
   },
   coverPhoto: {
-    width: 80,
-    height: 80,
+    width: normalize(48),
+    height: normalize(48),
     borderRadius: 8,
   },
   bookName: {
+    width: "90%",
     fontFamily: "nunito-medium",
-    marginTop: 8,
-    fontSize: 16,
-    marginBottom: 6,
+    color: "#676768",
+
+    fontSize: normalize(11),
   },
   authorName: {
     fontFamily: "nunito-medium",
     color: "#676768",
-    marginTop: 6,
-    fontSize: 14,
+    marginTop: normalize(6),
+    fontSize: normalize(9),
+  },
+
+  position: {
+    fontFamily: "nunito-medium",
+    color: "#676768",
+    marginTop: normalize(6),
+    fontSize: normalize(9),
   },
   status: {
     fontFamily: "nunito-medium",
     color: "#676768",
-    fontSize: 14,
+    fontSize: normalize(9),
     position: "absolute",
     bottom: 0,
     right: 0,

@@ -12,9 +12,11 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import SearchBar from "./SearchBar";
 import { useIsFocused } from "@react-navigation/native";
+import { SCREEN_WIDTH, normalize } from "../defined_function";
+import FlatButton from "../shared/FlatButton";
 
 function PickerModal({ value, setValue, options, searchResult, setSearchResult, visible, setVisible, onSearch }) {
   const [searchValue, setSearchValue] = useState("");
@@ -41,8 +43,12 @@ function PickerModal({ value, setValue, options, searchResult, setSearchResult, 
         >
           <Image source={{ uri: option.photo }} style={styles.photoPreview} />
           <View style={styles.content}>
-            <Text style={styles.title}>{option.title}</Text>
-            <Text style={styles.description}>{option.description}</Text>
+            <Text style={styles.title} numberOfLines={1}>
+              {option.title}
+            </Text>
+            <Text style={styles.description} numberOfLines={1}>
+              {option.description}
+            </Text>
           </View>
         </TouchableOpacity>
       );
@@ -51,34 +57,43 @@ function PickerModal({ value, setValue, options, searchResult, setSearchResult, 
 
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
-      <TouchableOpacity style={styles.centeredView} activeOpacity={0} onPress={() => setVisible(false)}>
-        <View>
-          <View style={styles.modalView}>
+      <TouchableOpacity style={styles.centeredView} activeOpacity={1}>
+        <View style={styles.modalView}>
+          <View style={styles.searchContainer}>
+            {searchResult && (
+              <Pressable
+                style={styles.backBtn}
+                onPress={() => {
+                  setSearchResult();
+                  setSearchValue("");
+                }}
+              >
+                <Ionicons name="chevron-back" size={normalize(14)} color="#949498" />
+              </Pressable>
+            )}
             <SearchBar
-              _styles={[styles.searchBar, { marginLeft: searchResult ? 50 : 0, width: searchResult ? "90%" : "100%" }]}
+              _styles={[styles.searchBar]}
               placeholder={"search books..."}
               value={searchValue}
               onChange={(value) => setSearchValue(value)}
-              onSearch={() => onSearch(searchValue)}
-            />
-            {searchResult && <Text style={styles.searchLable}>Search result</Text>}
-            {searchResult && (
-              <Pressable style={styles.backBtn} onPress={() => setSearchResult()}>
-                <Ionicons name="chevron-back" size={24} color="#676768" />
-              </Pressable>
-            )}
-            <ScrollView
-              style={styles.container}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexDirection: "column",
-                alignItems: "flex-start",
-                justifyContent: "flex-start",
+              onSearch={() => {
+                onSearch(searchValue);
               }}
-            >
-              {searchResult ? renderOptions(searchResult) : renderOptions(options)}
-            </ScrollView>
+            />
           </View>
+          {searchResult && <Text style={styles.searchLable}>Search result</Text>}
+
+          <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+            <View style={styles.contentContainer}>
+              {searchResult ? renderOptions(searchResult) : renderOptions(options)}
+            </View>
+          </ScrollView>
+          <FlatButton
+            _styles={styles.buttonClose}
+            onPress={() => setVisible(false)}
+            text="Close"
+            textColor={"#676768"}
+          />
         </View>
       </TouchableOpacity>
     </Modal>
@@ -90,94 +105,109 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    marginTop: normalize(22),
     height: "100%",
   },
   modalView: {
     height: Dimensions.get("window").height / 1.5,
-    margin: 20,
+    margin: normalize(20),
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    paddingTop: 20,
+    borderRadius: normalize(10),
+    padding: normalize(20),
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: normalize(2),
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    position: "relative",
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    width: Dimensions.get("window").width - 100,
+    width: SCREEN_WIDTH - normalize(40),
+    position: "relative",
+  },
+
+  searchContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 
   searchBar: {
-    marginBottom: 20,
-    width: "100%",
+    flex: 1,
+  },
+
+  backBtn: {
+    paddingVertical: normalize(10),
+    paddingRight: normalize(4),
+    marginRight: normalize(6),
   },
 
   searchLable: {
     fontFamily: "nunito-medium",
-    fontSize: 14,
-    letterSpacing: 2,
-    marginBottom: 20,
-    color: "#676768",
+    fontSize: normalize(10),
+    letterSpacing: normalize(2),
+    color: "#ced0d4",
+    marginTop: normalize(8),
   },
 
-  backBtn: {
-    position: "absolute",
-    top: 20,
-    left: 10,
-    padding: 20,
-  },
+  contentContainer: {},
 
-  container: {},
+  scrollContainer: {
+    width: "100%",
+    marginTop: normalize(20),
+  },
 
   buttonClose: {
     position: "absolute",
-    right: 20,
-    top: 20,
+    right: normalize(10),
+    bottom: normalize(10),
+    paddingHorizontal: normalize(14),
+    paddingVertical: normalize(10),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 
   item: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    marginBottom: 16,
+    marginBottom: normalize(16),
     width: "100%",
+    flex: 1,
   },
 
   content: {
-    flexGrow: 1,
+    flex: 1,
     marginLeft: 10,
   },
 
   title: {
-    width: "70%",
+    width: "92%",
     fontFamily: "nunito-medium",
-    fontSize: 16,
-    letterSpacing: 2,
+    fontSize: normalize(10),
+    letterSpacing: normalize(2),
     color: "#676768",
-    marginBottom: 10,
+    marginBottom: normalize(6),
   },
 
   description: {
     width: "100%",
     fontFamily: "nunito-medium",
-    fontSize: 12,
-    letterSpacing: 2,
+    fontSize: normalize(8),
+    letterSpacing: normalize(2),
     color: "#aaabaf",
   },
 
   photoPreview: {
-    width: 80,
-    height: 80,
-    borderRadius: 10,
+    width: normalize(40),
+    height: normalize(40),
+    borderRadius: normalize(10),
   },
 });
 

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ScrollView } from "react-native";
 import { globalStyles } from "../../styles/global";
 import axios from "axios";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
 import ReaderItem from "../../components/ReaderItem";
 import SearchBar from "../../components/SearchBar";
-import { _retrieveData } from "../../defined_function";
+import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import BookItem from "../../components/BookItem";
 
 function BookGroupManDashboard({ navigation }) {
@@ -59,41 +59,25 @@ function BookGroupManDashboard({ navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
-      <View
-        style={styles.booksContainer}
-        onLayout={(event) => {
-          setLayout(event.nativeEvent.layout);
-        }}
-      >
-        <FlatList
-          contentContainerStyle={{
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          numColumns={1}
-          style={styles.contentContainerStyle}
-          keyExtractor={(item) => item.book_detail_id}
-          data={books}
-          renderItem={({ item }) => (
-            <BookItem
-              _style={[styles.bookItem]}
-              data={item}
-              onPress={() =>
-                navigation.navigate("Book Group Detail", {
-                  book_info: item,
-                })
-              }
-            />
-          )}
-        />
-      </View>
-      <FlatButton
-        text="Add Book Group"
-        _styles={styles.addBookBtn}
-        fontSize={15}
-        onPress={() => navigation.navigate("Add Book Groups")}
-      />
+
+      <ScrollView>
+        <View style={styles.bookList}>
+          {books.map((book, index) => {
+            return (
+              <BookItem
+                key={book.book_detail_id}
+                _style={[styles.bookItem]}
+                data={book}
+                onPress={() =>
+                  navigation.navigate("Book Group Detail", {
+                    book_info: book,
+                  })
+                }
+              />
+            );
+          })}
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -103,26 +87,24 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    flex: 1,
   },
-  booksContainer: {
-    width: "100%",
-    marginTop: 10,
-  },
-  contentContainerStyle: {
-    height: 580,
-    // width: "100%",
+  bookList: {
+    width: SCREEN_WIDTH,
+    flex: 1,
+    paddingVertical: normalize(14),
+    paddingHorizontal: normalize(6),
+    overflow: "scroll",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
   },
   bookItem: {
-    margin: 10,
-  },
-  addBookBtn: {
-    width: "80%",
-    marginBottom: 14,
-    paddingVertical: 0,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1e74fd",
+    width: "100%",
+    padding: normalize(10),
+    borderRadius: normalize(10),
+    marginBottom: normalize(10),
   },
 });
 

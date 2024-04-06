@@ -84,7 +84,12 @@ function ChangePasswordScreen({ route, navigation }) {
               value={props.values.password}
               errorText={props.errors.password}
             />
-            <FlatButton _styles={styles.submitBtn} onPress={props.handleSubmit} text="submit" />
+            <FlatButton
+              _styles={styles.submitBtn}
+              onPress={props.handleSubmit}
+              text="submit"
+              fontSize={normalize(12)}
+            />
           </View>
         )}
       </Formik>
@@ -126,7 +131,8 @@ const styles = StyleSheet.create({
 
   submitBtn: {
     width: "100%",
-    height: normalize(28),
+    height: normalize(32),
+
     marginTop: normalize(10),
     marginBottom: normalize(20),
     paddingVertical: 0,

@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
 import { globalStyles } from "../../styles/global";
 import axios from "axios";
+import EmployeeItem from "../../components/EmployeeItem";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
 import ReaderItem from "../../components/ReaderItem";
 import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
-import BookItem from "../../components/BookItem";
+import { ScrollView } from "react-native-gesture-handler";
 
-function BookListDashBoard({ route, navigation }) {
-  const { book_info } = route.params;
-  const { book_detail_id } = book_info;
-
-  const [books, setBooks] = useState([]);
+function SelectBorrowerScreen({ navigation }) {
+  const [readers, setReaders] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
-
   useEffect(() => {
     setSearchValue("");
 
@@ -25,12 +22,11 @@ function BookListDashBoard({ route, navigation }) {
         .then((access_token) => {
           const config = {
             headers: { Authorization: `Bearer ${access_token}` },
-            params: { book_detail_id },
           };
           axios
-            .get(`http://10.0.2.2:5000/books/${book_detail_id}`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/borrowers`, config)
             .then((result) => {
-              setBooks([...result.data]);
+              setReaders([...result.data]);
             })
             .catch((error) => {
               console.log(error);
@@ -43,10 +39,10 @@ function BookListDashBoard({ route, navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    navigation.navigate("Book Search Result", {
+    navigation.navigate("Search Results", {
       search_value: searchValue,
-      book_detail_id: book_detail_id,
-      placeholder: "search books by position...",
+      placeholder: "search readers...",
+      type: "readers",
     });
   };
 
@@ -54,24 +50,24 @@ function BookListDashBoard({ route, navigation }) {
     <View style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search books by position..."
+        placeholder="search readers..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
 
       <ScrollView>
-        <View style={styles.bookList}>
-          {books.map((book, index) => {
+        <View style={styles.readerList}>
+          {readers.map((reader, index) => {
             return (
-              <BookItem
-                key={book.book_id}
-                _style={[styles.bookItem]}
-                have_position
-                data={book}
+              <ReaderItem
+                key={index}
+                _style={[styles.readerItem]}
+                borrowed_books={1}
+                data={reader}
                 onPress={() =>
-                  navigation.navigate("Edit Book", {
-                    book_info: book,
+                  navigation.navigate("Select Book Group", {
+                    reader_info: reader,
                   })
                 }
               />
@@ -79,13 +75,6 @@ function BookListDashBoard({ route, navigation }) {
           })}
         </View>
       </ScrollView>
-
-      <FlatButton
-        text="Add Books"
-        _styles={styles.addBookBtn}
-        fontSize={normalize(10)}
-        onPress={() => navigation.navigate("Add Books")}
-      />
     </View>
   );
 }
@@ -93,38 +82,27 @@ function BookListDashBoard({ route, navigation }) {
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
-    justifyContent: "center",
+    flexDirection: "column",
+    justifyContent: "flex-end",
     alignItems: "center",
-    position: "relative",
   },
-  bookList: {
+  readerList: {
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
     paddingHorizontal: normalize(6),
     overflow: "scroll",
-    flexDirection: "column",
-    justifyContent: "flex-start",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
     alignItems: "flex-start",
     flexWrap: "wrap",
   },
-  bookItem: {
-    width: "100%",
+  readerItem: {
+    width: "40%",
     padding: normalize(10),
+    margin: 10,
     borderRadius: normalize(10),
-    marginBottom: normalize(10),
-  },
-  addBookBtn: {
-    marginBottom: normalize(14),
-    padding: normalize(10),
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1e74fd",
-    position: "absolute",
-    bottom: normalize(20),
-    right: normalize(20),
   },
 });
 
-export default BookListDashBoard;
+export default SelectBorrowerScreen;

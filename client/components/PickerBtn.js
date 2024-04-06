@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { normalize } from "../defined_function";
 
 function PickerBtn({ _styles, title, onPress }) {
   return (
@@ -12,19 +13,19 @@ function PickerBtn({ _styles, title, onPress }) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: "80%",
-    height: 140,
+    width: "90%",
+    height: normalize(120),
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: "#ced0d4",
-    borderRadius: 20,
+    borderRadius: normalize(20),
   },
   title: {
     fontFamily: "nunito-medium",
-    fontSize: 20,
-    letterSpacing: 4,
+    fontSize: normalize(14),
+    letterSpacing: normalize(4),
     color: "#aaabaf",
   },
 });

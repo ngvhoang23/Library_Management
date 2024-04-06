@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Button, Image, TouchableOpacity } from "react-native";
 import { normalize } from "../defined_function";
 
-function ReaderItem({ _style, data, onPress }) {
+function ReaderItem({ _style, data, borrowed_books, onPress }) {
   const { user_id, full_name, reader_type, user_avatar, expire_date } = data;
 
   const [status, setStatus] = useState(true);
@@ -22,6 +22,11 @@ function ReaderItem({ _style, data, onPress }) {
       <Text style={[styles.readerType]}>
         {reader_type === "student" ? "Student" : reader_type === "lecturer" ? "Lecturer" : ""}
       </Text>
+      {borrowed_books && (
+        <Text style={[styles.borrowedBookQuantity, { color: borrowed_books >= 4 ? "#f02849" : "#1e74fd" }]}>
+          borrowed books: {borrowed_books}
+        </Text>
+      )}
       <Text style={[styles.status, { color: status ? "#6ec531" : "#f02849" }]}>{status ? "active" : "expired"}</Text>
     </TouchableOpacity>
   );
@@ -58,6 +63,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: normalize(4),
     left: normalize(10),
+  },
+  borrowedBookQuantity: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
   },
 });
 

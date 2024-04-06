@@ -311,7 +311,12 @@ function AddReaderScreen({ navigation }) {
                 value={props.values.last_name}
                 errorText={props.errors.last_name}
               />
-              <FlatButton _styles={styles.submitBtn} onPress={props.handleSubmit} text="submit" />
+              <FlatButton
+                _styles={styles.submitBtn}
+                onPress={props.handleSubmit}
+                text="submit"
+                fontSize={normalize(12)}
+              />
             </ScrollView>
           </TouchableOpacity>
         )}
@@ -367,7 +372,7 @@ const styles = StyleSheet.create({
 
   submitBtn: {
     width: "100%",
-    height: normalize(26),
+    height: normalize(32),
     marginTop: normalize(6),
     marginBottom: normalize(16),
     paddingVertical: 0,

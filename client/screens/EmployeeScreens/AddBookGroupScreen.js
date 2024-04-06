@@ -13,7 +13,7 @@ import { Picker } from "@react-native-picker/picker";
 import MenuPickers from "../../components/MenuPicker.js";
 import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
-import { _retrieveData, validateEmail } from "../../defined_function/index.js";
+import { _retrieveData, normalize, validateEmail } from "../../defined_function/index.js";
 import { useIsFocused } from "@react-navigation/native";
 
 const formSchema = yup.object({
@@ -252,8 +252,13 @@ function AddBookGroupScreen({ navigation }) {
                 })}
                 onChange={(selectedValue, selectedIndex) => props.setFieldValue("category", categories[selectedIndex])}
               />
+              <FlatButton
+                _styles={styles.submitBtn}
+                onPress={props.handleSubmit}
+                text="submit"
+                fontSize={normalize(12)}
+              />
             </ScrollView>
-            <FlatButton _styles={styles.submitBtn} onPress={props.handleSubmit} text="submit" fontSize={15} />
           </TouchableOpacity>
         )}
       </Formik>
@@ -277,48 +282,50 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     fontFamily: "nunito-medium",
-    fontSize: 18,
+    fontSize: normalize(18),
     width: "100%",
-    marginLeft: 40,
+    marginLeft: normalize(40),
   },
 
   avatarPicker: {
     width: "100%",
-    marginBottom: 20,
+    marginBottom: normalize(20),
   },
 
   formWrapper: {
     width: "100%",
-    height: "96%",
-    margin: 20,
+    marginTop: normalize(20),
+    marginBottom: 0,
     justifyContent: "space-between",
     alignItems: "center",
+    overflow: "scroll",
   },
 
   formContainer: {
     width: "90%",
-    height: "100%",
   },
 
   input: {
-    marginBottom: 20,
+    marginBottom: normalize(20),
     width: "100%",
   },
 
-  position: {
-    marginRight: 20,
-    width: "20%",
-  },
-
   submitBtn: {
-    width: "80%",
-    marginTop: 14,
-    marginBottom: "20px",
+    width: "100%",
+    height: normalize(32),
+
+    marginTop: normalize(6),
+    marginBottom: normalize(16),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1e74fd",
+  },
+
+  position: {
+    marginRight: normalize(20),
+    width: "20%",
   },
 });
 

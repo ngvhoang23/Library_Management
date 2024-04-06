@@ -6,11 +6,12 @@ import EmployeeItem from "../../components/EmployeeItem";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
 import SearchBar from "../../components/SearchBar";
-import { _retrieveData } from "../../defined_function";
+import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import BookItem from "../../components/BookItem";
+import { ScrollView } from "react-native-gesture-handler";
 
 function BookGroupSearchResult({ route, navigation }) {
-  const { search_value, placeholder } = route.params;
+  const { search_value, placeholder, navigate_to } = route.params;
 
   const [results, setResults] = useState([]);
   const [searchValue, setSearchValue] = useState(search_value);
@@ -53,29 +54,29 @@ function BookGroupSearchResult({ route, navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={() => handleSearch(searchValue)}
       />
-      <View style={styles.empsContainer}>
+
+      <ScrollView style={styles.resultContainer}>
         {results?.length > 0 ? (
-          <FlatList
-            style={styles.contentContainerStyle}
-            numColumns={2}
-            keyExtractor={(item) => item.book_detail_id}
-            data={results}
-            renderItem={({ item }) => (
-              <BookItem
-                _style={[styles.bookItem]}
-                data={item}
-                onPress={() =>
-                  navigation.navigate("Edit Book", {
-                    book_info: item,
-                  })
-                }
-              />
-            )}
-          />
+          <View style={styles.bookList}>
+            {results.map((item, index) => {
+              return (
+                <BookItem
+                  key={index}
+                  _style={[styles.bookItem]}
+                  data={item}
+                  onPress={() =>
+                    navigation.navigate(navigate_to || "Book Group Detail", {
+                      book_info: item,
+                    })
+                  }
+                />
+              );
+            })}
+          </View>
         ) : (
           <Text style={styles.messageText}>There are no results</Text>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -90,22 +91,30 @@ const styles = StyleSheet.create({
   searchBar: {
     width: "100%",
   },
-  empsContainer: {
-    marginTop: 10,
+
+  bookList: {
+    width: SCREEN_WIDTH,
+    flex: 1,
+    paddingVertical: normalize(14),
+    paddingHorizontal: normalize(6),
+    overflow: "scroll",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
   },
-  contentContainerStyle: {
-    height: 500,
-    flexGrow: 0,
-    marginBottom: 20,
-  },
+
   bookItem: {
-    margin: 10,
+    width: "100%",
+    padding: normalize(10),
+    marginBottom: normalize(10),
+    borderRadius: normalize(6),
   },
 
   messageText: {
-    marginTop: 30,
+    marginTop: normalize(30),
     fontFamily: "nunito-medium",
-    fontSize: 22,
+    fontSize: normalize(14),
     letterSpacing: 4,
     color: "#aaabaf",
   },

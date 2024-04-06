@@ -25,7 +25,7 @@ import { Picker } from "@react-native-picker/picker";
 import MenuPickers from "../../components/MenuPicker.js";
 import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
-import { _retrieveData, validateEmail } from "../../defined_function/index.js";
+import { _retrieveData, normalize, validateEmail } from "../../defined_function/index.js";
 import moment from "moment";
 
 const formSchema = yup.object({
@@ -249,8 +249,13 @@ function EditReaderScreen({ route, navigation }) {
                 value={props.values.last_name}
                 errorText={props.errors.last_name}
               />
+              <FlatButton
+                _styles={styles.submitBtn}
+                onPress={props.handleSubmit}
+                text="submit"
+                fontSize={normalize(12)}
+              />
             </ScrollView>
-            <FlatButton _styles={styles.submitBtn} onPress={props.handleSubmit} text="submit" />
           </TouchableOpacity>
         )}
       </Formik>
@@ -270,42 +275,45 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
+    flex: 1,
   },
 
   headerTitle: {
     fontFamily: "nunito-medium",
-    fontSize: 18,
+    fontSize: normalize(18),
     width: "100%",
-    marginLeft: 40,
+    marginLeft: normalize(40),
   },
 
   avatarPicker: {
     width: "100%",
-    marginBottom: 20,
+    marginBottom: normalize(20),
   },
 
   formWrapper: {
     width: "100%",
-    margin: 20,
+    marginTop: normalize(20),
     justifyContent: "space-between",
     alignItems: "center",
+    flex: 1,
   },
 
   formContainer: {
     width: "90%",
-    height: 640,
+    height: normalize(640),
+    flex: 1,
   },
 
   input: {
-    marginBottom: 20,
+    marginBottom: normalize(20),
     width: "100%",
   },
 
   submitBtn: {
-    width: 300,
-    height: 40,
-    marginTop: 10,
-    marginBottom: "20px",
+    width: "100%",
+    height: normalize(32),
+
+    marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",

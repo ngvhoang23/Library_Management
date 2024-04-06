@@ -15,7 +15,7 @@ function MainHeader({ title, navigation, is_stack, back_key }) {
       {is_stack ? (
         <AntDesign
           name="left"
-          size={normalize(14)}
+          size={normalize(16)}
           color="black"
           style={styles.icon}
           onPress={() => navigation.goBack()}
@@ -33,7 +33,7 @@ function MainHeader({ title, navigation, is_stack, back_key }) {
 const styles = StyleSheet.create({
   header: {
     width: Dimensions.get("window").width,
-    height: normalize(46),
+    height: normalize(52),
     paddingTop: normalize(14),
     paddingBottom: normalize(6),
     flexDirection: "row",
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontFamily: "nunito-bold",
-    fontSize: normalize(11),
+    fontSize: normalize(13),
     color: "#333",
     letterSpacing: 1,
     color: "#fff",

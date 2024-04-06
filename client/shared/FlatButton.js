@@ -2,12 +2,20 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Text, View } from "react-native";
 import { normalize } from "../defined_function";
 
-export default function FlatButton({ text, _styles, onPress, fontSize, children }) {
+export default function FlatButton({ text, _styles, onPress, textColor, fontSize, children }) {
   return (
     <TouchableOpacity style={[styles.wrapper, _styles]} onPress={onPress}>
       {children}
-      <View style={[styles.button]}>
-        <Text style={[styles.buttonText, { fontSize: fontSize || styles.buttonText.fontSize }]}>{text}</Text>
+      <View style={[styles.button, { marginLeft: children ? normalize(6) : 0 }]}>
+        <Text
+          style={[
+            styles.buttonText,
+            { fontSize: fontSize || styles.buttonText.fontSize },
+            { color: textColor || styles.buttonText.color },
+          ]}
+        >
+          {text}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -15,10 +23,10 @@ export default function FlatButton({ text, _styles, onPress, fontSize, children 
 
 const styles = StyleSheet.create({
   wrapper: {
-    borderRadius: 10,
+    borderRadius: normalize(10),
   },
   button: {
-    borderRadius: 8,
+    borderRadius: normalize(8),
   },
   buttonText: {
     fontFamily: "nunito-bold",

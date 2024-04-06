@@ -53,29 +53,6 @@ function SearchResults({ route, navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={() => handleSearch(searchValue)}
       />
-      {/* <View style={styles.empsContainer}>
-        {results?.length > 0 ? (
-          <FlatList
-            style={styles.contentContainerStyle}
-            numColumns={2}
-            keyExtractor={(item) => item.user_id}
-            data={results}
-            renderItem={({ item }) => (
-              <EmployeeItem
-                _style={styles.empItem}
-                data={item}
-                onPress={() =>
-                  navigation.navigate("Employee Detail", {
-                    emp_info: item,
-                  })
-                }
-              />
-            )}
-          />
-        ) : (
-          <Text style={styles.messageText}>There are no results</Text>
-        )}
-      </View> */}
 
       <ScrollView style={styles.resultContainer}>
         {results?.length > 0 ? (
@@ -89,6 +66,7 @@ function SearchResults({ route, navigation }) {
                   onPress={() =>
                     navigation.navigate(`${type === "employees" ? "Employee" : "Reader"} Detail`, {
                       emp_info: item,
+                      reader_info: item,
                     })
                   }
                 />

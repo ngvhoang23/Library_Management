@@ -1,14 +1,32 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { normalize } from "../defined_function";
 
-function BriefBookInfoPreview({ book_name, author_name, cover_photo, onPress }) {
+function BriefBookInfoPreview({ _styles, book_name, author_name, position, cover_photo, onPress }) {
+  const renderPosition = (oosition) => {
+    return position
+      ?.split("-")
+      .map((pos, index) => {
+        if (index == 0) {
+          pos = `K${pos}`;
+        } else if (index == 1) {
+          pos = `H${pos}`;
+        } else if (index == 2) {
+          pos = `TT${pos}`;
+        }
+        return pos;
+      })
+      .join("-");
+  };
+
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={styles.wrapper}>
-        <Image source={{ uri: cover_photo }} style={styles.avatarPreview} />
-        <View style={styles.bookInfo}>
-          <Text style={styles.bookName}>{book_name}</Text>
-          <Text style={styles.authorName}>{author_name}</Text>
-        </View>
+    <TouchableOpacity style={[styles.wrapper, _styles]} onPress={onPress}>
+      <Image source={{ uri: cover_photo }} style={styles.avatarPreview} />
+      <View style={styles.bookInfo}>
+        <Text style={styles.bookName} numberOfLines={3}>
+          {book_name}
+        </Text>
+        <Text style={styles.authorName}>{author_name}</Text>
+        <Text style={styles.position}>Position: {renderPosition(position)}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -16,40 +34,48 @@ function BriefBookInfoPreview({ book_name, author_name, cover_photo, onPress }) 
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 30,
-    with: "100%",
+    width: "90%",
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: "#ced0d4",
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: 22,
+    padding: normalize(14),
   },
 
   bookInfo: {
-    width: "50%",
-    marginLeft: 20,
+    width: "70%",
+    marginLeft: normalize(10),
   },
 
   bookName: {
     width: "100%",
     fontFamily: "nunito-medium",
-    fontSize: 16,
-    letterSpacing: 4,
+    fontSize: normalize(12),
+    letterSpacing: normalize(2),
     color: "#676768",
-    marginBottom: 20,
+    marginBottom: normalize(6),
   },
 
   authorName: {
     width: "100%",
     fontFamily: "nunito-medium",
-    fontSize: 12,
-    letterSpacing: 4,
+    fontSize: normalize(9),
+    letterSpacing: normalize(2),
+    marginBottom: normalize(4),
     color: "#aaabaf",
   },
 
-  avatarPreview: { width: 200, height: 200 },
+  position: {
+    width: "100%",
+    fontFamily: "nunito-medium",
+    fontSize: normalize(9),
+    letterSpacing: normalize(2),
+    color: "#aaabaf",
+  },
+
+  avatarPreview: { width: normalize(70), height: normalize(70) },
 });
 
 export default BriefBookInfoPreview;

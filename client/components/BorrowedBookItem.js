@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
 
   readerAvatar: {
     aspectRatio: 1,
-    height: normalize(50),
+    height: normalize(60),
     borderRadius: 10,
     marginRight: normalize(14),
   },
@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
   },
   readerName: {
     fontFamily: "nunito-medium",
-    fontSize: normalize(10),
+    fontSize: normalize(12),
     letterSpacing: 2,
     width: normalize(150),
     color: "#676768",
   },
-  readerPhoneNum: { fontFamily: "nunito-medium", fontSize: normalize(8), letterSpacing: 2, color: "#aaabaf" },
+  readerPhoneNum: { fontFamily: "nunito-medium", fontSize: normalize(10), letterSpacing: 2, color: "#aaabaf" },
   bookContainer: {
     flexDirection: "row",
     justifyContent: "flex-start",
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   bookName: {
     width: normalize(180),
     fontFamily: "nunito-medium",
-    fontSize: normalize(8),
+    fontSize: normalize(10),
     letterSpacing: 2,
     color: "#676768",
     marginBottom: normalize(2),
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   authorName: {
     width: normalize(180),
     fontFamily: "nunito-medium",
-    fontSize: normalize(6),
+    fontSize: normalize(8),
     letterSpacing: 2,
     color: "#aaabaf",
   },

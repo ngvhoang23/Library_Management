@@ -266,7 +266,12 @@ function EditEmployeeScreen({ route, navigation }) {
                 value={props.values.last_name}
                 errorText={props.errors.last_name}
               />
-              <FlatButton _styles={styles.submitBtn} onPress={props.handleSubmit} text="submit" />
+              <FlatButton
+                _styles={styles.submitBtn}
+                onPress={props.handleSubmit}
+                text="submit"
+                fontSize={normalize(12)}
+              />
             </ScrollView>
           </TouchableOpacity>
         )}
@@ -323,7 +328,8 @@ const styles = StyleSheet.create({
 
   submitBtn: {
     width: "100%",
-    height: normalize(28),
+    height: normalize(32),
+
     marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",

@@ -55,25 +55,6 @@ function ReaderManDashboard({ navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
-      {/* <View style={styles.readersContainer}>
-        <FlatList
-          style={styles.contentContainerStyle}
-          numColumns={2}
-          keyExtractor={(item) => item.user_id}
-          data={readers}
-          renderItem={({ item }) => (
-            <ReaderItem
-              _style={styles.readerItem}
-              data={item}
-              onPress={() =>
-                navigation.navigate("Reader Detail", {
-                  reader_info: item,
-                })
-              }
-            />
-          )}
-        />
-      </View> */}
 
       <ScrollView>
         <View style={styles.readerList}>

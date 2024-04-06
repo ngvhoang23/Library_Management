@@ -22,7 +22,7 @@ import { Picker } from "@react-native-picker/picker";
 import AlertModal from "../../components/AlertModal";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
-import { _retrieveData } from "../../defined_function";
+import { _retrieveData, normalize } from "../../defined_function";
 
 function BookGroupDetailScreen({ route, navigation }) {
   const { book_info } = route.params;
@@ -76,7 +76,8 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Book name"
           value={book_name}
-          icon={<Entypo name="open-book" size={24} color="#676768" />}
+          multiline
+          icon={<Entypo name="open-book" size={normalize(18)} color="#949498" />}
           read_only
         />
 
@@ -85,7 +86,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Price"
           value={price?.toString()}
-          icon={<MaterialIcons name="price-check" size={24} color="#676768" />}
+          icon={<MaterialIcons name="price-check" size={normalize(18)} color="#949498" />}
           read_only
         />
 
@@ -94,7 +95,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Published Date"
           value={published_date ? new Date(published_date).toISOString().split("T")[0] : ""}
-          icon={<Entypo name="publish" size={24} color="#676768" />}
+          icon={<Entypo name="publish" size={normalize(18)} color="#949498" />}
           read_only
         />
 
@@ -103,7 +104,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Description"
           value={description}
-          icon={<MaterialCommunityIcons name="message-text-outline" size={24} color="#676768" />}
+          multiline
           read_only
         />
 
@@ -112,7 +113,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Publish company"
           value={publish_com}
-          icon={<Entypo name="publish" size={24} color="#676768" />}
+          icon={<Entypo name="publish" size={normalize(18)} color="#949498" />}
           read_only
         />
 
@@ -121,7 +122,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Author"
           value={author_name}
-          icon={<AntDesign name="user" size={24} color="#676768" />}
+          icon={<AntDesign name="user" size={normalize(18)} color="#949498" />}
           read_only
         />
 
@@ -130,7 +131,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Category"
           value={category_name}
-          icon={<MaterialIcons name="type-specimen" size={24} color="#676768" />}
+          icon={<MaterialIcons name="type-specimen" size={normalize(18)} color="#949498" />}
           read_only
         />
       </ScrollView>
@@ -159,91 +160,93 @@ function BookGroupDetailScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   wrapper: {
+    flex: 1,
     width: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: 20,
+    marginTop: normalize(20),
   },
 
   avatarContainer: {
     position: "relative",
     with: "100%",
-    minHeight: 100,
+    minHeight: normalize(50),
     backgroundColor: "#eee",
     borderWidth: 1,
     borderStyle: "dashed",
     borderColor: "#ced0d4",
     justifyContent: "center",
     alignItems: "center",
-    padding: 12,
-    marginBottom: 20,
+    padding: normalize(12),
+    marginBottom: normalize(20),
   },
 
-  avatarPreview: { width: 200, height: 200, borderRadius: 99999 },
+  avatarPreview: { width: normalize(120), height: normalize(120), borderRadius: 99999 },
 
   headerTitle: {
     fontFamily: "nunito-medium",
-    fontSize: 18,
+    fontSize: normalize(18),
     width: "100%",
-    marginLeft: 40,
+    marginLeft: normalize(40),
   },
 
   avatarPicker: {
     width: "100%",
-    marginBottom: 20,
+    marginBottom: normalize(20),
   },
 
   formWrapper: {
     width: "100%",
-    margin: 20,
+    margin: normalize(20),
     justifyContent: "space-between",
     alignItems: "center",
   },
 
   formContainer: {
     width: "90%",
-    height: "90%",
+    height: normalize(420),
+    flex: 1,
+    flexGrow: 1,
     borderBottomWidth: 1,
     borderColor: "#eee",
   },
 
   input: {
-    marginBottom: 20,
+    marginBottom: normalize(20),
     width: "100%",
-    marginBottom: 30,
+    marginBottom: normalize(30),
   },
 
   openBookListBtn: {
-    height: 50,
+    height: normalize(32),
     width: "40%",
     paddingVertical: 0,
-    marginRight: 10,
+    marginRight: normalize(10),
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1e74fd",
-    borderRadius: 10,
   },
 
   editBtn: {
-    height: 50,
+    height: normalize(32),
     width: "40%",
     paddingVertical: 0,
-    marginLeft: 10,
+    marginLeft: normalize(10),
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1e74fd",
-    borderRadius: 10,
   },
 
   options: {
     width: "100%",
-    marginTop: 24,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: normalize(10),
+    marginTop: normalize(10),
   },
 });
 

@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
 
   deleteBtn: {
-    height: normalize(30),
+    height: normalize(32),
     width: "40%",
     paddingVertical: 0,
     marginRight: normalize(10),
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   },
 
   editBtn: {
-    height: normalize(30),
+    height: normalize(32),
     width: "40%",
     paddingVertical: 0,
     marginLeft: normalize(10),

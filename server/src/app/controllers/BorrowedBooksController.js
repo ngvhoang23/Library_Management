@@ -43,20 +43,19 @@ class BorrowedBooksController {
       });
   }
 
-  // [POST] /borrowed-books
-  postBorrowedBooks(req, res) {
-    const { emp_id, reader_id, book_id, borrow_date, return_date } = req.body;
-
+  // [GET] /borrowed-books/borrowers
+  getBorrowersWithin4Days(req, res) {
     const promise = () => {
       return new Promise((resolve, reject) => {
         db.query(
-          `insert into borrowed_books(emp_id, reader_id, book_id, borrow_date, return_date) values(
-            ${emp_id},
-            ${reader_id},
-            ${book_id},
-            ${borrow_date ? `'${borrow_date}'` : null},
-            ${return_date ? `'${return_date}'` : null},
-        )`,
+          `
+              with rm as (
+                select bb.reader_id, count(bb.book_id) as borrowed_books from borrowed_books bb
+                where DATE_ADD(bb.borrow_date, INTERVAL 4 DAY) >= CURDATE() and reader_id = 60
+              )
+              select ui.*, rm.borrowed_books from user_info ui
+              inner join rm on rm.reader_id = ui.user_id
+              `,
           (err, result) => {
             if (err) {
               reject(err);
@@ -73,6 +72,108 @@ class BorrowedBooksController {
         res.status(200).send(result);
       })
       .catch((err) => {
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /available-books
+  getAvailableBooksByGroup(req, res) {
+    const { book_detail_id } = req.query;
+
+    const promise = () => {
+      const sql = `
+      select * from books 
+        inner join book_detail on books.book_detail_id = book_detail.book_detail_id
+        inner join authors on book_detail.author_id = authors.author_id
+        inner join categories on book_detail.category_id = categories.category_id
+        where books.book_detail_id = ${book_detail_id} and books.status = 1
+      `;
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(400).send(err);
+        console.log(err);
+      });
+  }
+
+  // [POST] /borrowed-books
+  postBorrowedBooks(req, res) {
+    const { emp_id, reader_id, book_id, borrow_date, return_date } = req.body;
+
+    const data = [];
+
+    data.push([emp_id || null, reader_id || null, book_id || null, borrow_date || null, return_date || null]);
+
+    const checkingBookStatus = () => {
+      return new Promise((resolve, reject) => {
+        db.query(`select * from books where book_id=${book_id} and status=1`, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            if (result.length === 0) {
+              reject({ message: "This book is unavailable", code: "UNAVAILABLE_BOOK", status: 400 });
+            } else {
+              resolve(result);
+            }
+          }
+        });
+      });
+    };
+
+    const updateBookStatus = () => {
+      return new Promise((resolve, reject) => {
+        db.query(`update books set status=0 where book_id=${book_id}`, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            console.log(result);
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        db.query(
+          `insert into borrowed_books(emp_id, reader_id, book_id, borrow_date, return_date) values ?`,
+          [data],
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          },
+        );
+      });
+    };
+
+    checkingBookStatus()
+      .then((result) => {
+        return updateBookStatus();
+      })
+      .then((result) => {
+        return promise();
+      })
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
         res.status(400).send(err);
       });
   }

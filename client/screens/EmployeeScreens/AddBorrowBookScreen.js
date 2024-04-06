@@ -1,42 +1,52 @@
-import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, ScrollView, Keyboard, TouchableOpacity, Text, Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, Text, ScrollView, Keyboard, TouchableOpacity, unstable_batchedUpdates } from "react-native";
 import { Formik } from "formik";
 import FlatButton from "../../shared/FlatButton.js";
 import * as yup from "yup";
 import InputItem from "../../components/InputItem.js";
-import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
-import AvatarPicker from "../../components/AvatarPicker.js";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import MyDateTimePicker from "../../components/MyDateTimePicker.js";
-import { Picker } from "@react-native-picker/picker";
-import MenuPickers from "../../components/MenuPicker.js";
 import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
-import { _retrieveData, normalize, validateEmail } from "../../defined_function/index.js";
+import { _retrieveData, addDays, normalize } from "../../defined_function/index.js";
 import { useIsFocused } from "@react-navigation/native";
 import BriefBookInfoPreview from "../../components/BriefBookInfoPreview.js";
+import BriefUserInfoPreview from "../../components/BriefUserInfoPreview.js";
 import PickerBtn from "../../components/PickerBtn.js";
-import PickerModal from "../../components/PickerModal";
+import PreviewInfoItem from "../../components/PreviewInfoItem.js";
+import { Fontisto } from "@expo/vector-icons";
+import PickerModal from "../../components/PickerModal.js";
 
-const formSchema = yup.object({
-  position: yup.object().test("", "Book positions cannot be left blank", (val) => {
-    return val?.shelf && val?.row && val?.order;
-  }),
-});
+const formSchema = yup.object({});
 
-function AddBookScreen({ navigation }) {
-  const [isShowDatePicker, setIsShowDatePicker] = useState(false);
+function AddBorrowBookScreen({ route, navigation }) {
+  const { reader_info, book_info } = route.params;
+  const { user_id: reader_id, reader_type, full_name, phone_num, user_avatar } = reader_info;
+  const { book_id } = book_info;
+
+  const [userInfo, setUserInfo] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
-  const [bookInfo, setBookInfo] = useState({});
   const [books, setBooks] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedBook, setSelectedBook] = useState();
+  const [selectedBook, setSelectedBook] = useState(book_info);
+  const [selectedReader, setSelectedReader] = useState(reader_info);
   const [selectedId, setSelectedId] = useState();
   const [searchResult, setSearchResult] = useState();
-
   const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      _retrieveData("USER_INFO")
+        .then((user_info) => {
+          setUserInfo(JSON.parse(user_info));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     if (isFocused) {
@@ -85,6 +95,49 @@ function AddBookScreen({ navigation }) {
     }
   }, [selectedId]);
 
+  const handleSubmit = ({ borrow_date, return_date }) => {
+    setIsLoading(true);
+
+    const data = {
+      emp_id: userInfo?.user_id,
+      reader_id: reader_id,
+      book_id: book_id,
+      borrow_date: borrow_date,
+      return_date: return_date,
+    };
+
+    _retrieveData("ACCESS_TOKEN")
+      .then((access_token) => {
+        const configurations = {
+          method: "POST",
+          url: `http://10.0.2.2:5000/borrowed-books/`,
+          data: data,
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        };
+
+        axios(configurations)
+          .then((result) => {
+            setResultStatus({ isSuccess: 1, visible: true });
+            // navigation.goBack();
+          })
+          .catch((err) => {
+            if (err?.response?.data?.code === "UNAVAILABLE_BOOK") {
+              alert("This book is unavailable");
+            }
+            setResultStatus({ isSuccess: 0, visible: true });
+            console.log("err", err);
+          })
+          .finally((result) => {
+            setIsLoading(false);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const handleSearch = (search_value) => {
     if (search_value) {
       _retrieveData("ACCESS_TOKEN")
@@ -120,75 +173,31 @@ function AddBookScreen({ navigation }) {
     }
   };
 
-  const handleSubmit = (bookInfo) => {
-    const { import_date, position } = bookInfo;
-
-    // setIsLoading(true);
-
-    if (!selectedId) {
-      alert("Select book group to continue");
-      return;
-    }
-
-    const formatedPosition = `${position.shelf}-${position.row}-${position.order}`;
-
-    const data = {
-      book_detail_id: selectedId,
-      position: formatedPosition,
-      import_date,
-    };
-
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "POST",
-          url: `http://10.0.2.2:5000/books/`,
-          data: data,
-          headers: {
-            Accept: "application/json",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
-
-        axios(configurations)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.navigate("Book Groups");
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-            if (err?.response?.data?.code === "ER_DUP_ENTRY") {
-              alert("This position contained another book");
-            }
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   return (
-    <TouchableOpacity style={styles.wrapper} activeOpacity={1}>
+    <View style={styles.wrapper}>
+      <BriefUserInfoPreview
+        _styles={styles.userInfoContainer}
+        full_name={full_name}
+        phone_num={phone_num}
+        avatar={`http://10.0.2.2:5000${user_avatar}`}
+      />
+
       {selectedBook ? (
         <BriefBookInfoPreview
           book_name={selectedBook?.book_name}
           author_name={selectedBook?.author_name}
+          position={selectedBook?.position}
           cover_photo={`http://10.0.2.2:5000${selectedBook?.cover_photo}`}
           onPress={() => setShowModal(true)}
-          _styles={styles.bookInfoPreview}
         />
       ) : (
-        <PickerBtn _styles={styles.selectBookBtn} title={"Choose Book"} onPress={() => setShowModal(true)} />
+        <PickerBtn _styles={styles.selectBookBtn} title={"Select Book"} onPress={() => setShowModal(true)} />
       )}
 
       <Formik
         initialValues={{
-          import_date: new Date().toISOString().split("T")[0],
-          position: { shelf: "", row: "", order: "" },
+          borrow_date: new Date().toISOString().split("T")[0],
+          return_date: addDays(new Date(), 7).toISOString().split("T")[0],
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
@@ -208,50 +217,23 @@ function AddBookScreen({ navigation }) {
                 flexWrap: "wrap",
               }}
             >
-              <MyDateTimePicker
+              <PreviewInfoItem
                 _styles={[styles.input]}
-                lableTitle="Import Date"
-                value={props.values.import_date}
-                errorText={props.errors.import_date}
-                onPress={() => setIsShowDatePicker(true)}
-              />
-              {isShowDatePicker && (
-                <DateTimePicker
-                  mode="date"
-                  display="spinner"
-                  value={new Date(props.values.import_date)}
-                  onChange={(event, selectedDate) => {
-                    setIsShowDatePicker(false);
-                    props.setFieldValue("import_date", selectedDate.toISOString().split("T")[0]);
-                  }}
-                />
-              )}
-
-              <InputItem
-                _styles={[styles.input, styles.position]}
-                placeholder="Shelf"
-                lableTitle="Shelf"
-                onChange={(val) => props.setFieldValue("position", { ...props.values.position, shelf: val })}
-                value={props.values.position?.shelf}
+                textStyles={{ color: "#676768" }}
+                lableTitle="Borrow Date"
+                value={props.values.borrow_date}
+                icon={<Fontisto name="date" size={normalize(16)} color="#949498" />}
+                read_only
               />
 
-              <InputItem
-                _styles={[styles.input, styles.position]}
-                placeholder="Row"
-                lableTitle="Row"
-                onChange={(val) => props.setFieldValue("position", { ...props.values.position, row: val })}
-                value={props.values.position?.row}
+              <PreviewInfoItem
+                _styles={[styles.input]}
+                textStyles={{ color: "#676768" }}
+                lableTitle="Return Date"
+                value={props.values.return_date}
+                icon={<Fontisto name="date" size={normalize(16)} color="#949498" />}
+                read_only
               />
-
-              <InputItem
-                _styles={[styles.input, styles.position]}
-                placeholder="Order"
-                lableTitle="Order"
-                onChange={(val) => props.setFieldValue("position", { ...props.values.position, order: val })}
-                value={props.values.position?.order}
-              />
-
-              {props.errors.position && <Text style={styles.positionValidate}>{props.errors.position}</Text>}
             </ScrollView>
             <FlatButton
               _styles={styles.submitBtn}
@@ -284,7 +266,7 @@ function AddBookScreen({ navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </TouchableOpacity>
+    </View>
   );
 }
 
@@ -295,10 +277,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
-  },
-
-  selectBookBtn: {
-    marginTop: 30,
   },
 
   headerTitle: {
@@ -327,16 +305,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  position: {
-    marginRight: normalize(20),
-    width: "20%",
-  },
-
   submitBtn: {
     width: "90%",
     height: normalize(32),
 
-    marginTop: normalize(6),
     marginBottom: normalize(16),
     paddingVertical: 0,
     display: "flex",
@@ -345,9 +317,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#1e74fd",
   },
 
-  bookInfoPreview: {
-    marginTop: normalize(30),
+  positionValidate: {
+    marginBottom: normalize(6),
+    marginLeft: normalize(6),
+    color: "#f02849",
+    fontSize: normalize(10),
+  },
+
+  position: {
+    marginRight: normalize(20),
+    width: "20%",
+  },
+
+  selectBookBtn: {
+    borderRadius: 0,
+    height: normalize(100),
+  },
+
+  userInfoContainer: {
+    marginBottom: normalize(20),
   },
 });
 
-export default AddBookScreen;
+export default AddBorrowBookScreen;

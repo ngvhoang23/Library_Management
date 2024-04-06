@@ -9,9 +9,10 @@ class BookController {
       return new Promise((resolve, reject) => {
         db.query(
           `
-        select * from books 
-          inner join authors on books.author_id = authors.author_id
-          inner join categories on books.category_id = categories.category_id
+          select * from books 
+          inner join book_detail on books.book_detail_id = book_detail.book_detail_id
+          inner join authors on book_detail.author_id = authors.author_id
+          inner join categories on book_detail.category_id = categories.category_id
         `,
           (err, result) => {
             if (err) {
@@ -43,7 +44,7 @@ class BookController {
         inner join book_detail on books.book_detail_id = book_detail.book_detail_id
         inner join authors on book_detail.author_id = authors.author_id
         inner join categories on book_detail.category_id = categories.category_id
-      where books.book_detail_id = 2
+      where books.book_detail_id = ${book_detail_id}
       `;
 
       return new Promise((resolve, reject) => {
@@ -194,9 +195,7 @@ class BookController {
 
   // [GET] /books/searching/:search_value
   searchBooks(req, res) {
-    const { search_value } = req.query;
-
-    console.log(search_value);
+    const { search_value, book_detail_id } = req.query;
 
     const promise = () => {
       const data = [`%${search_value}%`];
@@ -207,7 +206,7 @@ class BookController {
               inner join book_detail on books.book_detail_id = book_detail.book_detail_id
               inner join authors on book_detail.author_id = authors.author_id
               inner join categories on book_detail.category_id = categories.category_id
-              where books.position like ?`,
+              where books.position like ? and books.book_detail_id = ${book_detail_id}`,
           data,
           (err, result) => {
             if (err) {
@@ -370,11 +369,11 @@ class BookController {
 
     const book = [];
 
-    book.push([book_detail_id || null, position || null, import_date || null]);
+    book.push([book_detail_id || null, position || null, import_date || null, 1]);
 
     const promise = () => {
       return new Promise((resolve, reject) => {
-        db.query(`insert into books(book_detail_id, position, import_date) values ?`, [book], (err, result) => {
+        db.query(`insert into books(book_detail_id, position, import_date, status) values ?`, [book], (err, result) => {
           if (err) {
             reject(err);
           } else {

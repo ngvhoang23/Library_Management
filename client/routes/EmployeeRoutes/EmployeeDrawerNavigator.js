@@ -13,7 +13,7 @@ import { useAuthContext } from "../../context/roleContext";
 import { useUserInfoContext } from "../../context/userInfoContext";
 import axios from "axios";
 import { _retrieveData } from "../../defined_function/index";
-import { BorrowBookTabNavigation } from "./TabNavigation";
+import { BookManTabNavigation, BorrowBookTabNavigation, ReaderManTabNavigation } from "./TabNavigation";
 
 const Drawer = createDrawerNavigator();
 
@@ -50,8 +50,8 @@ const EmployeeDrawerNavigator = () => {
         );
       }}
     >
-      <Drawer.Screen name="Manage Readers" component={ReaderManStackNavigation} options={{ headerShown: false }} />
-      <Drawer.Screen name="Manage Books" component={BookManStackNavigation} options={{ headerShown: false }} />
+      <Drawer.Screen name="Manage Readers" component={ReaderManTabNavigation} options={{ headerShown: false }} />
+      <Drawer.Screen name="Manage Books" component={BookManTabNavigation} options={{ headerShown: false }} />
       <Drawer.Screen
         name="Manage Borrowed Books"
         component={BorrowBookTabNavigation}

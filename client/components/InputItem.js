@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     left: normalize(6),
     top: normalize(2),
-    fontSize: normalize(9),
+    fontSize: normalize(10),
     letterSpacing: 1,
     color: "#1e74fd",
     backgroundColor: "#fff",
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginTop: normalize(14),
-    fontSize: normalize(12),
+    fontSize: normalize(13),
     fontFamily: "nunito-regular",
     borderColor: "transparent",
     letterSpacing: 1,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   errorText: {
     marginBottom: normalize(4),
     marginLeft: normalize(6),
-    fontSize: normalize(9),
+    fontSize: normalize(10),
     color: "#f02849",
   },
 });

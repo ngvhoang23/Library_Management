@@ -22,4 +22,10 @@ function normalize(size) {
   return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
 }
 
-export { validateEmail, _retrieveData, normalize, SCREEN_WIDTH, SCREEN_HEIGHT };
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+export { validateEmail, _retrieveData, normalize, SCREEN_WIDTH, SCREEN_HEIGHT, addDays };

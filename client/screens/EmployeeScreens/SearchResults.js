@@ -6,7 +6,8 @@ import EmployeeItem from "../../components/EmployeeItem";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
 import SearchBar from "../../components/SearchBar";
-import { _retrieveData } from "../../defined_function";
+import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
+import { ScrollView } from "react-native-gesture-handler";
 
 function SearchResults({ route, navigation }) {
   const { search_value, placeholder, type } = route.params;
@@ -52,29 +53,29 @@ function SearchResults({ route, navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={() => handleSearch(searchValue)}
       />
-      <View style={styles.empsContainer}>
+      <ScrollView style={styles.resultContainer}>
         {results?.length > 0 ? (
-          <FlatList
-            style={styles.contentContainerStyle}
-            numColumns={2}
-            keyExtractor={(item) => item.user_id}
-            data={results}
-            renderItem={({ item }) => (
-              <EmployeeItem
-                _style={styles.empItem}
-                data={item}
-                onPress={() =>
-                  navigation.navigate("Employee Detail", {
-                    emp_info: item,
-                  })
-                }
-              />
-            )}
-          />
+          <View style={styles.empList}>
+            {results.map((item, index) => {
+              return (
+                <EmployeeItem
+                  key={index}
+                  _style={[styles.empItem]}
+                  data={item}
+                  onPress={() =>
+                    navigation.navigate(`${type === "employees" ? "Employee" : "Reader"} Detail`, {
+                      emp_info: item,
+                      reader_info: item,
+                    })
+                  }
+                />
+              );
+            })}
+          </View>
         ) : (
           <Text style={styles.messageText}>There are no results</Text>
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -89,22 +90,30 @@ const styles = StyleSheet.create({
   searchBar: {
     width: "100%",
   },
-  empsContainer: {
-    marginTop: 10,
+
+  empList: {
+    width: SCREEN_WIDTH,
+    flex: 1,
+    paddingVertical: normalize(14),
+    paddingHorizontal: normalize(6),
+    overflow: "scroll",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
   },
-  contentContainerStyle: {
-    height: 500,
-    flexGrow: 0,
-    marginBottom: 20,
-  },
+
   empItem: {
-    margin: 10,
+    width: "40%",
+    padding: normalize(10),
+    margin: normalize(10),
+    borderRadius: normalize(10),
   },
 
   messageText: {
-    marginTop: 30,
+    marginTop: normalize(30),
     fontFamily: "nunito-medium",
-    fontSize: 22,
+    fontSize: normalize(14),
     letterSpacing: 4,
     color: "#aaabaf",
   },

@@ -11,7 +11,7 @@ import MyDateTimePicker from "../../components/MyDateTimePicker.js";
 import MenuPickers from "../../components/MenuPicker.js";
 import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
-import { _retrieveData } from "../../defined_function/index.js";
+import { _retrieveData, normalize } from "../../defined_function/index.js";
 
 const formSchema = yup.object({
   password: yup
@@ -84,7 +84,12 @@ function ChangePasswordScreen({ route, navigation }) {
               value={props.values.password}
               errorText={props.errors.password}
             />
-            <FlatButton _styles={styles.submitBtn} onPress={props.handleSubmit} text="submit" />
+            <FlatButton
+              _styles={styles.submitBtn}
+              onPress={props.handleSubmit}
+              text="submit"
+              fontSize={normalize(12)}
+            />
           </View>
         )}
       </Formik>
@@ -114,21 +119,22 @@ const styles = StyleSheet.create({
 
   formWrapper: {
     width: "90%",
-    margin: 20,
+    margin: normalize(20),
     justifyContent: "space-between",
     alignItems: "center",
   },
 
   input: {
-    marginBottom: 20,
+    marginBottom: normalize(20),
     width: "100%",
   },
 
   submitBtn: {
-    width: 300,
-    height: 40,
-    marginTop: 10,
-    marginBottom: "20px",
+    width: "100%",
+    height: normalize(32),
+
+    marginTop: normalize(10),
+    marginBottom: normalize(20),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",

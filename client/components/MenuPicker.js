@@ -39,7 +39,7 @@ function MenuPickers({ _styles, lableTitle, errorText, options, onChange, initIn
         style={styles.container}
       >
         <Text style={[globalStyles.input, styles.input]}>{val?.title}</Text>
-        <Entypo style={styles.icon} name="chevron-small-down" size={28} color="#676768" />
+        <Entypo style={styles.icon} name="chevron-small-down" size={28} color="#949498" />
       </TouchableOpacity>
       {errorText && <Text style={[styles.errorText]}>{errorText}</Text>}
 

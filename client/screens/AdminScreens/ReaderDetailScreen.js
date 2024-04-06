@@ -129,7 +129,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="User Name"
           value={user_name}
-          icon={<FontAwesome name="user-o" size={24} color="#949498" />}
+          icon={<FontAwesome name="user-o" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -138,7 +138,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Phone Number"
           value={phone_num}
-          icon={<Feather name="phone-call" size={24} color="#949498" />}
+          icon={<Feather name="phone-call" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -147,7 +147,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Gender"
           value={gender ? "Male" : "Female"}
-          icon={<Fontisto name="transgender-alt" size={24} color="#949498" />}
+          icon={<Fontisto name="transgender-alt" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -156,7 +156,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Reader type"
           value={reader_type === "lecturer" ? "Lecturer" : "Student"}
-          icon={<FontAwesome5 name="book-reader" size={24} color="#949498" />}
+          icon={<FontAwesome5 name="book-reader" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -165,7 +165,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Birth Date"
           value={birth_date ? new Date(birth_date).toISOString().split("T")[0] : ""}
-          icon={<FontAwesome5 name="birthday-cake" size={24} color="#949498" />}
+          icon={<FontAwesome5 name="birthday-cake" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -174,7 +174,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Start Date"
           value={created_at ? new Date(created_at).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={24} color="#949498" />}
+          icon={<Fontisto name="date" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -183,7 +183,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="End Date"
           value={expire_date ? new Date(expire_date).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={24} color="#949498" />}
+          icon={<Fontisto name="date" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -192,7 +192,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Email"
           value={email_address}
-          icon={<Fontisto name="email" size={24} color="#949498" />}
+          icon={<Fontisto name="email" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -201,7 +201,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Address"
           value={address}
-          icon={<Entypo name="address" size={24} color="#949498" />}
+          icon={<Entypo name="address" size={normalize(20)} color="#949498" />}
           read_only
         />
 
@@ -210,7 +210,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Full Name"
           value={full_name}
-          icon={<MaterialCommunityIcons name="smart-card-outline" size={24} color="#949498" />}
+          icon={<MaterialCommunityIcons name="smart-card-outline" size={normalize(20)} color="#949498" />}
           read_only
         />
       </ScrollView>
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
   },
 
   deleteBtn: {
-    height: normalize(30),
+    height: normalize(32),
     width: "40%",
     paddingVertical: 0,
     marginRight: normalize(10),
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
   },
 
   editBtn: {
-    height: normalize(30),
+    height: normalize(32),
     width: "40%",
     paddingVertical: 0,
     marginLeft: normalize(10),
@@ -336,10 +336,10 @@ const styles = StyleSheet.create({
     zIndex: 10,
     fontSize: normalize(14),
     fontStyle: "italic",
-    borderWidth: 1,
+    borderWidth: normalize(1),
     borderStyle: "dashed",
     paddingHorizontal: normalize(10),
-    borderRadius: 4,
+    borderRadius: normalize(4),
   },
 
   options: {

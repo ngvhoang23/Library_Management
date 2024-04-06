@@ -17,6 +17,10 @@ import AddBookScreen from "../../screens/EmployeeScreens/AddBookScreen";
 import BookGroupSearchResult from "../../screens/EmployeeScreens/BookGroupSearchResult";
 import BookSearchResult from "../../screens/EmployeeScreens/BookSearchResult";
 import BorrowedBookManDashboard from "../../screens/EmployeeScreens/BorrowedBookManDashboard";
+import SelectBorrowerScreen from "../../screens/EmployeeScreens/SelectBorrowerScreen";
+import AddBorrowBookScreen from "../../screens/EmployeeScreens/AddBorrowBookScreen";
+import SelectBookGroupScreen from "../../screens/EmployeeScreens/SelectBookGroupScreen";
+import SelectBorrowedBookScreen from "../../screens/EmployeeScreens/SelectBorrowedBookScreen";
 
 const Stack = createStackNavigator();
 
@@ -24,7 +28,7 @@ const screenOptionStyle = {};
 
 const ReaderManStackNavigation = () => {
   return (
-    <Stack.Navigator screenOptions={screenOptionStyle}>
+    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Readers">
       <Stack.Screen
         name="Readers"
         component={ReaderManDashboard}
@@ -66,6 +70,18 @@ const ReaderManStackNavigation = () => {
   );
 };
 
+const AddReaderStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Add Readers">
+      <Stack.Screen
+        name="Add Readers"
+        component={AddReaderScreen}
+        options={{ header: (props) => <MainHeader title="Add Readers" {...props} /> }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const BookManStackNavigation = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle}>
@@ -73,7 +89,7 @@ const BookManStackNavigation = () => {
         name="Book Groups"
         component={BookGroupManDashboard}
         options={{
-          header: (props) => <MainHeader title="Books" {...props} />,
+          header: (props) => <MainHeader title="Book Groups" {...props} />,
         }}
       />
       <Stack.Screen
@@ -143,6 +159,20 @@ const BookManStackNavigation = () => {
   );
 };
 
+const AddBookStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="Add Book Groups"
+        component={AddBookGroupScreen}
+        options={{
+          header: (props) => <MainHeader title="Add Book Group" {...props} />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const BorrowBookDashboardStackNavigation = () => {
   return (
     <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Borrowed Book Management">
@@ -157,4 +187,65 @@ const BorrowBookDashboardStackNavigation = () => {
   );
 };
 
-export { ReaderManStackNavigation, BookManStackNavigation, BorrowBookDashboardStackNavigation };
+const AddBorrowBookStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Select Borrower">
+      <Stack.Screen
+        name="Select Borrower"
+        component={SelectBorrowerScreen}
+        options={{
+          header: (props) => <MainHeader title="Select Borrower" {...props} />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Select Book Group"
+        component={SelectBookGroupScreen}
+        options={{
+          header: (props) => <MainHeader title="Select Book Group" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Select Borrowed Book"
+        component={SelectBorrowedBookScreen}
+        options={{
+          header: (props) => <MainHeader title="Select Book" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrow Book"
+        component={AddBorrowBookScreen}
+        options={{
+          header: (props) => <MainHeader title="Borrow Book" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Book Group Search Result"
+        component={BookGroupSearchResult}
+        options={{
+          header: (props) => <MainHeader title="Book Group Search Result" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Book Search Result"
+        component={BookSearchResult}
+        options={{
+          header: (props) => <MainHeader title="Book Search Result" {...props} is_stack />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export {
+  ReaderManStackNavigation,
+  AddReaderStackNavigation,
+  BookManStackNavigation,
+  BorrowBookDashboardStackNavigation,
+  AddBookStackNavigation,
+  AddBorrowBookStackNavigation,
+};

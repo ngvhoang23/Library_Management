@@ -23,17 +23,9 @@ function BorrowedBookManDashboard({ navigation }) {
             headers: { Authorization: `Bearer ${access_token}` },
           };
           axios
-            .get(`http://10.0.2.2:5000/books/borrowed-books`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/`, config)
             .then((result) => {
-              console.log(result.data);
-              setBorrowedBooks([
-                ...result.data,
-                ...result.data,
-                ...result.data,
-                ...result.data,
-                ...result.data,
-                ...result.data,
-              ]);
+              setBorrowedBooks([...result.data]);
             })
             .catch((error) => {
               console.log(error);
@@ -61,29 +53,6 @@ function BorrowedBookManDashboard({ navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
-
-      {/* <FlatList
-        contentContainerStyle={{
-          flexDirection: "column",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
-        }}
-        style={styles.borrowedList}
-        numColumns={1}
-        keyExtractor={(item, id) => id}
-        data={borrowedBooks}
-        renderItem={({ item }) => (
-          <BorrowedBookItem
-            _style={[styles.bookItem]}
-            data={item}
-            onPress={() =>
-              navigation.navigate("Book Group Detail", {
-                book_info: item,
-              })
-            }
-          />
-        )}
-      /> */}
 
       <ScrollView>
         <View style={styles.borrowedList}>
