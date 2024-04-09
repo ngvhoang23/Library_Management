@@ -16,11 +16,24 @@ import EditBookScreen from "../../screens/EmployeeScreens/EditBookScreen";
 import AddBookScreen from "../../screens/EmployeeScreens/AddBookScreen";
 import BookGroupSearchResult from "../../screens/EmployeeScreens/BookGroupSearchResult";
 import BookSearchResult from "../../screens/EmployeeScreens/BookSearchResult";
-import BorrowedBookManDashboard from "../../screens/EmployeeScreens/BorrowedBookManDashboard";
 import SelectBorrowerScreen from "../../screens/EmployeeScreens/SelectBorrowerScreen";
 import AddBorrowBookScreen from "../../screens/EmployeeScreens/AddBorrowBookScreen";
 import SelectBookGroupScreen from "../../screens/EmployeeScreens/SelectBookGroupScreen";
 import SelectBorrowedBookScreen from "../../screens/EmployeeScreens/SelectBorrowedBookScreen";
+import BorrowingBooksByBorrowersScreen from "../../screens/EmployeeScreens/BorrowingBooksByBorrowersScreen";
+import BorrowingBookDetailScreen from "../../screens/EmployeeScreens/BorrowingBookDetailScreen";
+import BorrowersManDashboard from "../../screens/EmployeeScreens/BorrowersManDashboard";
+import BorrowersSearchResult from "../../screens/EmployeeScreens/BorrowersSearchResult";
+import BorrowingBookByBorrowerSearchResult from "../../screens/EmployeeScreens/BorrowingBookByBorrowerSearchResult";
+import BorrowingReaderSearchResult from "../../screens/EmployeeScreens/BorrowingReaderSearchResult";
+import BookGroupToBorrowSearchResult from "../../screens/EmployeeScreens/BookGroupToBorrowSearchResult";
+import BookToBorrowSearchResult from "../../screens/EmployeeScreens/BookToBorrowSearchResult";
+import BorrowedBookManDashBoard from "../../screens/EmployeeScreens/BorrowedBookManDashBoard";
+import FineManDashBoard from "../../screens/EmployeeScreens/FineManDashBoard";
+import BorrowingBookSearchResult from "../../screens/EmployeeScreens/BorrowingBookSearchResult";
+import FineDetailScreen from "../../screens/EmployeeScreens/FineDetailScreen";
+import OverdueBookListScreen from "../../screens/EmployeeScreens/OverdueBookListScreen";
+import FineSearchResult from "../../screens/EmployeeScreens/FineSearchResult";
 
 const Stack = createStackNavigator();
 
@@ -173,14 +186,46 @@ const AddBookStackNavigation = () => {
   );
 };
 
-const BorrowBookDashboardStackNavigation = () => {
+const BorrowersManagementDashboardStackNavigation = () => {
   return (
-    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Borrowed Book Management">
+    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Borrowers Management">
       <Stack.Screen
-        name="Borrowed Book Management"
-        component={BorrowedBookManDashboard}
+        name="Borrowers Management"
+        component={BorrowersManDashboard}
         options={{
-          header: (props) => <MainHeader title="Borrowed Book Management" {...props} />,
+          header: (props) => <MainHeader title="Borrowers Management" {...props} />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrowing Books"
+        component={BorrowingBooksByBorrowersScreen}
+        options={{
+          header: (props) => <MainHeader title="Borrowing Books" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrowing Book Detail"
+        component={BorrowingBookDetailScreen}
+        options={{
+          header: (props) => <MainHeader title="Borrowing Book Detail" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrowers Search Result"
+        component={BorrowingReaderSearchResult}
+        options={{
+          header: (props) => <MainHeader title="Borrowers Search Result" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrowing Books Search Result"
+        component={BorrowingBookByBorrowerSearchResult}
+        options={{
+          header: (props) => <MainHeader title="Books Search Result" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -223,18 +268,94 @@ const AddBorrowBookStackNavigation = () => {
       />
 
       <Stack.Screen
-        name="Book Group Search Result"
-        component={BookGroupSearchResult}
+        name="Borrowers Search Result"
+        component={BorrowersSearchResult}
         options={{
-          header: (props) => <MainHeader title="Book Group Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Borrowers Search Result" {...props} is_stack />,
         }}
       />
 
       <Stack.Screen
-        name="Book Search Result"
-        component={BookSearchResult}
+        name="Book Group To Borrow Search Result"
+        component={BookGroupToBorrowSearchResult}
         options={{
-          header: (props) => <MainHeader title="Book Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Book Groups Search Result" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Book To Borrow Search Result"
+        component={BookToBorrowSearchResult}
+        options={{
+          header: (props) => <MainHeader title="Books Search Result" {...props} is_stack />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const BorrowedBookManStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="Borrowed Books"
+        component={BorrowedBookManDashBoard}
+        options={{
+          header: (props) => <MainHeader title="Borrowed Books" {...props} />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrowing Book Detail"
+        component={BorrowingBookDetailScreen}
+        options={{
+          header: (props) => <MainHeader title="Borrowing Book Detail" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrowing Books Search Result"
+        component={BorrowingBookSearchResult}
+        options={{
+          header: (props) => <MainHeader title="Books Search Result" {...props} is_stack />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const FineManStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="Fine"
+        component={FineManDashBoard}
+        options={{
+          header: (props) => <MainHeader title="Fine" {...props} />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Fine Detail"
+        component={FineDetailScreen}
+        options={{
+          header: (props) => <MainHeader title="Fine Detail" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Overdue Books Detail"
+        component={OverdueBookListScreen}
+        options={{
+          header: (props) => <MainHeader title="Overdue Books" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Fine Search Result"
+        component={FineSearchResult}
+        options={{
+          header: (props) => <MainHeader title="Fine Search Result" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -245,7 +366,9 @@ export {
   ReaderManStackNavigation,
   AddReaderStackNavigation,
   BookManStackNavigation,
-  BorrowBookDashboardStackNavigation,
+  BorrowersManagementDashboardStackNavigation,
   AddBookStackNavigation,
   AddBorrowBookStackNavigation,
+  BorrowedBookManStackNavigation,
+  FineManStackNavigation,
 };

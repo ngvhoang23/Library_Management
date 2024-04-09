@@ -1,6 +1,7 @@
 import { ActivityIndicator, Button, Modal, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useEffect, useRef } from "react";
+import { normalize } from "../defined_function";
 
 function AlertModal({ visible, isSuccess, onClose }) {
   const timeoutRef = useRef();
@@ -42,11 +43,11 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    margin: 20,
-    width: 200,
-    height: 70,
+    margin: normalize(20),
+    width: normalize(140),
+    height: normalize(50),
     backgroundColor: "white",
-    borderRadius: 5,
+    borderRadius: normalize(5),
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -61,12 +62,12 @@ const styles = StyleSheet.create({
   },
 
   modalText: {
-    marginVertical: 15,
+    marginVertical: normalize(15),
     textAlign: "center",
-    fontSize: 16,
-    marginLeft: 15,
+    fontSize: normalize(16),
+    marginLeft: normalize(15),
     fontFamily: "nunito-medium",
-    letterSpacing: 4,
+    letterSpacing: normalize(4),
   },
 });
 

@@ -18,8 +18,8 @@ const scale = SCREEN_WIDTH / 320;
 
 function normalize(size) {
   const newSize = size * scale;
-
-  return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
+  const value = Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
+  return value * 1.1;
 }
 
 function addDays(date, days) {

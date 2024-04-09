@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ScrollView, StatusBar } from "react-native";
 import { globalStyles } from "../../styles/global";
 import axios from "axios";
 import FlatButton from "../../shared/FlatButton";

@@ -97,9 +97,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   readerItem: {
-    width: "40%",
+    width: "44%",
     padding: normalize(10),
-    margin: 10,
+    margin: normalize(10),
     borderRadius: normalize(10),
   },
 });

@@ -1,4 +1,5 @@
 import { ActivityIndicator, Button, Modal, StyleSheet, Text, View } from "react-native";
+import { normalize } from "../defined_function";
 
 function LoadingModal({ visible }) {
   return (
@@ -22,11 +23,11 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    margin: 20,
-    width: 200,
-    height: 70,
+    margin: normalize(20),
+    width: normalize(150),
+    height: normalize(50),
     backgroundColor: "white",
-    borderRadius: 5,
+    borderRadius: normalize(5),
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -41,12 +42,12 @@ const styles = StyleSheet.create({
   },
 
   modalText: {
-    marginVertical: 15,
+    marginVertical: normalize(15),
     textAlign: "center",
-    fontSize: 16,
-    marginLeft: 15,
+    fontSize: normalize(14),
+    marginLeft: normalize(15),
     fontFamily: "nunito-medium",
-    letterSpacing: 4,
+    letterSpacing: normalize(4),
   },
 });
 

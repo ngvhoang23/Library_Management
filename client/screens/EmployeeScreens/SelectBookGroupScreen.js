@@ -13,6 +13,7 @@ import BookItem from "../../components/BookItem";
 
 function SelectBookGroupScreen({ route, navigation }) {
   const { reader_info } = route.params;
+  const { reader_type } = reader_info;
   const [books, setBooks] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
@@ -24,9 +25,12 @@ function SelectBookGroupScreen({ route, navigation }) {
         .then((access_token) => {
           const config = {
             headers: { Authorization: `Bearer ${access_token}` },
+            params: {
+              reader_type,
+            },
           };
           axios
-            .get(`http://10.0.2.2:5000/books/book-groups`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/book-groups`, config)
             .then((result) => {
               setBooks([...result.data]);
             })
@@ -41,9 +45,10 @@ function SelectBookGroupScreen({ route, navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    navigation.navigate("Book Group Search Result", {
+    navigation.navigate("Book Group To Borrow Search Result", {
       search_value: searchValue,
-      navigate_to: "Select Borrowed Book",
+      reader_type,
+      reader_info,
       placeholder: "search books by name...",
     });
   };
@@ -66,12 +71,16 @@ function SelectBookGroupScreen({ route, navigation }) {
                 key={book.book_detail_id}
                 _style={[styles.bookItem]}
                 data={book}
-                onPress={() =>
+                remaining={book.remaining}
+                onPress={() => {
+                  if (book.remaining <= 0) {
+                    alert("There are no books available for borrowing");
+                  }
                   navigation.navigate("Select Borrowed Book", {
                     book_group_info: book,
                     reader_info,
-                  })
-                }
+                  });
+                }}
               />
             );
           })}

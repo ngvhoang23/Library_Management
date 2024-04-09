@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
-import { globalStyles } from "../../styles/global";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, Dimensions, ScrollView } from "react-native";
 import axios from "axios";
-import EmployeeItem from "../../components/EmployeeItem";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
-import ReaderItem from "../../components/ReaderItem";
 import SearchBar from "../../components/SearchBar";
-import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
-import { ScrollView } from "react-native-gesture-handler";
-import BookItem from "../../components/BookItem";
+import { SCREEN_HEIGHT, SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
+import BorrowedBookItem from "../../components/BorrowedBookItem";
+import { AntDesign } from "@expo/vector-icons";
+import BorrowerItem from "../../components/BorrowerItem";
 
-function SelectBorrowedBookScreen({ route, navigation }) {
-  const { reader_info, book_group_info } = route.params;
-  const { book_detail_id } = book_group_info;
-  const [books, setBooks] = useState([]);
+function BorrowersManDashboard({ navigation }) {
+  const [borrowers, setBorrowers] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
+
   useEffect(() => {
     setSearchValue("");
 
@@ -25,14 +22,11 @@ function SelectBorrowedBookScreen({ route, navigation }) {
         .then((access_token) => {
           const config = {
             headers: { Authorization: `Bearer ${access_token}` },
-            params: {
-              book_detail_id,
-            },
           };
           axios
-            .get(`http://10.0.2.2:5000/borrowed-books/available-books/${book_detail_id}`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/borrowing-readers`, config)
             .then((result) => {
-              setBooks([...result.data]);
+              setBorrowers([...result.data]);
             })
             .catch((error) => {
               console.log(error);
@@ -45,11 +39,9 @@ function SelectBorrowedBookScreen({ route, navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    navigation.navigate("Book To Borrow Search Result", {
+    navigation.navigate("Borrowers Search Result", {
       search_value: searchValue,
-      book_detail_id,
-      reader_info,
-      placeholder: "search books by positionaa...",
+      placeholder: "search borrowers...",
     });
   };
 
@@ -57,25 +49,24 @@ function SelectBorrowedBookScreen({ route, navigation }) {
     <View style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search books by position..."
+        placeholder="search borrowers..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
 
       <ScrollView>
-        <View style={styles.bookList}>
-          {books.map((book, index) => {
+        <View style={styles.borrowerList}>
+          {borrowers.map((borrower, index) => {
             return (
-              <BookItem
-                key={book.book_id}
-                _style={[styles.bookItem]}
-                have_position
-                data={book}
+              <BorrowerItem
+                key={borrower?.user_id}
+                _style={[styles.borrowerItem]}
+                data={borrower}
+                borrowing_books={borrower.borrowed_books || 0}
                 onPress={() =>
-                  navigation.navigate("Borrow Book", {
-                    book_info: book,
-                    reader_info,
+                  navigation.navigate("Borrowing Books", {
+                    borrower_info: borrower,
                   })
                 }
               />
@@ -90,11 +81,14 @@ function SelectBorrowedBookScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
+    flex: 1,
     flexDirection: "column",
-    justifyContent: "flex-end",
+    justifyContent: "center",
     alignItems: "center",
+    position: "relative",
   },
-  bookList: {
+
+  borrowerList: {
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
@@ -102,15 +96,14 @@ const styles = StyleSheet.create({
     overflow: "scroll",
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
-    flexWrap: "wrap",
+    alignItems: "center",
   },
-  bookItem: {
+  borrowerItem: {
     width: "100%",
     padding: normalize(10),
     borderRadius: normalize(10),
-    marginBottom: normalize(10),
+    marginBottom: normalize(14),
   },
 });
 
-export default SelectBorrowedBookScreen;
+export default BorrowersManDashboard;

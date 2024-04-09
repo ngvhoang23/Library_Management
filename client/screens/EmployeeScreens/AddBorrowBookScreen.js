@@ -108,6 +108,31 @@ function AddBorrowBookScreen({ route, navigation }) {
 
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
+        return new Promise((resolve, reject) => {
+          const config = {
+            params: {
+              reader_id,
+            },
+            headers: { Authorization: `Bearer ${access_token}` },
+          };
+          axios
+            .get(`http://10.0.2.2:5000/borrowed-books/checking-borrowing-conditions`, config)
+            .then((result) => {
+              if (result?.data?.status === 200) {
+                resolve(access_token);
+              } else {
+                setResultStatus({ isSuccess: 0, visible: true });
+                reject("Reader is not eligible to borrow");
+                alert("Reader is not eligible to borrow");
+                return;
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      })
+      .then((access_token) => {
         const configurations = {
           method: "POST",
           url: `http://10.0.2.2:5000/borrowed-books/`,
@@ -134,6 +159,8 @@ function AddBorrowBookScreen({ route, navigation }) {
           });
       })
       .catch((err) => {
+        setIsLoading(false);
+        setResultStatus({ isSuccess: 0, visible: true });
         console.log(err);
       });
   };
@@ -239,7 +266,7 @@ function AddBorrowBookScreen({ route, navigation }) {
               _styles={styles.submitBtn}
               onPress={props.handleSubmit}
               text="submit"
-              fontSize={normalize(12)}
+              fontSize={normalize(10)}
             />
           </TouchableOpacity>
         )}
@@ -336,6 +363,7 @@ const styles = StyleSheet.create({
 
   userInfoContainer: {
     marginBottom: normalize(20),
+    marginTop: normalize(20),
   },
 });
 

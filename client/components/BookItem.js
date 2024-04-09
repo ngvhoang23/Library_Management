@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { StyleSheet, View, Text, Button, Image, TouchableOpacity } from "react-native";
 import { normalize } from "../defined_function";
 
-function BookItem({ _style, data, onPress, have_position, status }) {
+function BookItem({ _style, data, onPress, have_position, status, remaining, overdue, in_progess }) {
   const { position, book_name, cover_photo, author_name } = data;
 
   useEffect(() => {}, []);
@@ -45,6 +45,15 @@ function BookItem({ _style, data, onPress, have_position, status }) {
               Position: {renderPosition()}
             </Text>
           )}
+
+          {remaining != null && remaining != undefined && (
+            <Text
+              style={[styles.remaining, { color: remaining > 0 ? "#6ec531" : "#f02849" }]}
+            >{`Remaining: ${remaining}`}</Text>
+          )}
+
+          {overdue && <Text style={[styles.overdue, { color: "#f02849" }]}>{`Overdue`}</Text>}
+          {in_progess && <Text style={[styles.inProgess, { color: "#6ec531" }]}>{`in progess`}</Text>}
         </View>
       </View>
     </TouchableOpacity>
@@ -84,8 +93,7 @@ const styles = StyleSheet.create({
     width: "90%",
     fontFamily: "nunito-medium",
     color: "#676768",
-
-    fontSize: normalize(11),
+    fontSize: normalize(12),
   },
   authorName: {
     fontFamily: "nunito-medium",
@@ -98,8 +106,45 @@ const styles = StyleSheet.create({
     fontFamily: "nunito-medium",
     color: "#676768",
     marginTop: normalize(6),
-    fontSize: normalize(9),
+    fontSize: normalize(10),
   },
+
+  remaining: {
+    fontFamily: "nunito-medium",
+    marginTop: normalize(6),
+    fontSize: normalize(10),
+  },
+
+  overdue: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    position: "absolute",
+    bottom: normalize(-10),
+    right: normalize(10),
+    borderWidth: 1,
+    borderColor: "#f02849",
+    borderStyle: "solid",
+    borderRadius: normalize(6),
+    paddingHorizontal: normalize(6),
+    paddingVertical: normalize(4),
+    backgroundColor: "rgba(240, 40, 73, 0.1)",
+  },
+
+  inProgess: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    position: "absolute",
+    bottom: normalize(-20),
+    right: normalize(10),
+    borderWidth: 1,
+    borderColor: "#6ec531",
+    borderStyle: "solid",
+    borderRadius: normalize(6),
+    paddingHorizontal: normalize(8),
+    paddingVertical: normalize(6),
+    backgroundColor: "rgba(110, 197, 49, 0.1)",
+  },
+
   status: {
     fontFamily: "nunito-medium",
     color: "#676768",

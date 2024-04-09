@@ -17,7 +17,6 @@ function BriefUserInfoPreview({ _styles, full_name, phone_num, avatar, onPress }
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: normalize(30),
     width: "90%",
     borderWidth: 1,
     borderStyle: "dashed",

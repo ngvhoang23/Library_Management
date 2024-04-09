@@ -79,7 +79,7 @@ function AddReaderScreen({ navigation }) {
     }
   };
 
-  const handleSubmit = (readerInfo) => {
+  const trySubmit = (readerInfo) => {
     const {
       user_name,
       password,
@@ -121,37 +121,67 @@ function AddReaderScreen({ navigation }) {
     first_name && formData.append("first_name", first_name.trim());
     last_name && formData.append("last_name", last_name.trim());
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "POST",
-          url: `http://10.0.2.2:5000/users/reader`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "POST",
+            url: `http://10.0.2.2:5000/users/reader`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-        axios(configurations)
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+              // setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              // setResultStatus({ isSuccess: 0, visible: true });
+              if (err?.response?.data?.code === "ER_DUP_ENTRY") {
+                alert("Duplicate User Name");
+                setIsLoading(false);
+              } else {
+                reject(err);
+              }
+              console.log("err", err);
+            });
+          // .finally((result) => {
+          //   setIsLoading(false);
+          // });
+        })
+        .catch((err) => {
+          reject(err);
+          console.log(err);
+        });
+    });
+  };
+
+  const handleSubmit = (readerInfo, resetForm) => {
+    trySubmit(readerInfo)
+      .then((result) => {
+        resetForm();
+        setResultStatus({ isSuccess: 1, visible: true });
+      })
+      .catch((err) => {
+        trySubmit(readerInfo)
           .then((result) => {
+            resetForm();
             setResultStatus({ isSuccess: 1, visible: true });
-            navigation.navigate("Readers");
           })
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
-            if (err?.response?.data?.code === "ER_DUP_ENTRY") {
-              alert("Duplicate User Name");
-            }
-            console.log("err", err);
           })
           .finally((result) => {
             setIsLoading(false);
           });
       })
-      .catch((err) => {
-        console.log(err);
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -173,8 +203,11 @@ function AddReaderScreen({ navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
-          handleSubmit(values);
+          const resetForm = () => {
+            setAvatar();
+            actions.resetForm();
+          };
+          handleSubmit(values, resetForm);
         }}
       >
         {(props) => (
@@ -315,7 +348,7 @@ function AddReaderScreen({ navigation }) {
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
                 text="submit"
-                fontSize={normalize(12)}
+                fontSize={normalize(10)}
               />
             </ScrollView>
           </TouchableOpacity>

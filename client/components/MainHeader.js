@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, ImageBackground, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Image, ImageBackground, Dimensions, StatusBar, Pressable } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SimpleLineIcons, AntDesign } from "@expo/vector-icons";
@@ -13,15 +13,13 @@ function MainHeader({ title, navigation, is_stack, back_key }) {
   return (
     <View source={require("../assets/images/header_bg.png")} style={styles.header}>
       {is_stack ? (
-        <AntDesign
-          name="left"
-          size={normalize(16)}
-          color="black"
-          style={styles.icon}
-          onPress={() => navigation.goBack()}
-        />
+        <Pressable onPress={() => navigation.goBack()} style={styles.icon}>
+          <AntDesign name="left" size={normalize(16)} color="#fff" />
+        </Pressable>
       ) : (
-        <SimpleLineIcons name="menu" size={normalize(14)} onPress={openMenu} style={styles.icon} />
+        <Pressable onPress={openMenu} style={styles.icon}>
+          <SimpleLineIcons name="menu" size={normalize(15)} color="#fff" />
+        </Pressable>
       )}
       <View style={styles.headerTitle}>
         <Text style={styles.headerText}>{title}</Text>
@@ -33,8 +31,8 @@ function MainHeader({ title, navigation, is_stack, back_key }) {
 const styles = StyleSheet.create({
   header: {
     width: Dimensions.get("window").width,
-    height: normalize(52),
-    paddingTop: normalize(14),
+    height: normalize(54),
+    paddingTop: StatusBar.currentHeight + normalize(2),
     paddingBottom: normalize(6),
     flexDirection: "row",
     alignItems: "center",
@@ -49,11 +47,14 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   icon: {
-    paddingTop: normalize(14),
+    paddingTop: StatusBar.currentHeight + normalize(2),
     paddingBottom: normalize(6),
     position: "absolute",
-    left: normalize(16),
+    left: normalize(8),
     color: "#fff",
+    paddingHorizontal: normalize(14),
+    alignItems: "center",
+    justifyContent: "center",
   },
   headerTitle: {
     flexDirection: "row",

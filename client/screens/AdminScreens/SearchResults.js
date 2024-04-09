@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
 
   empItem: {
-    width: "40%",
+    width: "44%",
     padding: normalize(10),
     margin: normalize(10),
     borderRadius: normalize(10),

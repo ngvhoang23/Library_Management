@@ -39,7 +39,7 @@ function InputItem({
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 0.6,
     borderColor: "#ced0d4",
     borderRadius: 4,
   },

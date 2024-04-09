@@ -7,7 +7,9 @@ function EmployeeItem({ _style, data, onPress }) {
   return (
     <TouchableOpacity style={[styles.wrapper, _style]} activeOpacity={0.6} onPress={onPress}>
       <Image style={styles.empAvatar} source={{ uri: `http://10.0.2.2:5000${user_avatar}` }} />
-      <Text style={styles.empName}>{full_name}</Text>
+      <Text style={styles.empName} numberOfLines={1}>
+        {full_name}
+      </Text>
       <Text style={styles.role}>{role === "emp" ? "Staff" : role === "reader" ? "Reader" : "Admin"}</Text>
     </TouchableOpacity>
   );

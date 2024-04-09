@@ -7,17 +7,17 @@ import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
 import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
-import BookItem from "../../components/BookItem";
 import { ScrollView } from "react-native-gesture-handler";
+import ReaderItem from "../../components/ReaderItem";
 
-function BookSearchResult({ route, navigation }) {
-  const { search_value, book_detail_id, placeholder } = route.params;
+function BorrowersSearchResult({ route, navigation }) {
+  const { search_value, placeholder } = route.params;
 
   const [results, setResults] = useState([]);
   const [searchValue, setSearchValue] = useState(search_value);
   useEffect(() => {
     handleSearch(search_value);
-  }, []);
+  }, [search_value]);
 
   const handleSearch = (search_value) => {
     _retrieveData("ACCESS_TOKEN")
@@ -25,14 +25,13 @@ function BookSearchResult({ route, navigation }) {
         const config = {
           params: {
             search_value,
-            book_detail_id,
           },
           headers: { Authorization: `Bearer ${access_token}` },
         };
 
         if (search_value) {
           axios
-            .get(`http://10.0.2.2:5000/books/searching/${search_value}`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/borrowers/searching/${search_value}`, config)
             .then((result) => {
               setResults([...result.data]);
             })
@@ -55,22 +54,25 @@ function BookSearchResult({ route, navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={() => handleSearch(searchValue)}
       />
-
-      <ScrollView>
+      <ScrollView style={styles.resultContainer}>
         {results?.length > 0 ? (
-          <View style={styles.bookList}>
+          <View style={styles.borrowerList}>
             {results.map((item, index) => {
               return (
-                <BookItem
-                  key={item.book_id}
-                  _style={[styles.bookItem]}
-                  have_position
+                <ReaderItem
+                  key={index}
+                  _style={[styles.readerItem]}
+                  borrowed_books={item.borrowed_books || 0}
                   data={item}
-                  onPress={() =>
-                    navigation.navigate(`Edit Book`, {
-                      book_info: item,
-                    })
-                  }
+                  onPress={() => {
+                    if (item.borrowed_books >= 4) {
+                      alert("Cannot borrow because the reader has borrowed 4 books within 4 days");
+                      return;
+                    }
+                    navigation.navigate("Select Book Group", {
+                      reader_info: item,
+                    });
+                  }}
                 />
               );
             })}
@@ -93,7 +95,8 @@ const styles = StyleSheet.create({
   searchBar: {
     width: "100%",
   },
-  bookList: {
+
+  borrowerList: {
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
@@ -105,11 +108,11 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
 
-  bookItem: {
-    width: "100%",
+  readerItem: {
+    width: "44%",
     padding: normalize(10),
-    marginBottom: normalize(10),
-    borderRadius: normalize(6),
+    margin: normalize(10),
+    borderRadius: normalize(10),
   },
 
   messageText: {
@@ -121,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookSearchResult;
+export default BorrowersSearchResult;

@@ -56,7 +56,6 @@ class LoginController {
                     message: "log in failed",
                   });
                 }
-                console.log(result);
                 res.status(200).send({
                   message: "Login Successful",
                   access_token,

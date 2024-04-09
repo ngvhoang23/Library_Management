@@ -39,10 +39,9 @@ function SelectBorrowerScreen({ navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    navigation.navigate("Search Results", {
+    navigation.navigate("Borrowers Search Result", {
       search_value: searchValue,
-      placeholder: "search readers...",
-      type: "readers",
+      placeholder: "search borrower...",
     });
   };
 
@@ -50,7 +49,7 @@ function SelectBorrowerScreen({ navigation }) {
     <View style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search readers..."
+        placeholder="search borrower..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
@@ -63,13 +62,21 @@ function SelectBorrowerScreen({ navigation }) {
               <ReaderItem
                 key={index}
                 _style={[styles.readerItem]}
-                borrowed_books={1}
+                borrowed_books={reader.borrowed_books || 0}
                 data={reader}
-                onPress={() =>
+                onPress={() => {
+                  if (reader.borrowed_books >= 4) {
+                    alert("Cannot borrow because the reader has borrowed 4 books within 4 days");
+                    return;
+                  }
+                  if (new Date(reader.expire_date) <= new Date()) {
+                    alert("Reader card has expired");
+                    return;
+                  }
                   navigation.navigate("Select Book Group", {
                     reader_info: reader,
-                  })
-                }
+                  });
+                }}
               />
             );
           })}
@@ -98,9 +105,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   readerItem: {
-    width: "40%",
+    width: "44%",
     padding: normalize(10),
-    margin: 10,
+    margin: normalize(10),
     borderRadius: normalize(10),
   },
 });

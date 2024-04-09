@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, Dimensions, ScrollView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
+import { globalStyles } from "../../styles/global";
 import axios from "axios";
+import EmployeeItem from "../../components/EmployeeItem";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
+import ReaderItem from "../../components/ReaderItem";
 import SearchBar from "../../components/SearchBar";
-import { SCREEN_HEIGHT, SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
-import BorrowedBookItem from "../../components/BorrowedBookItem";
-import { AntDesign } from "@expo/vector-icons";
+import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
+import { ScrollView } from "react-native-gesture-handler";
+import BookItem from "../../components/BookItem";
 
-function BorrowedBookManDashboard({ navigation }) {
-  const [borrowedBooks, setBorrowedBooks] = useState([]);
+function BorrowedBookManDashBoard({ route, navigation }) {
+  const [books, setBooks] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
 
@@ -23,9 +26,9 @@ function BorrowedBookManDashboard({ navigation }) {
             headers: { Authorization: `Bearer ${access_token}` },
           };
           axios
-            .get(`http://10.0.2.2:5000/borrowed-books/`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/borrowing-books/`, config)
             .then((result) => {
-              setBorrowedBooks([...result.data]);
+              setBooks([...result.data]);
             })
             .catch((error) => {
               console.log(error);
@@ -38,33 +41,36 @@ function BorrowedBookManDashboard({ navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    // navigation.navigate("Book Group Search Result", {
-    //   search_value: searchValue,
-    //   placeholder: "search books...",
-    // });
+    navigation.navigate("Borrowing Books Search Result", {
+      search_value: searchValue,
+      placeholder: "search books by position...",
+    });
   };
 
   return (
     <View style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search books..."
+        placeholder="search books by position..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
 
       <ScrollView>
-        <View style={styles.borrowedList}>
-          {borrowedBooks.map((borrowedBook, index) => {
+        <View style={styles.bookList}>
+          {books.map((book, index) => {
             return (
-              <BorrowedBookItem
-                key={index}
+              <BookItem
+                key={book.book_id}
                 _style={[styles.bookItem]}
-                data={borrowedBook}
+                have_position
+                in_progess={new Date() < new Date(book.return_date)}
+                overdue={new Date() >= new Date(book.return_date)}
+                data={book}
                 onPress={() =>
-                  navigation.navigate("Book Group Detail", {
-                    book_info: borrowedBook,
+                  navigation.navigate("Borrowing Book Detail", {
+                    borrowing_book_info: book,
                   })
                 }
               />
@@ -79,29 +85,30 @@ function BorrowedBookManDashboard({ navigation }) {
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
-    flex: 1,
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
-    position: "relative",
   },
-
-  borrowedList: {
+  bookList: {
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
-    paddingHorizontal: normalize(6),
+    paddingHorizontal: normalize(14),
     overflow: "scroll",
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "center",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
   },
   bookItem: {
     width: "100%",
-    padding: normalize(10),
-    borderRadius: normalize(10),
-    marginBottom: normalize(14),
+    paddingTop: normalize(10),
+    paddingBottom: normalize(20),
+    marginBottom: normalize(10),
+    borderBottomWidth: 0.5,
+    borderColor: "#ced0d4",
+    borderStyle: "solid",
   },
 });
 
-export default BorrowedBookManDashboard;
+export default BorrowedBookManDashBoard;

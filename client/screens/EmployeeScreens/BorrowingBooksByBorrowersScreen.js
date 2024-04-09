@@ -11,12 +11,13 @@ import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import { ScrollView } from "react-native-gesture-handler";
 import BookItem from "../../components/BookItem";
 
-function SelectBorrowedBookScreen({ route, navigation }) {
-  const { reader_info, book_group_info } = route.params;
-  const { book_detail_id } = book_group_info;
+function BorrowingBooksByBorrowersScreen({ route, navigation }) {
+  const { borrower_info } = route.params;
+  const { user_id, full_name, phone_num, user_avatar } = borrower_info;
   const [books, setBooks] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
+
   useEffect(() => {
     setSearchValue("");
 
@@ -26,11 +27,11 @@ function SelectBorrowedBookScreen({ route, navigation }) {
           const config = {
             headers: { Authorization: `Bearer ${access_token}` },
             params: {
-              book_detail_id,
+              borrower_id: user_id,
             },
           };
           axios
-            .get(`http://10.0.2.2:5000/borrowed-books/available-books/${book_detail_id}`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/borrowing-books/${user_id}`, config)
             .then((result) => {
               setBooks([...result.data]);
             })
@@ -45,11 +46,10 @@ function SelectBorrowedBookScreen({ route, navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    navigation.navigate("Book To Borrow Search Result", {
+    navigation.navigate("Borrowing Books Search Result", {
       search_value: searchValue,
-      book_detail_id,
-      reader_info,
-      placeholder: "search books by positionaa...",
+      borrower_info: borrower_info,
+      placeholder: "search books by position...",
     });
   };
 
@@ -71,11 +71,16 @@ function SelectBorrowedBookScreen({ route, navigation }) {
                 key={book.book_id}
                 _style={[styles.bookItem]}
                 have_position
+                overdue={new Date() > new Date(book.return_date)}
                 data={book}
                 onPress={() =>
-                  navigation.navigate("Borrow Book", {
-                    book_info: book,
-                    reader_info,
+                  navigation.navigate("Borrowing Book Detail", {
+                    borrowing_book_info: {
+                      ...book,
+                      reader_name: full_name,
+                      reader_phone_num: phone_num,
+                      reader_avatar: user_avatar,
+                    },
                   })
                 }
               />
@@ -98,7 +103,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
-    paddingHorizontal: normalize(6),
+    paddingHorizontal: normalize(14),
     overflow: "scroll",
     flexDirection: "column",
     justifyContent: "flex-start",
@@ -107,10 +112,13 @@ const styles = StyleSheet.create({
   },
   bookItem: {
     width: "100%",
-    padding: normalize(10),
-    borderRadius: normalize(10),
+    paddingTop: normalize(10),
+    paddingBottom: normalize(20),
     marginBottom: normalize(10),
+    borderBottomWidth: 0.5,
+    borderColor: "#ced0d4",
+    borderStyle: "solid",
   },
 });
 
-export default SelectBorrowedBookScreen;
+export default BorrowingBooksByBorrowersScreen;

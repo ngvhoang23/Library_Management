@@ -81,7 +81,7 @@ function LogicWrapper() {
         </NavigationContainer>
       );
     }
-    if (auth === "emp") {
+    if (auth === "emp" || 1) {
       return (
         <NavigationContainer theme={MyTheme}>
           <EmployeeDrawerNavigator />

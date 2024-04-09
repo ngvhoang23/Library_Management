@@ -18,11 +18,13 @@ function ReaderItem({ _style, data, borrowed_books, onPress }) {
   return (
     <TouchableOpacity style={[styles.wrapper, _style]} activeOpacity={0.6} onPress={onPress}>
       <Image style={styles.empAvatar} source={{ uri: `http://10.0.2.2:5000${user_avatar}` }} />
-      <Text style={styles.empName}>{full_name}</Text>
+      <Text style={styles.empName} numberOfLines={1}>
+        {full_name}
+      </Text>
       <Text style={[styles.readerType]}>
         {reader_type === "student" ? "Student" : reader_type === "lecturer" ? "Lecturer" : ""}
       </Text>
-      {borrowed_books && (
+      {borrowed_books != null && (
         <Text style={[styles.borrowedBookQuantity, { color: borrowed_books >= 4 ? "#f02849" : "#1e74fd" }]}>
           borrowed books: {borrowed_books}
         </Text>

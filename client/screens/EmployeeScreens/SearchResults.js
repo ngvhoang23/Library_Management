@@ -82,20 +82,21 @@ function SearchResults({ route, navigation }) {
 
 const styles = StyleSheet.create({
   wrapper: {
+    width: "100%",
     flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "center",
   },
 
-  searchBar: {
-    width: "100%",
-  },
+  // searchBar: {
+  //   width: "100%",
+  // },
 
   empList: {
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
-    paddingHorizontal: normalize(6),
+    paddingHorizontal: normalize(0),
     overflow: "scroll",
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -104,9 +105,9 @@ const styles = StyleSheet.create({
   },
 
   empItem: {
-    width: "40%",
+    width: "44%",
     padding: normalize(10),
-    margin: normalize(10),
+    margin: normalize(0),
     borderRadius: normalize(10),
   },
 

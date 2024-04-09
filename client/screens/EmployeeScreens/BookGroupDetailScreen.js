@@ -15,7 +15,9 @@ import {
   AntDesign,
   FontAwesome6,
   EvilIcons,
+  SimpleLineIcons,
   Entypo,
+  Ionicons,
 } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -77,7 +79,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           lableTitle="Book name"
           value={book_name}
           multiline
-          icon={<Entypo name="open-book" size={normalize(18)} color="#949498" />}
+          icon={<Ionicons name="book-outline" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -86,7 +88,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Price"
           value={price?.toString()}
-          icon={<MaterialIcons name="price-check" size={normalize(18)} color="#949498" />}
+          icon={<MaterialIcons name="attach-money" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -95,7 +97,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Published Date"
           value={published_date ? new Date(published_date).toISOString().split("T")[0] : ""}
-          icon={<Entypo name="publish" size={normalize(18)} color="#949498" />}
+          icon={<Fontisto name="date" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -113,7 +115,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Publish company"
           value={publish_com}
-          icon={<Entypo name="publish" size={normalize(18)} color="#949498" />}
+          icon={<SimpleLineIcons name="cloud-upload" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -122,7 +124,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Author"
           value={author_name}
-          icon={<AntDesign name="user" size={normalize(18)} color="#949498" />}
+          icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -131,7 +133,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Category"
           value={category_name}
-          icon={<MaterialIcons name="type-specimen" size={normalize(18)} color="#949498" />}
+          icon={<MaterialIcons name="checklist-rtl" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
       </ScrollView>

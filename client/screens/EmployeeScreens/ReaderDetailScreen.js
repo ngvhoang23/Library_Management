@@ -12,7 +12,12 @@ import {
   Fontisto,
   FontAwesome5,
   MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome6,
+  EvilIcons,
+  SimpleLineIcons,
   Entypo,
+  Ionicons,
 } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -35,8 +40,10 @@ function ReaderDetailScreen({ route, navigation }) {
   useEffect(() => {
     if (new Date(expire_date) <= new Date()) {
       setStatus(0);
+    } else {
+      setStatus(1);
     }
-  }, [reader_info]);
+  }, [readerInfo, isFocused]);
 
   useEffect(() => {
     _retrieveData("ACCESS_TOKEN")
@@ -129,7 +136,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="User Name"
           value={user_name}
-          icon={<FontAwesome name="user-o" size={normalize(20)} color="#949498" />}
+          icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -138,7 +145,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Phone Number"
           value={phone_num}
-          icon={<Feather name="phone-call" size={normalize(20)} color="#949498" />}
+          icon={<AntDesign name="phone" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -147,7 +154,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Gender"
           value={gender ? "Male" : "Female"}
-          icon={<Fontisto name="transgender-alt" size={normalize(20)} color="#949498" />}
+          icon={<FontAwesome name="transgender" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -156,7 +163,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Reader type"
           value={reader_type === "lecturer" ? "Lecturer" : "Student"}
-          icon={<FontAwesome5 name="book-reader" size={normalize(20)} color="#949498" />}
+          icon={<Feather name="users" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -165,7 +172,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Birth Date"
           value={birth_date ? new Date(birth_date).toISOString().split("T")[0] : ""}
-          icon={<FontAwesome5 name="birthday-cake" size={normalize(20)} color="#949498" />}
+          icon={<Fontisto name="date" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -174,7 +181,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Start Date"
           value={created_at ? new Date(created_at).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(20)} color="#949498" />}
+          icon={<FontAwesome name="hourglass-1" size={normalize(16)} color="#6fa4f8" />}
           read_only
         />
 
@@ -183,7 +190,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="End Date"
           value={expire_date ? new Date(expire_date).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(20)} color="#949498" />}
+          icon={<FontAwesome name="hourglass-end" size={normalize(16)} color="#6fa4f8" />}
           read_only
         />
 
@@ -192,7 +199,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Email"
           value={email_address}
-          icon={<Fontisto name="email" size={normalize(20)} color="#949498" />}
+          icon={<Fontisto name="email" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -201,7 +208,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Address"
           value={address}
-          icon={<Entypo name="address" size={normalize(20)} color="#949498" />}
+          icon={<EvilIcons name="location" size={normalize(22)} color="#6fa4f8" />}
           read_only
         />
 
@@ -210,7 +217,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Full Name"
           value={full_name}
-          icon={<MaterialCommunityIcons name="smart-card-outline" size={normalize(20)} color="#949498" />}
+          icon={<MaterialIcons name="drive-file-rename-outline" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
       </ScrollView>

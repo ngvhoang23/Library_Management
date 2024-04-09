@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { normalize } from "../defined_function";
 
-function BriefBookInfoPreview({ _styles, book_name, author_name, position, cover_photo, onPress }) {
+function BriefBookInfoPreview({ _styles, book_name, author_name, position, cover_photo, overdue, onPress }) {
   const renderPosition = (oosition) => {
     return position
       ?.split("-")
@@ -25,8 +25,9 @@ function BriefBookInfoPreview({ _styles, book_name, author_name, position, cover
         <Text style={styles.bookName} numberOfLines={3}>
           {book_name}
         </Text>
-        <Text style={styles.authorName}>{author_name}</Text>
-        <Text style={styles.position}>Position: {renderPosition(position)}</Text>
+        {author_name && <Text style={styles.authorName}>{author_name}</Text>}
+        {position && <Text style={styles.position}>Position: {renderPosition(position)}</Text>}
+        {overdue && <Text style={styles.overdue}>Overdue</Text>}
       </View>
     </TouchableOpacity>
   );
@@ -73,6 +74,22 @@ const styles = StyleSheet.create({
     fontSize: normalize(9),
     letterSpacing: normalize(2),
     color: "#aaabaf",
+  },
+
+  overdue: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    position: "absolute",
+    bottom: normalize(0),
+    right: normalize(0),
+    borderWidth: 1,
+    borderColor: "#f02849",
+    borderStyle: "solid",
+    borderRadius: normalize(6),
+    paddingHorizontal: normalize(6),
+    paddingVertical: normalize(4),
+    backgroundColor: "rgba(240, 40, 73, 0.1)",
+    color: "#f02849",
   },
 
   avatarPreview: { width: normalize(70), height: normalize(70) },

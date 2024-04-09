@@ -66,7 +66,6 @@ function EditBookGroupScreen({ route, navigation }) {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("object");
     if (isFocused) {
       _retrieveData("ACCESS_TOKEN")
         .then((access_token) => {
@@ -285,7 +284,7 @@ function EditBookGroupScreen({ route, navigation }) {
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
                 text="submit"
-                fontSize={normalize(12)}
+                fontSize={normalize(10)}
               />
             </ScrollView>
           </TouchableOpacity>

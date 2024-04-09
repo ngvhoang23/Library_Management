@@ -88,7 +88,7 @@ function EditReaderScreen({ route, navigation }) {
     }
   };
 
-  const handleSubmit = (readerInfo) => {
+  const trySubmit = (readerInfo) => {
     const { phone_num, birth_date, email_address, gender, first_name, last_name, address } = readerInfo;
     setIsLoading(true);
     const formData = new FormData();
@@ -114,34 +114,58 @@ function EditReaderScreen({ route, navigation }) {
     first_name && formData.append("first_name", first_name.trim());
     last_name && formData.append("last_name", last_name.trim());
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "PUT",
-          url: `http://10.0.2.2:5000/users/reader`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "PUT",
+            url: `http://10.0.2.2:5000/users/reader`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-        axios(configurations)
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+              // setResultStatus({ isSuccess: 1, visible: true });
+              // navigation.goBack();
+            })
+            .catch((err) => {
+              reject(err);
+              // setResultStatus({ isSuccess: 0, visible: true });
+              console.log("err", err);
+            });
+          // .finally((result) => {
+          //   setIsLoading(false);
+          // });
+        })
+        .catch((err) => {
+          reject(err);
+          console.log(err);
+        });
+    });
+  };
+
+  const handleSubmit = (readerInfo) => {
+    trySubmit(readerInfo)
+      .then((result) => {
+        setResultStatus({ isSuccess: 1, visible: true });
+      })
+      .catch((err) => {
+        trySubmit(readerInfo)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
-            navigation.goBack();
           })
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
           });
       })
-      .catch((err) => {
-        console.log(err);
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -253,7 +277,7 @@ function EditReaderScreen({ route, navigation }) {
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
                 text="submit"
-                fontSize={normalize(12)}
+                fontSize={normalize(10)}
               />
             </ScrollView>
           </TouchableOpacity>

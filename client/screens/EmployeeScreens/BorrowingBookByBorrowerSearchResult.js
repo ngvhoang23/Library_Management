@@ -7,17 +7,18 @@ import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
 import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
-import BookItem from "../../components/BookItem";
 import { ScrollView } from "react-native-gesture-handler";
+import BookItem from "../../components/BookItem";
 
-function BookSearchResult({ route, navigation }) {
-  const { search_value, book_detail_id, placeholder } = route.params;
+function BorrowingBookByBorrowerSearchResult({ route, navigation }) {
+  const { search_value, borrower_info, placeholder } = route.params;
+  const { user_id: borrower_id, full_name, phone_num, user_avatar } = borrower_info;
 
   const [results, setResults] = useState([]);
   const [searchValue, setSearchValue] = useState(search_value);
   useEffect(() => {
     handleSearch(search_value);
-  }, []);
+  }, [search_value]);
 
   const handleSearch = (search_value) => {
     _retrieveData("ACCESS_TOKEN")
@@ -25,14 +26,14 @@ function BookSearchResult({ route, navigation }) {
         const config = {
           params: {
             search_value,
-            book_detail_id,
+            borrower_id,
           },
           headers: { Authorization: `Bearer ${access_token}` },
         };
 
         if (search_value) {
           axios
-            .get(`http://10.0.2.2:5000/books/searching/${search_value}`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/borrowing-books/searching-by-borrower/${search_value}`, config)
             .then((result) => {
               setResults([...result.data]);
             })
@@ -55,20 +56,25 @@ function BookSearchResult({ route, navigation }) {
         onChange={(value) => setSearchValue(value)}
         onSearch={() => handleSearch(searchValue)}
       />
-
-      <ScrollView>
+      <ScrollView style={styles.resultContainer}>
         {results?.length > 0 ? (
-          <View style={styles.bookList}>
+          <View style={styles.empList}>
             {results.map((item, index) => {
               return (
                 <BookItem
                   key={item.book_id}
                   _style={[styles.bookItem]}
                   have_position
+                  overdue={new Date() > new Date(item.return_date)}
                   data={item}
                   onPress={() =>
-                    navigation.navigate(`Edit Book`, {
-                      book_info: item,
+                    navigation.navigate("Borrowing Book Detail", {
+                      borrowing_book_info: {
+                        ...item,
+                        reader_name: full_name,
+                        reader_phone_num: phone_num,
+                        reader_avatar: user_avatar,
+                      },
                     })
                   }
                 />
@@ -93,7 +99,8 @@ const styles = StyleSheet.create({
   searchBar: {
     width: "100%",
   },
-  bookList: {
+
+  empList: {
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
@@ -108,8 +115,8 @@ const styles = StyleSheet.create({
   bookItem: {
     width: "100%",
     padding: normalize(10),
-    marginBottom: normalize(10),
-    borderRadius: normalize(6),
+    borderRadius: normalize(10),
+    marginBottom: normalize(14),
   },
 
   messageText: {
@@ -121,4 +128,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookSearchResult;
+export default BorrowingBookByBorrowerSearchResult;

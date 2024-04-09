@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   empItem: {
-    width: "40%",
+    width: "44%",
     padding: normalize(10),
     margin: 10,
     borderRadius: normalize(10),

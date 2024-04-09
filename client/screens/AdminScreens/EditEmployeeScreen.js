@@ -270,7 +270,7 @@ function EditEmployeeScreen({ route, navigation }) {
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
                 text="submit"
-                fontSize={normalize(12)}
+                fontSize={normalize(10)}
               />
             </ScrollView>
           </TouchableOpacity>

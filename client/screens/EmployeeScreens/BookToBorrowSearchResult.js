@@ -10,8 +10,8 @@ import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import BookItem from "../../components/BookItem";
 import { ScrollView } from "react-native-gesture-handler";
 
-function BookSearchResult({ route, navigation }) {
-  const { search_value, book_detail_id, placeholder } = route.params;
+function BookToBorrowSearchResult({ route, navigation }) {
+  const { search_value, book_detail_id, reader_info, placeholder } = route.params;
 
   const [results, setResults] = useState([]);
   const [searchValue, setSearchValue] = useState(search_value);
@@ -32,7 +32,7 @@ function BookSearchResult({ route, navigation }) {
 
         if (search_value) {
           axios
-            .get(`http://10.0.2.2:5000/books/searching/${search_value}`, config)
+            .get(`http://10.0.2.2:5000/borrowed-books/available-books/searching/${search_value}`, config)
             .then((result) => {
               setResults([...result.data]);
             })
@@ -67,8 +67,9 @@ function BookSearchResult({ route, navigation }) {
                   have_position
                   data={item}
                   onPress={() =>
-                    navigation.navigate(`Edit Book`, {
+                    navigation.navigate("Borrow Book", {
                       book_info: item,
+                      reader_info,
                     })
                   }
                 />
@@ -108,8 +109,8 @@ const styles = StyleSheet.create({
   bookItem: {
     width: "100%",
     padding: normalize(10),
+    borderRadius: normalize(10),
     marginBottom: normalize(10),
-    borderRadius: normalize(6),
   },
 
   messageText: {
@@ -121,4 +122,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookSearchResult;
+export default BookToBorrowSearchResult;

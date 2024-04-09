@@ -6,20 +6,25 @@ import {
   AddBorrowBookStackNavigation,
   AddReaderStackNavigation,
   BookManStackNavigation,
-  BorrowBookDashboardStackNavigation,
+  BorrowedBookManStackNavigation,
+  BorrowersManagementDashboardStackNavigation,
+  FineManStackNavigation,
   ReaderManStackNavigation,
 } from "./StackNavigator";
-import AddBookGroupScreen from "../../screens/EmployeeScreens/AddBookGroupScreen";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { normalize } from "../../defined_function";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faBook, faBookMedical, faChartLine, faCommentDollar, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { AntDesign, Feather, MaterialIcons, Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
-const BorrowBookTabNavigation = () => {
+const BorrowerManTabNavigation = () => {
   return (
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={{
+        unmountOnBlur: true,
         headerShown: false,
         tabBarStyle: {
           height: normalize(50),
@@ -35,11 +40,11 @@ const BorrowBookTabNavigation = () => {
     >
       <Tab.Screen
         name="Dashboard"
-        component={BorrowBookDashboardStackNavigation}
+        component={BorrowersManagementDashboardStackNavigation}
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialCommunityIcons name="view-dashboard-outline" size={normalize(18)} color={color} />;
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -49,7 +54,7 @@ const BorrowBookTabNavigation = () => {
         options={{
           tabBarLabel: "Borrow Book",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Entypo name="add-to-list" size={normalize(18)} color={color} />;
+            return <MaterialCommunityIcons name="book-plus-outline" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -62,14 +67,15 @@ const ReaderManTabNavigation = () => {
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={{
+        unmountOnBlur: true,
         headerShown: false,
         tabBarStyle: {
-          height: normalize(50),
-          paddingTop: normalize(8),
+          height: normalize(44),
+          paddingTop: normalize(6),
           paddingBottom: normalize(4),
         },
         tabBarLabelStyle: {
-          fontSize: normalize(12),
+          fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
         tabBarLabelPosition: "below-icon",
@@ -81,7 +87,7 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialCommunityIcons name="view-dashboard-outline" size={normalize(18)} color={color} />;
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -91,7 +97,7 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Reader",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Entypo name="add-to-list" size={normalize(18)} color={color} />;
+            return <Feather name="user-plus" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -104,14 +110,15 @@ const BookManTabNavigation = () => {
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={{
+        unmountOnBlur: true,
         headerShown: false,
         tabBarStyle: {
-          height: normalize(50),
-          paddingTop: normalize(8),
+          height: normalize(44),
+          paddingTop: normalize(6),
           paddingBottom: normalize(4),
         },
         tabBarLabelStyle: {
-          fontSize: normalize(12),
+          fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
         tabBarLabelPosition: "below-icon",
@@ -123,7 +130,7 @@ const BookManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialCommunityIcons name="view-dashboard-outline" size={normalize(18)} color={color} />;
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -133,7 +140,7 @@ const BookManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Book Group",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Entypo name="add-to-list" size={normalize(18)} color={color} />;
+            return <Ionicons name="book-outline" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -141,4 +148,47 @@ const BookManTabNavigation = () => {
   );
 };
 
-export { BorrowBookTabNavigation, ReaderManTabNavigation, BookManTabNavigation };
+const BorrowedBookManTabNavigation = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="Borrowed Books Tab"
+      screenOptions={{
+        unmountOnBlur: true,
+        headerShown: false,
+        tabBarStyle: {
+          height: normalize(44),
+          paddingTop: normalize(6),
+          paddingBottom: normalize(4),
+        },
+        tabBarLabelStyle: {
+          fontSize: normalize(12),
+          fontFamily: "nunito-medium",
+        },
+        tabBarLabelPosition: "below-icon",
+      }}
+    >
+      <Tab.Screen
+        name="Borrowed Books Tab"
+        component={BorrowedBookManStackNavigation}
+        options={{
+          tabBarLabel: "Borrowed Books",
+          tabBarIcon: ({ focused, color, size }) => {
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
+          },
+        }}
+      />
+      <Tab.Screen
+        name="Fine Management Tab"
+        component={FineManStackNavigation}
+        options={{
+          tabBarLabel: "Fine Management",
+          tabBarIcon: ({ focused, color, size }) => {
+            return <MaterialIcons name="attach-money" size={normalize(16)} color={color} />;
+          },
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+export { BorrowerManTabNavigation, ReaderManTabNavigation, BookManTabNavigation, BorrowedBookManTabNavigation };
