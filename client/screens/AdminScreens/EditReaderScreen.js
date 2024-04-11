@@ -88,7 +88,7 @@ function EditReaderScreen({ route, navigation }) {
     }
   };
 
-  const handleSubmit = (readerInfo) => {
+  const trySubmit = (readerInfo) => {
     const { phone_num, birth_date, email_address, gender, first_name, last_name, address } = readerInfo;
     setIsLoading(true);
     const formData = new FormData();
@@ -114,34 +114,57 @@ function EditReaderScreen({ route, navigation }) {
     first_name && formData.append("first_name", first_name.trim());
     last_name && formData.append("last_name", last_name.trim());
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "PUT",
-          url: `http://10.0.2.2:5000/users/reader`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "PUT",
+            url: `http://10.0.2.2:5000/users/reader`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-        axios(configurations)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            navigation.goBack();
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+            })
+            .catch((err) => {
+              reject(err);
+              console.log("err", err);
+            });
+        })
+        .catch((err) => {
+          reject(err);
+          console.log(err);
+        });
+    });
+  };
+
+  const handleSubmit = (readerInfo) => {
+    trySubmit(readerInfo)
+      .then((result) => {
+        navigation.navigate("Reader Detail", { reader_info: { user_id: user_id } });
+        setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
-        console.log(err);
+        if (err?.message === "Network Error") {
+          trySubmit(readerInfo)
+            .then((result) => {
+              navigation.navigate("Reader Detail", { reader_info: { user_id: user_id } });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            });
+          console.log(err);
+        }
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -159,7 +182,6 @@ function EditReaderScreen({ route, navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
           handleSubmit(values);
         }}
       >
@@ -222,6 +244,7 @@ function EditReaderScreen({ route, navigation }) {
               <MenuPickers
                 _styles={[styles.input]}
                 lableTitle="Gender"
+                initIndex={gender === 0 ? 1 : 0}
                 value={props.values.gender}
                 errorText={props.errors.gender}
                 options={[
@@ -249,7 +272,12 @@ function EditReaderScreen({ route, navigation }) {
                 value={props.values.last_name}
                 errorText={props.errors.last_name}
               />
-              <FlatButton _styles={styles.submitBtn} onPress={props.handleSubmit} text="submit" />
+              <FlatButton
+                _styles={styles.submitBtn}
+                onPress={props.handleSubmit}
+                text="submit"
+                fontSize={normalize(10)}
+              />
             </ScrollView>
           </TouchableOpacity>
         )}
@@ -271,13 +299,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
-  },
-
-  headerTitle: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(18),
-    width: "100%",
-    marginLeft: normalize(40),
   },
 
   avatarPicker: {
@@ -307,7 +328,6 @@ const styles = StyleSheet.create({
   submitBtn: {
     width: "100%",
     height: normalize(32),
-
     marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",

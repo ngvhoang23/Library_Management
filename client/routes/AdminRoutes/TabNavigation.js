@@ -10,6 +10,7 @@ import {
 import AddBookGroupScreen from "../../screens/EmployeeScreens/AddBookGroupScreen";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { normalize } from "../../defined_function";
+import { AntDesign, Feather, MaterialIcons, Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,14 +19,15 @@ const EmployeeManTabNavigation = () => {
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={{
+        unmountOnBlur: true,
         headerShown: false,
         tabBarStyle: {
-          height: normalize(40),
+          height: normalize(44),
           paddingTop: normalize(6),
           paddingBottom: normalize(4),
         },
         tabBarLabelStyle: {
-          fontSize: normalize(8),
+          fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
         tabBarLabelPosition: "below-icon",
@@ -37,7 +39,7 @@ const EmployeeManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialCommunityIcons name="view-dashboard-outline" size={normalize(16)} color={color} />;
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -47,7 +49,7 @@ const EmployeeManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Employee",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Entypo name="add-to-list" size={normalize(16)} color={color} />;
+            return <Feather name="user-plus" size={normalize(16)} color={color} />;
           },
         }}
       />
@@ -60,14 +62,15 @@ const ReaderManTabNavigation = () => {
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={{
+        unmountOnBlur: true,
         headerShown: false,
         tabBarStyle: {
-          height: normalize(40),
+          height: normalize(44),
           paddingTop: normalize(6),
           paddingBottom: normalize(4),
         },
         tabBarLabelStyle: {
-          fontSize: normalize(8),
+          fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
         tabBarLabelPosition: "below-icon",
@@ -79,17 +82,17 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialCommunityIcons name="view-dashboard-outline" size={normalize(16)} color={color} />;
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
           },
         }}
       />
       <Tab.Screen
-        name="Borrow Reader"
+        name="Add Reader"
         component={AddReaderStackNavigation}
         options={{
           tabBarLabel: "Add Reader",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Entypo name="add-to-list" size={normalize(16)} color={color} />;
+            return <Feather name="user-plus" size={normalize(16)} color={color} />;
           },
         }}
       />

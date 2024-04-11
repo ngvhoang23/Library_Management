@@ -92,7 +92,7 @@ const ReaderManTabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Borrow Reader"
+        name="Add Reader"
         component={AddReaderStackNavigation}
         options={{
           tabBarLabel: "Add Reader",

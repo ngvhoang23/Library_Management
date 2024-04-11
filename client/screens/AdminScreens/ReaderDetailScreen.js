@@ -12,7 +12,12 @@ import {
   Fontisto,
   FontAwesome5,
   MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome6,
+  EvilIcons,
+  SimpleLineIcons,
   Entypo,
+  Ionicons,
 } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -35,8 +40,10 @@ function ReaderDetailScreen({ route, navigation }) {
   useEffect(() => {
     if (new Date(expire_date) <= new Date()) {
       setStatus(0);
+    } else {
+      setStatus(1);
     }
-  }, [readerInfo]);
+  }, [readerInfo, isFocused]);
 
   useEffect(() => {
     _retrieveData("ACCESS_TOKEN")
@@ -77,6 +84,7 @@ function ReaderDetailScreen({ route, navigation }) {
   } = readerInfo;
 
   const handleActiveReader = () => {
+    setIsLoading(true);
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
         const configurations = {
@@ -91,6 +99,41 @@ function ReaderDetailScreen({ route, navigation }) {
         axios(configurations)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
+            setStatus(1);
+          })
+          .catch((err) => {
+            setResultStatus({ isSuccess: 0, visible: true });
+            console.log("err", err);
+          })
+          .finally((result) => {
+            setIsLoading(false);
+          });
+      })
+      .catch((err) => {
+        setResultStatus({ isSuccess: 0, visible: true });
+        console.log(err);
+      })
+      .finally((result) => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleDeleteReader = () => {
+    _retrieveData("ACCESS_TOKEN")
+      .then((access_token) => {
+        const configurations = {
+          method: "DELETE",
+          url: `http://10.0.2.2:5000/users/reader`,
+          data: { user_id: user_id },
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        };
+        axios(configurations)
+          .then((result) => {
+            setResultStatus({ isSuccess: 1, visible: true });
+            navigation.goBack();
             setStatus(1);
           })
           .catch((err) => {
@@ -129,7 +172,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="User Name"
           value={user_name}
-          icon={<FontAwesome name="user-o" size={normalize(20)} color="#949498" />}
+          icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -138,7 +181,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Phone Number"
           value={phone_num}
-          icon={<Feather name="phone-call" size={normalize(20)} color="#949498" />}
+          icon={<AntDesign name="phone" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -147,7 +190,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Gender"
           value={gender ? "Male" : "Female"}
-          icon={<Fontisto name="transgender-alt" size={normalize(20)} color="#949498" />}
+          icon={<FontAwesome name="transgender" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -156,7 +199,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Reader type"
           value={reader_type === "lecturer" ? "Lecturer" : "Student"}
-          icon={<FontAwesome5 name="book-reader" size={normalize(20)} color="#949498" />}
+          icon={<Feather name="users" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -165,7 +208,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Birth Date"
           value={birth_date ? new Date(birth_date).toISOString().split("T")[0] : ""}
-          icon={<FontAwesome5 name="birthday-cake" size={normalize(20)} color="#949498" />}
+          icon={<Fontisto name="date" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -174,7 +217,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Start Date"
           value={created_at ? new Date(created_at).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(20)} color="#949498" />}
+          icon={<FontAwesome name="hourglass-1" size={normalize(16)} color="#6fa4f8" />}
           read_only
         />
 
@@ -183,7 +226,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="End Date"
           value={expire_date ? new Date(expire_date).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(20)} color="#949498" />}
+          icon={<FontAwesome name="hourglass-end" size={normalize(16)} color="#6fa4f8" />}
           read_only
         />
 
@@ -192,7 +235,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Email"
           value={email_address}
-          icon={<Fontisto name="email" size={normalize(20)} color="#949498" />}
+          icon={<Fontisto name="email" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
 
@@ -201,7 +244,7 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Address"
           value={address}
-          icon={<Entypo name="address" size={normalize(20)} color="#949498" />}
+          icon={<EvilIcons name="location" size={normalize(22)} color="#6fa4f8" />}
           read_only
         />
 
@@ -210,17 +253,18 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Full Name"
           value={full_name}
-          icon={<MaterialCommunityIcons name="smart-card-outline" size={normalize(20)} color="#949498" />}
+          icon={<MaterialIcons name="drive-file-rename-outline" size={normalize(18)} color="#6fa4f8" />}
           read_only
         />
       </ScrollView>
 
       <View style={styles.options}>
         <FlatButton
-          _styles={styles.deleteBtn}
+          _styles={styles.changePasswordBtn}
           text="Change Password"
           onPress={() => navigation.navigate("Change Password", { user_id: reader_info?.user_id })}
         />
+        <FlatButton _styles={styles.deleteBtn} text="Delete Reader" onPress={handleDeleteReader} />
         <FlatButton
           _styles={styles.editBtn}
           text="Edit"
@@ -297,9 +341,9 @@ const styles = StyleSheet.create({
     marginBottom: normalize(30),
   },
 
-  deleteBtn: {
+  changePasswordBtn: {
     height: normalize(32),
-    width: "40%",
+    width: "46%",
     paddingVertical: 0,
     marginRight: normalize(10),
     display: "flex",
@@ -308,15 +352,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#1e74fd",
   },
 
-  editBtn: {
+  deleteBtn: {
     height: normalize(32),
-    width: "40%",
+    width: "46%",
     paddingVertical: 0,
     marginLeft: normalize(10),
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f02849",
+  },
+
+  editBtn: {
+    height: normalize(32),
+    width: "100%",
+    paddingVertical: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#1e74fd",
+    marginTop: normalize(10),
   },
 
   activeBtn: {
@@ -336,17 +391,19 @@ const styles = StyleSheet.create({
     zIndex: 10,
     fontSize: normalize(14),
     fontStyle: "italic",
-    borderWidth: normalize(1),
+    borderWidth: 1,
     borderStyle: "dashed",
     paddingHorizontal: normalize(10),
-    borderRadius: normalize(4),
+    borderRadius: 4,
   },
 
   options: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
+    flexWrap: "wrap",
+    paddingHorizontal: normalize(16),
     marginBottom: normalize(10),
     marginTop: normalize(10),
   },

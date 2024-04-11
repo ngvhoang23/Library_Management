@@ -43,7 +43,6 @@ function ReaderManDashboard({ navigation }) {
     navigation.navigate("Reader Search Results", {
       search_value: searchValue,
       placeholder: "search readers...",
-      type: "readers",
     });
   };
 
@@ -51,7 +50,7 @@ function ReaderManDashboard({ navigation }) {
     <View style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search employees..."
+        placeholder="search readers..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}

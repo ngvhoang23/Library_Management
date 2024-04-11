@@ -79,7 +79,7 @@ function AddReaderScreen({ navigation }) {
     }
   };
 
-  const handleSubmit = (readerInfo) => {
+  const trySubmit = (readerInfo) => {
     const {
       user_name,
       password,
@@ -121,37 +121,69 @@ function AddReaderScreen({ navigation }) {
     first_name && formData.append("first_name", first_name.trim());
     last_name && formData.append("last_name", last_name.trim());
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "POST",
-          url: `http://10.0.2.2:5000/users/reader`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "POST",
+            url: `http://10.0.2.2:5000/users/reader`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-        axios(configurations)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            navigation.navigate("Readers");
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-            if (err?.response?.data?.code === "ER_DUP_ENTRY") {
-              alert("Duplicate User Name");
-            }
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+            })
+            .catch((err) => {
+              if (err?.response?.data?.code === "ER_DUP_ENTRY") {
+                alert("Duplicate User Name");
+                setIsLoading(false);
+              } else {
+                reject(err);
+              }
+              console.log("err", err);
+            });
+        })
+        .catch((err) => {
+          reject(err);
+          console.log(err);
+        });
+    });
+  };
+
+  const handleSubmit = (readerInfo, resetForm) => {
+    trySubmit(readerInfo)
+      .then((result) => {
+        resetForm();
+        navigation.navigate("Dashboard", { screen: "Readers" });
+        setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
         console.log(err);
+        if (err?.message === "Network Error") {
+          trySubmit(readerInfo)
+            .then((result) => {
+              resetForm();
+              navigation.navigate("Dashboard", {
+                screen: "Readers",
+              });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            })
+            .finally((result) => {
+              setIsLoading(false);
+            });
+        }
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -173,8 +205,11 @@ function AddReaderScreen({ navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
-          handleSubmit(values);
+          const resetForm = () => {
+            setAvatar();
+            actions.resetForm();
+          };
+          handleSubmit(values, resetForm);
         }}
       >
         {(props) => (
@@ -185,7 +220,7 @@ function AddReaderScreen({ navigation }) {
                 avatar={avatar}
                 setAvatar={setAvatar}
                 onPickImage={pickImage}
-                title={"Select Avatar"}
+                title={"Select Cover Photo"}
               />
               <InputItem
                 _styles={[styles.input]}
@@ -270,6 +305,7 @@ function AddReaderScreen({ navigation }) {
               <MenuPickers
                 _styles={[styles.input]}
                 lableTitle="Gender"
+                initIndex={0}
                 value={props.values.gender}
                 errorText={props.errors.gender}
                 options={[
@@ -284,6 +320,7 @@ function AddReaderScreen({ navigation }) {
               <MenuPickers
                 _styles={[styles.input]}
                 lableTitle="Reader type"
+                initIndex={0}
                 value={props.values.reader_type}
                 errorText={props.errors.reader_type}
                 options={[
@@ -339,13 +376,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  headerTitle: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(18),
-    width: "100%",
-    marginLeft: normalize(40),
-  },
-
   avatarPicker: {
     width: "100%",
     marginBottom: normalize(20),
@@ -362,7 +392,6 @@ const styles = StyleSheet.create({
 
   formContainer: {
     width: "90%",
-    height: normalize(720),
   },
 
   input: {

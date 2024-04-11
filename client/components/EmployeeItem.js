@@ -17,6 +17,7 @@ function EmployeeItem({ _style, data, onPress }) {
 
 const styles = StyleSheet.create({
   wrapper: {
+    position: "relative",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
   role: {
     fontFamily: "nunito-medium",
     color: "#ccc",
-    fontSize: normalize(8),
+    fontSize: normalize(10),
   },
 });
 

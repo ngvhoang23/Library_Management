@@ -11,7 +11,7 @@ import AddReaderScreen from "../../screens/AdminScreens/AddReaderScreen";
 import ReaderDetailScreen from "../../screens/AdminScreens/ReaderDetailScreen";
 import EditReaderScreen from "../../screens/AdminScreens/EditReaderScreen";
 import SearchResults from "../../screens/AdminScreens/SearchResults";
-import ReaderSearchResults from "../../screens/EmployeeScreens/ReaderSearchResults";
+import ReaderSearchResults from "../../screens/AdminScreens/ReaderSearchResults";
 
 const Stack = createStackNavigator();
 
@@ -83,12 +83,6 @@ const ReaderManStackNavigation = () => {
       />
 
       <Stack.Screen
-        name="Add Readers"
-        component={AddReaderScreen}
-        options={{ header: (props) => <MainHeader title="Add Readers" {...props} is_stack /> }}
-      />
-
-      <Stack.Screen
         name="Reader Detail"
         component={ReaderDetailScreen}
         options={{ header: (props) => <MainHeader title="Readers Detail" {...props} is_stack /> }}
@@ -107,7 +101,7 @@ const ReaderManStackNavigation = () => {
       />
 
       <Stack.Screen
-        name="Readers Search Results"
+        name="Reader Search Results"
         component={ReaderSearchResults}
         options={{ header: (props) => <MainHeader title="Search Result" {...props} is_stack /> }}
       />

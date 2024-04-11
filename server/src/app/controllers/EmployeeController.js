@@ -225,7 +225,7 @@ class EmployeeController {
         first_name=${first_name ? `'${first_name}'` : null}, 
         last_name=${last_name ? `'${last_name}'` : null},
         full_name='${first_name ? first_name : ""} ${last_name ? last_name : ""}',
-        created_at=${created_at ? `'${created_at}'` : null}
+        created_at=${created_at ? `'${created_at}'` : "created_at"}
         where user_id=${user_id}
       `;
       return new Promise((resolve, reject) => {

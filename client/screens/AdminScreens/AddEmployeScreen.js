@@ -78,7 +78,7 @@ function AddEmployeScreen({ navigation }) {
     }
   };
 
-  const handleSubmit = (empInfo) => {
+  const trySubmit = (empInfo) => {
     const { user_name, password, phone_num, birth_date, email_address, gender, first_name, last_name, address } =
       empInfo;
     setIsLoading(true);
@@ -101,37 +101,66 @@ function AddEmployeScreen({ navigation }) {
     first_name && formData.append("first_name", first_name.trim());
     last_name && formData.append("last_name", last_name.trim());
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "POST",
-          url: `http://10.0.2.2:5000/users/employee`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "POST",
+            url: `http://10.0.2.2:5000/users/employee`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-        axios(configurations)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            navigation.navigate("Employees");
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-            if (err?.response?.data?.code === "ER_DUP_ENTRY") {
-              alert("Duplicate User Name");
-            }
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+            })
+            .catch((err) => {
+              if (err?.response?.data?.code === "ER_DUP_ENTRY") {
+                alert("Duplicate User Name");
+                setIsLoading(false);
+              } else {
+                reject(err);
+              }
+              console.log("err", err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  };
+
+  const handleSubmit = (readerInfo) => {
+    trySubmit(readerInfo)
+      .then((result) => {
+        navigation.navigate("Dashboard", { screen: "Employees" });
+        setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
         console.log(err);
+        if (err?.message === "Network Error") {
+          trySubmit(readerInfo)
+            .then((result) => {
+              navigation.navigate("Dashboard", {
+                screen: "Employees",
+              });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            })
+            .finally((result) => {
+              setIsLoading(false);
+            });
+        }
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -151,7 +180,6 @@ function AddEmployeScreen({ navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
           handleSubmit(values);
         }}
       >
@@ -284,13 +312,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  headerTitle: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(18),
-    width: "100%",
-    marginLeft: normalize(40),
-  },
-
   avatarPicker: {
     width: "100%",
     marginBottom: normalize(20),
@@ -318,7 +339,6 @@ const styles = StyleSheet.create({
   submitBtn: {
     width: "100%",
     height: normalize(32),
-
     marginTop: normalize(6),
     marginBottom: normalize(16),
     paddingVertical: 0,

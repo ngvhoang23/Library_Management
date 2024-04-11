@@ -86,7 +86,7 @@ function EditEmployeeScreen({ route, navigation }) {
     }
   };
 
-  const handleSubmit = (empInfo) => {
+  const trySubmit = (empInfo) => {
     const { phone_num, birth_date, email_address, gender, first_name, last_name, first_work_date, address } = empInfo;
     setIsLoading(true);
     const formData = new FormData();
@@ -111,34 +111,57 @@ function EditEmployeeScreen({ route, navigation }) {
     last_name && formData.append("last_name", last_name.trim());
     first_work_date && formData.append("created_at", first_work_date);
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "PUT",
-          url: `http://10.0.2.2:5000/users/employee`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "PUT",
+            url: `http://10.0.2.2:5000/users/employee`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-        axios(configurations)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            navigation.goBack();
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+            })
+            .catch((err) => {
+              reject(err);
+              console.log("err", err);
+            });
+        })
+        .catch((err) => {
+          reject(err);
+          console.log(err);
+        });
+    });
+  };
+
+  const handleSubmit = (empInfo) => {
+    trySubmit(empInfo)
+      .then((result) => {
+        navigation.navigate("Employee Detail", { emp_info: { user_id: user_id } });
+        setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
-        console.log(err);
+        if (err?.message === "Network Error") {
+          trySubmit(empInfo)
+            .then((result) => {
+              navigation.navigate("Employee Detail", { emp_info: { user_id: user_id } });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            });
+          console.log(err);
+        }
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -146,18 +169,17 @@ function EditEmployeeScreen({ route, navigation }) {
     <View style={styles.wrapper}>
       <Formik
         initialValues={{
-          phone_num: phone_num,
-          email_address: email_address,
+          phone_num: phone_num || "",
+          email_address: email_address || "",
           birth_date: new Date(birth_date).toISOString().split("T")[0],
           gender: { value: gender, index: gender === 0 ? 1 : 0 },
-          first_name: first_name,
-          last_name: last_name,
-          address: address,
+          first_name: first_name || "",
+          last_name: last_name || "",
+          address: address || "",
           first_work_date: new Date(created_at).toISOString().split("T")[0],
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
           handleSubmit(values);
         }}
       >
@@ -239,6 +261,7 @@ function EditEmployeeScreen({ route, navigation }) {
               <MenuPickers
                 _styles={[styles.input]}
                 lableTitle="Gender"
+                initIndex={gender === 0 ? 1 : 0}
                 value={props.values.gender}
                 errorText={props.errors.gender}
                 options={[
@@ -295,13 +318,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  headerTitle: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(18),
-    width: "100%",
-    marginLeft: normalize(40),
-  },
-
   avatarPicker: {
     width: "100%",
     marginBottom: normalize(20),
@@ -329,7 +345,6 @@ const styles = StyleSheet.create({
   submitBtn: {
     width: "100%",
     height: normalize(32),
-
     marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",

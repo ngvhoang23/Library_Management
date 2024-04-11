@@ -17,8 +17,8 @@ function ReaderItem({ _style, data, borrowed_books, onPress }) {
 
   return (
     <TouchableOpacity style={[styles.wrapper, _style]} activeOpacity={0.6} onPress={onPress}>
-      <Image style={styles.empAvatar} source={{ uri: `http://10.0.2.2:5000${user_avatar}` }} />
-      <Text style={styles.empName} numberOfLines={1}>
+      <Image style={styles.readerAvatar} source={{ uri: `http://10.0.2.2:5000${user_avatar}` }} />
+      <Text style={styles.readerName} numberOfLines={1}>
         {full_name}
       </Text>
       <Text style={[styles.readerType]}>
@@ -43,12 +43,12 @@ const styles = StyleSheet.create({
     borderColor: "#ced0d4",
     borderRadius: 8,
   },
-  empAvatar: {
+  readerAvatar: {
     width: normalize(50),
     height: normalize(50),
     borderRadius: 500000,
   },
-  empName: {
+  readerName: {
     fontFamily: "nunito-medium",
     marginTop: normalize(8),
     fontSize: normalize(10),

@@ -85,11 +85,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
-
-  searchBar: {
-    width: "100%",
-  },
-
   empList: {
     width: SCREEN_WIDTH,
     flex: 1,
