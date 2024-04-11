@@ -27,7 +27,6 @@ function FineManDashBoard({ navigation }) {
           axios
             .get(`http://10.0.2.2:5000/borrowed-books/fine`, config)
             .then((result) => {
-              console.log(result.data);
               setBorrowers(result.data);
             })
             .catch((error) => {

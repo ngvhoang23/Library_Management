@@ -71,7 +71,7 @@ function SelectBookGroupScreen({ route, navigation }) {
                 key={book.book_detail_id}
                 _style={[styles.bookItem]}
                 data={book}
-                remaining={book.remaining}
+                remaining={book.remaining || 0}
                 onPress={() => {
                   if (book.remaining <= 0) {
                     alert("There are no books available for borrowing");
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(14),
     paddingHorizontal: normalize(6),
     overflow: "scroll",
-    flexDirection: "column",
+    flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     flexWrap: "wrap",

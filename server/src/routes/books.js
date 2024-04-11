@@ -23,4 +23,7 @@ router.post("/", BookController.postBook);
 router.put("/book-groups", uploadCoverPhoto.single("cover-photo"), BookController.editBookGroup);
 router.put("/", BookController.editBook);
 
+router.delete("/", BookController.deleteBooks);
+router.delete("/book-groups/:book_detail_id", BookController.deleteBookGroup);
+
 module.exports = router;

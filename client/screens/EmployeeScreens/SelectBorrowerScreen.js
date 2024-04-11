@@ -104,10 +104,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     flexWrap: "wrap",
   },
+
   readerItem: {
     width: "44%",
     padding: normalize(10),
-    margin: normalize(10),
+    margin: normalize(8),
     borderRadius: normalize(10),
   },
 });

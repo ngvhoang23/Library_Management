@@ -1,8 +1,23 @@
-import { useEffect } from "react";
-import { StyleSheet, View, Text, Button, Image, TouchableOpacity } from "react-native";
+import { useEffect, useRef } from "react";
+import { StyleSheet, View, Text, Button, Image, TouchableOpacity, Animated, Easing } from "react-native";
 import { normalize } from "../defined_function";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faCircle } from "@fortawesome/free-regular-svg-icons";
 
-function BookItem({ _style, data, onPress, have_position, status, remaining, overdue, in_progess }) {
+function BookItem({
+  _style,
+  data,
+  onPress,
+  have_position,
+  status,
+  remaining,
+  overdue,
+  in_progess,
+  checking,
+  is_checked,
+  onLongPress,
+}) {
   const { position, book_name, cover_photo, author_name } = data;
 
   useEffect(() => {}, []);
@@ -23,10 +38,57 @@ function BookItem({ _style, data, onPress, have_position, status, remaining, ove
       .join("-");
   };
 
+  const rotateAnimation = useRef(new Animated.Value(0)).current;
+
+  const startRotateAnimation = () => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(rotateAnimation, {
+          toValue: 10,
+          duration: 100,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnimation, {
+          toValue: -10,
+          duration: 100,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotateAnimation, {
+          toValue: 0,
+          duration: 100,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  };
+
+  useEffect(() => {
+    if (checking) {
+      startRotateAnimation();
+    } else {
+    }
+  }, [checking]);
+
+  const spin = rotateAnimation.interpolate({
+    inputRange: [-50, 50],
+    outputRange: ["-4deg", "4deg"],
+  });
+
   return (
-    <TouchableOpacity style={[styles.wrapper, _style]} activeOpacity={0.6} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.wrapper, _style]}
+      activeOpacity={checking ? 0.8 : 0.6}
+      onPress={onPress}
+      onLongPress={onLongPress}
+    >
       <View style={[styles.container]}>
-        <Image style={styles.coverPhoto} source={{ uri: `http://10.0.2.2:5000${cover_photo}` }} />
+        <Animated.View style={{ transform: checking ? [{ rotate: spin }] : [] }}>
+          <Image style={styles.coverPhoto} source={{ uri: `http://10.0.2.2:5000${cover_photo}` }} />
+        </Animated.View>
+
         <View style={styles.bookInfo}>
           <Text style={styles.bookName} numberOfLines={2}>
             {book_name}
@@ -54,6 +116,12 @@ function BookItem({ _style, data, onPress, have_position, status, remaining, ove
 
           {overdue && <Text style={[styles.overdue, { color: "#f02849" }]}>{`Overdue`}</Text>}
           {in_progess && <Text style={[styles.inProgess, { color: "#6ec531" }]}>{`in progess`}</Text>}
+          {checking &&
+            (is_checked ? (
+              <AntDesign style={styles.checkIcon} name="checkcircleo" size={normalize(16)} color="#1e74fd" />
+            ) : (
+              <FontAwesome name="circle-thin" style={styles.checkIcon} size={normalize(18)} color="#1e74fd" />
+            ))}
         </View>
       </View>
     </TouchableOpacity>
@@ -153,6 +221,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+
+  checkIcon: { position: "absolute", right: 0 },
 });
 
 export default BookItem;

@@ -309,7 +309,7 @@ class BookController {
 
   // [POST] /books/book-groups
   postBookGroup(req, res) {
-    const { book_name, price, published_date, author_id, description, category_id, publish_com } = req.body;
+    const { book_name, price, published_date, author_id, description, category_id, publish_com, for_reader } = req.body;
 
     let cover_photo = undefined;
 
@@ -328,6 +328,7 @@ class BookController {
       category_id || null,
       publish_com || null,
       cover_photo || null,
+      for_reader || null,
     ]);
 
     const insertBook = () => {
@@ -339,7 +340,8 @@ class BookController {
         description,
         category_id,
         publish_com,
-        cover_photo) 
+        cover_photo,
+        for_reader) 
         values ?`;
 
       return new Promise((resolve, reject) => {
@@ -393,13 +395,48 @@ class BookController {
       });
   }
 
-  // [DELETE] /books
-  deleteBook(req, res) {
-    const { book_id } = req.body;
+  // [DELETE] /books/:book_id
+  deleteBooks(req, res) {
+    const { deleting_books } = req.body;
+
+    const getBookIdList = () => {
+      return deleting_books
+        .map((book_id) => {
+          return book_id;
+        })
+        .join(",");
+    };
+
+    const promise = () => {
+      const sql = `delete from books where book_id in (${getBookIdList()})`;
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [DELETE] /books/book-groups/:book_detail_id
+  deleteBookGroup(req, res) {
+    const { book_detail_id } = req.body;
 
     const promise = () => {
       return new Promise((resolve, reject) => {
-        db.query(`delete from books where book_id = ${book_id}`, (err, result) => {
+        db.query(`delete from book_detail where book_detail_id = ${book_detail_id}`, (err, result) => {
           if (err) {
             reject(err);
           } else {
@@ -507,8 +544,6 @@ class BookController {
     const { book_id, import_date, position } = req.body;
 
     const data = [position, import_date, book_id];
-
-    console.log(req.body);
 
     const promise = () => {
       return new Promise((resolve, reject) => {

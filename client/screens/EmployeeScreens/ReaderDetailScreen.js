@@ -84,6 +84,7 @@ function ReaderDetailScreen({ route, navigation }) {
   } = readerInfo;
 
   const handleActiveReader = () => {
+    setIsLoading(true);
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
         const configurations = {
@@ -98,6 +99,41 @@ function ReaderDetailScreen({ route, navigation }) {
         axios(configurations)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
+            setStatus(1);
+          })
+          .catch((err) => {
+            setResultStatus({ isSuccess: 0, visible: true });
+            console.log("err", err);
+          })
+          .finally((result) => {
+            setIsLoading(false);
+          });
+      })
+      .catch((err) => {
+        setResultStatus({ isSuccess: 0, visible: true });
+        console.log(err);
+      })
+      .finally((result) => {
+        setIsLoading(false);
+      });
+  };
+
+  const handleDeleteReader = () => {
+    _retrieveData("ACCESS_TOKEN")
+      .then((access_token) => {
+        const configurations = {
+          method: "DELETE",
+          url: `http://10.0.2.2:5000/users/reader`,
+          data: { user_id: user_id },
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        };
+        axios(configurations)
+          .then((result) => {
+            setResultStatus({ isSuccess: 1, visible: true });
+            navigation.goBack();
             setStatus(1);
           })
           .catch((err) => {
@@ -224,10 +260,11 @@ function ReaderDetailScreen({ route, navigation }) {
 
       <View style={styles.options}>
         <FlatButton
-          _styles={styles.deleteBtn}
+          _styles={styles.changePasswordBtn}
           text="Change Password"
           onPress={() => navigation.navigate("Change Password", { user_id: reader_info?.user_id })}
         />
+        <FlatButton _styles={styles.deleteBtn} text="Delete Reader" onPress={handleDeleteReader} />
         <FlatButton
           _styles={styles.editBtn}
           text="Edit"
@@ -304,9 +341,9 @@ const styles = StyleSheet.create({
     marginBottom: normalize(30),
   },
 
-  deleteBtn: {
+  changePasswordBtn: {
     height: normalize(32),
-    width: "40%",
+    width: "46%",
     paddingVertical: 0,
     marginRight: normalize(10),
     display: "flex",
@@ -315,15 +352,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#1e74fd",
   },
 
-  editBtn: {
+  deleteBtn: {
     height: normalize(32),
-    width: "40%",
+    width: "46%",
     paddingVertical: 0,
     marginLeft: normalize(10),
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f02849",
+  },
+
+  editBtn: {
+    height: normalize(32),
+    width: "100%",
+    paddingVertical: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#1e74fd",
+    marginTop: normalize(10),
   },
 
   activeBtn: {
@@ -352,8 +400,10 @@ const styles = StyleSheet.create({
   options: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
+    flexWrap: "wrap",
+    paddingHorizontal: normalize(16),
     marginBottom: normalize(10),
     marginTop: normalize(10),
   },

@@ -34,6 +34,7 @@ import BorrowingBookSearchResult from "../../screens/EmployeeScreens/BorrowingBo
 import FineDetailScreen from "../../screens/EmployeeScreens/FineDetailScreen";
 import OverdueBookListScreen from "../../screens/EmployeeScreens/OverdueBookListScreen";
 import FineSearchResult from "../../screens/EmployeeScreens/FineSearchResult";
+import ReaderSearchResults from "../../screens/EmployeeScreens/ReaderSearchResults";
 
 const Stack = createStackNavigator();
 
@@ -75,8 +76,8 @@ const ReaderManStackNavigation = () => {
       />
 
       <Stack.Screen
-        name="Search Results"
-        component={SearchResults}
+        name="Reader Search Results"
+        component={ReaderSearchResults}
         options={{ header: (props) => <MainHeader title="Search Result" {...props} is_stack /> }}
       />
     </Stack.Navigator>

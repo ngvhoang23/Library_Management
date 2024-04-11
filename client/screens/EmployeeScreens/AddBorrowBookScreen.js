@@ -108,31 +108,6 @@ function AddBorrowBookScreen({ route, navigation }) {
 
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
-        return new Promise((resolve, reject) => {
-          const config = {
-            params: {
-              reader_id,
-            },
-            headers: { Authorization: `Bearer ${access_token}` },
-          };
-          axios
-            .get(`http://10.0.2.2:5000/borrowed-books/checking-borrowing-conditions`, config)
-            .then((result) => {
-              if (result?.data?.status === 200) {
-                resolve(access_token);
-              } else {
-                setResultStatus({ isSuccess: 0, visible: true });
-                reject("Reader is not eligible to borrow");
-                alert("Reader is not eligible to borrow");
-                return;
-              }
-            })
-            .catch((error) => {
-              reject(error);
-            });
-        });
-      })
-      .then((access_token) => {
         const configurations = {
           method: "POST",
           url: `http://10.0.2.2:5000/borrowed-books/`,
@@ -141,15 +116,16 @@ function AddBorrowBookScreen({ route, navigation }) {
             Authorization: `Bearer ${access_token}`,
           },
         };
-
         axios(configurations)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.goBack();
+            navigation.goBack();
           })
           .catch((err) => {
             if (err?.response?.data?.code === "UNAVAILABLE_BOOK") {
               alert("This book is unavailable");
+            } else if (err?.response?.data?.code == "INVALID_READER") {
+              alert("Reader is not eligible to borrow");
             }
             setResultStatus({ isSuccess: 0, visible: true });
             console.log("err", err);

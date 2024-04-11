@@ -8,12 +8,14 @@ import { useIsFocused } from "@react-navigation/native";
 import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import { ScrollView } from "react-native-gesture-handler";
+import ReaderItem from "../../components/ReaderItem";
 
-function SearchResults({ route, navigation }) {
-  const { search_value, placeholder, type } = route.params;
+function ReaderSearchResults({ route, navigation }) {
+  const { search_value, placeholder } = route.params;
 
   const [results, setResults] = useState([]);
   const [searchValue, setSearchValue] = useState(search_value);
+
   useEffect(() => {
     handleSearch(search_value);
   }, [search_value]);
@@ -30,7 +32,7 @@ function SearchResults({ route, navigation }) {
 
         if (search_value) {
           axios
-            .get(`http://10.0.2.2:5000/users/${type}/searching/${search_value}`, config)
+            .get(`http://10.0.2.2:5000/users/readers/searching/${search_value}`, config)
             .then((result) => {
               setResults([...result.data]);
             })
@@ -55,16 +57,15 @@ function SearchResults({ route, navigation }) {
       />
       <ScrollView style={styles.resultContainer}>
         {results?.length > 0 ? (
-          <View style={styles.userList}>
+          <View style={styles.readerList}>
             {results.map((item, index) => {
               return (
-                <EmployeeItem
+                <ReaderItem
                   key={index}
-                  _style={[styles.userItem]}
+                  _style={[styles.readerItem]}
                   data={item}
                   onPress={() =>
-                    navigation.navigate(`${type === "employees" ? "Employee" : "Reader"} Detail`, {
-                      emp_info: item,
+                    navigation.navigate("Reader Detail", {
                       reader_info: item,
                     })
                   }
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  userList: {
+  readerList: {
     width: SCREEN_WIDTH,
     flex: 1,
     paddingVertical: normalize(14),
@@ -103,10 +104,10 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
 
-  userItem: {
+  readerItem: {
     width: "44%",
     padding: normalize(10),
-    margin: normalize(8),
+    margin: 10,
     borderRadius: normalize(10),
   },
 
@@ -119,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchResults;
+export default ReaderSearchResults;

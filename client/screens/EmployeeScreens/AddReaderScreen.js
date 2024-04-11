@@ -138,10 +138,8 @@ function AddReaderScreen({ navigation }) {
           axios(configurations)
             .then((result) => {
               resolve(result);
-              // setResultStatus({ isSuccess: 1, visible: true });
             })
             .catch((err) => {
-              // setResultStatus({ isSuccess: 0, visible: true });
               if (err?.response?.data?.code === "ER_DUP_ENTRY") {
                 alert("Duplicate User Name");
                 setIsLoading(false);
@@ -150,9 +148,6 @@ function AddReaderScreen({ navigation }) {
               }
               console.log("err", err);
             });
-          // .finally((result) => {
-          //   setIsLoading(false);
-          // });
         })
         .catch((err) => {
           reject(err);
@@ -165,20 +160,27 @@ function AddReaderScreen({ navigation }) {
     trySubmit(readerInfo)
       .then((result) => {
         resetForm();
+        navigation.navigate("Dashboard", { screen: "Readers" });
         setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
-        trySubmit(readerInfo)
-          .then((result) => {
-            resetForm();
-            setResultStatus({ isSuccess: 1, visible: true });
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
+        console.log(err);
+        if (err?.message === "Network Error") {
+          trySubmit(readerInfo)
+            .then((result) => {
+              resetForm();
+              navigation.navigate("Dashboard", {
+                screen: "Readers",
+              });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            })
+            .finally((result) => {
+              setIsLoading(false);
+            });
+        }
       })
       .finally((result) => {
         setIsLoading(false);
@@ -303,6 +305,7 @@ function AddReaderScreen({ navigation }) {
               <MenuPickers
                 _styles={[styles.input]}
                 lableTitle="Gender"
+                initIndex={0}
                 value={props.values.gender}
                 errorText={props.errors.gender}
                 options={[
@@ -317,6 +320,7 @@ function AddReaderScreen({ navigation }) {
               <MenuPickers
                 _styles={[styles.input]}
                 lableTitle="Reader type"
+                initIndex={0}
                 value={props.values.reader_type}
                 errorText={props.errors.reader_type}
                 options={[

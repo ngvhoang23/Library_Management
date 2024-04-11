@@ -25,107 +25,21 @@ const formSchema = yup.object({
   }),
 });
 
-function AddBookScreen({ navigation }) {
+function AddBookScreen({ route, navigation }) {
+  const { book_detail_info } = route.params;
+  const { book_detail_id, book_name, author_name, cover_photo } = book_detail_info;
   const [isShowDatePicker, setIsShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
-  const [bookInfo, setBookInfo] = useState({});
-  const [books, setBooks] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedBook, setSelectedBook] = useState();
-  const [selectedId, setSelectedId] = useState();
   const [searchResult, setSearchResult] = useState();
-
   const isFocused = useIsFocused();
-
-  useEffect(() => {
-    if (isFocused) {
-      _retrieveData("ACCESS_TOKEN")
-        .then((access_token) => {
-          const config = {
-            headers: { Authorization: `Bearer ${access_token}` },
-          };
-          axios
-            .get(`http://10.0.2.2:5000/books/book-groups`, config)
-            .then((result) => {
-              setBooks([...result.data]);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [isFocused]);
-
-  useEffect(() => {
-    if (selectedId) {
-      _retrieveData("ACCESS_TOKEN")
-        .then((access_token) => {
-          const config = {
-            params: {
-              book_detail_id: selectedId,
-            },
-            headers: { Authorization: `Bearer ${access_token}` },
-          };
-          axios
-            .get(`http://10.0.2.2:5000/books/book-groups/${selectedId}`, config)
-            .then((result) => {
-              setSelectedBook(result.data[0]);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [selectedId]);
-
-  const handleSearch = (search_value) => {
-    if (search_value) {
-      _retrieveData("ACCESS_TOKEN")
-        .then((access_token) => {
-          const config = {
-            params: {
-              search_value,
-            },
-            headers: { Authorization: `Bearer ${access_token}` },
-          };
-          axios
-            .get(`http://10.0.2.2:5000/books/book-groups/searching/${search_value}`, config)
-            .then((result) => {
-              const books = result.data;
-              setSearchResult(
-                books.map((book) => {
-                  return {
-                    id: book?.book_detail_id,
-                    photo: `http://10.0.2.2:5000${book?.cover_photo}`,
-                    title: book?.book_name,
-                    description: book?.author_name,
-                  };
-                }),
-              );
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
 
   const handleSubmit = (bookInfo) => {
     const { import_date, position } = bookInfo;
 
     // setIsLoading(true);
 
-    if (!selectedId) {
+    if (!book_detail_id) {
       alert("Select book group to continue");
       return;
     }
@@ -133,7 +47,7 @@ function AddBookScreen({ navigation }) {
     const formatedPosition = `${position.shelf}-${position.row}-${position.order}`;
 
     const data = {
-      book_detail_id: selectedId,
+      book_detail_id: book_detail_id,
       position: formatedPosition,
       import_date,
     };
@@ -153,7 +67,7 @@ function AddBookScreen({ navigation }) {
         axios(configurations)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.navigate("Book Groups");
+            navigation.goBack();
           })
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
@@ -173,16 +87,14 @@ function AddBookScreen({ navigation }) {
 
   return (
     <TouchableOpacity style={styles.wrapper} activeOpacity={1}>
-      {selectedBook ? (
+      {book_detail_info && (
         <BriefBookInfoPreview
-          book_name={selectedBook?.book_name}
-          author_name={selectedBook?.author_name}
-          cover_photo={`http://10.0.2.2:5000${selectedBook?.cover_photo}`}
+          book_name={book_name}
+          author_name={author_name}
+          cover_photo={`http://10.0.2.2:5000${cover_photo}`}
           onPress={() => setShowModal(true)}
           _styles={styles.bookInfoPreview}
         />
-      ) : (
-        <PickerBtn _styles={styles.selectBookBtn} title={"Choose Book"} onPress={() => setShowModal(true)} />
       )}
 
       <Formik
@@ -192,7 +104,6 @@ function AddBookScreen({ navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
           handleSubmit(values);
         }}
       >
@@ -262,22 +173,6 @@ function AddBookScreen({ navigation }) {
           </TouchableOpacity>
         )}
       </Formik>
-      <PickerModal
-        visible={showModal}
-        setVisible={setShowModal}
-        setValue={setSelectedId}
-        searchResult={searchResult}
-        setSearchResult={setSearchResult}
-        onSearch={handleSearch}
-        options={books.map((book) => {
-          return {
-            id: book?.book_detail_id,
-            photo: `http://10.0.2.2:5000${book?.cover_photo}`,
-            title: book?.book_name,
-            description: book?.author_name,
-          };
-        })}
-      />
       <LoadingModal visible={isLoading} />
       <AlertModal
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}

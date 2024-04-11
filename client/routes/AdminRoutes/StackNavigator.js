@@ -11,6 +11,7 @@ import AddReaderScreen from "../../screens/AdminScreens/AddReaderScreen";
 import ReaderDetailScreen from "../../screens/AdminScreens/ReaderDetailScreen";
 import EditReaderScreen from "../../screens/AdminScreens/EditReaderScreen";
 import SearchResults from "../../screens/AdminScreens/SearchResults";
+import ReaderSearchResults from "../../screens/EmployeeScreens/ReaderSearchResults";
 
 const Stack = createStackNavigator();
 
@@ -106,8 +107,8 @@ const ReaderManStackNavigation = () => {
       />
 
       <Stack.Screen
-        name="Search Results"
-        component={SearchResults}
+        name="Readers Search Results"
+        component={ReaderSearchResults}
         options={{ header: (props) => <MainHeader title="Search Result" {...props} is_stack /> }}
       />
     </Stack.Navigator>

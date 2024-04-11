@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const db = require("../../config/db");
 const moment = require("moment");
-const { groupBy } = require("../../DefinedFunctions");
+const { groupBy, checkValidReaderToBorrow } = require("../../DefinedFunctions");
 
 class BorrowedBooksController {
   // [GET] /borrowed-books
@@ -91,9 +91,9 @@ class BorrowedBooksController {
 
     const promise = () => {
       const sql = `
-      select user_id, getDept(user_id) as overdue_days, expire_date < curdate() is_expired 
+      select user_id, getDept(user_id) as overdue_days, getBorrowingBookQuantity(user_id) as borrowing_books, expire_date < curdate() is_expired 
       from user_info
-      where user_id = ${reader_id} and (getDept(user_id) > 0 or expire_date < curdate())
+      where user_id = ${reader_id} and (getDept(user_id) > 0 or expire_date < curdate() or getBorrowingBookQuantity(user_id) >= 4)
       `;
 
       return new Promise((resolve, reject) => {
@@ -461,8 +461,10 @@ class BorrowedBooksController {
         left join rm on bd.book_detail_id = rm.book_detail_id
         inner join authors a on a.author_id = bd.author_id
         inner join categories c on c.category_id = bd.category_id
-        where for_reader = '${reader_type}'
+        where for_reader = ${reader_type == "student" ? 1 : 2} or for_reader = 3
       `;
+
+      console.log(sql);
 
       return new Promise((resolve, reject) => {
         db.query(sql, (err, result) => {
@@ -501,7 +503,7 @@ class BorrowedBooksController {
         left join rm on bd.book_detail_id = rm.book_detail_id
         inner join authors a on a.author_id = bd.author_id
         inner join categories c on c.category_id = bd.category_id
-        where for_reader = '${reader_type}' and bd.book_name like ?
+        where (for_reader = ${reader_type === "reader" ? 1 : 2} or for_reader = 3) and bd.book_name like ?
       `;
 
       return new Promise((resolve, reject) => {
@@ -555,7 +557,6 @@ class BorrowedBooksController {
           if (err) {
             reject(err);
           } else {
-            console.log(result);
             resolve(result);
           }
         });
@@ -578,7 +579,10 @@ class BorrowedBooksController {
       });
     };
 
-    checkingBookStatus()
+    checkValidReaderToBorrow(reader_id)
+      .then((result) => {
+        return checkingBookStatus();
+      })
       .then((result) => {
         return updateBookStatus();
       })
@@ -625,7 +629,25 @@ class BorrowedBooksController {
 
   // [DELETE] /borrowed-books/:borrow_id
   deleteBorrowedBook(req, res) {
-    const { borrow_id } = req.query;
+    const { book_id, borrow_id } = req.query;
+
+    const updateBookStatus = () => {
+      const sql = `
+      update books b
+        inner join borrowed_books bb on b.book_id = bb.book_id
+        set b.status = 1
+        where bb.actual_return_date is null and b.book_id = ${book_id}
+      `;
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
 
     const deleteBorrowedBook = () => {
       return new Promise((resolve, reject) => {
@@ -633,14 +655,16 @@ class BorrowedBooksController {
           if (err) {
             reject(err);
           } else {
-            console.log(result);
             resolve(result);
           }
         });
       });
     };
 
-    deleteBorrowedBook()
+    updateBookStatus()
+      .then((result) => {
+        return deleteBorrowedBook();
+      })
       .then((result) => {
         res.status(200).send(result);
       })

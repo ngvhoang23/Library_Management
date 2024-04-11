@@ -74,14 +74,14 @@ function LogicWrapper() {
   };
 
   const render = () => {
-    if (auth === "admin") {
+    if (auth === "admin" || 1) {
       return (
         <NavigationContainer theme={MyTheme}>
           <AdminDrawerNavigator />
         </NavigationContainer>
       );
     }
-    if (auth === "emp" || 1) {
+    if (auth === "emp") {
       return (
         <NavigationContainer theme={MyTheme}>
           <EmployeeDrawerNavigator />

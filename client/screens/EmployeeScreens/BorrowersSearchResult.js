@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   readerItem: {
     width: "44%",
     padding: normalize(10),
-    margin: normalize(10),
+    margin: normalize(8),
     borderRadius: normalize(10),
   },
 

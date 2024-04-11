@@ -34,7 +34,6 @@ function BookGroupDetailScreen({ route, navigation }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
-  const [status, setStatus] = useState(true);
   const [bookInfo, setBookInfo] = useState({});
 
   useEffect(() => {
@@ -61,8 +60,52 @@ function BookGroupDetailScreen({ route, navigation }) {
       });
   }, [isFocused]);
 
-  const { book_name, price, published_date, description, publish_com, author_name, category_name, cover_photo } =
-    bookInfo;
+  const {
+    book_name,
+    price,
+    published_date,
+    description,
+    publish_com,
+    author_name,
+    category_name,
+    cover_photo,
+    for_reader,
+  } = bookInfo;
+
+  const handleDeleteBookGroup = () => {
+    setIsLoading(true);
+    _retrieveData("ACCESS_TOKEN")
+      .then((access_token) => {
+        const configurations = {
+          method: "DELETE",
+          url: `http://10.0.2.2:5000/books/book-groups/${book_detail_id}`,
+          data: { book_detail_id: book_detail_id },
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${access_token}`,
+          },
+        };
+        axios(configurations)
+          .then((result) => {
+            setResultStatus({ isSuccess: 1, visible: true });
+            navigation.goBack();
+          })
+          .catch((err) => {
+            setResultStatus({ isSuccess: 0, visible: true });
+            console.log("err", err);
+          })
+          .finally((result) => {
+            setIsLoading(false);
+          });
+      })
+      .catch((err) => {
+        setResultStatus({ isSuccess: 0, visible: true });
+        console.log(err);
+      })
+      .finally((result) => {
+        setIsLoading(false);
+      });
+  };
 
   return (
     <View style={styles.wrapper}>
@@ -122,6 +165,15 @@ function BookGroupDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
+          lableTitle="For reader"
+          value={`${for_reader == 1 ? "Student" : for_reader == 2 ? "Lecturer" : "All"}`}
+          icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
+          read_only
+        />
+
+        <PreviewInfoItem
+          _styles={[styles.input]}
+          textStyles={{ color: "#676768" }}
           lableTitle="Author"
           value={author_name}
           icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
@@ -144,6 +196,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           text="Book List"
           onPress={() => navigation.navigate("Book List", { book_info: bookInfo })}
         />
+        <FlatButton _styles={styles.deleteBtn} text="Delete Book Group" onPress={handleDeleteBookGroup} />
         <FlatButton
           _styles={styles.editBtn}
           text="Edit"
@@ -222,7 +275,7 @@ const styles = StyleSheet.create({
 
   openBookListBtn: {
     height: normalize(32),
-    width: "40%",
+    width: "46%",
     paddingVertical: 0,
     marginRight: normalize(10),
     display: "flex",
@@ -231,22 +284,35 @@ const styles = StyleSheet.create({
     backgroundColor: "#1e74fd",
   },
 
-  editBtn: {
+  deleteBtn: {
     height: normalize(32),
-    width: "40%",
+    width: "46%",
     paddingVertical: 0,
     marginLeft: normalize(10),
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f02849",
+  },
+
+  editBtn: {
+    height: normalize(32),
+    width: "100%",
+    paddingVertical: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "#1e74fd",
+    marginTop: normalize(10),
   },
 
   options: {
     width: "100%",
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
+    flexWrap: "wrap",
+    paddingHorizontal: normalize(16),
     marginBottom: normalize(10),
     marginTop: normalize(10),
   },

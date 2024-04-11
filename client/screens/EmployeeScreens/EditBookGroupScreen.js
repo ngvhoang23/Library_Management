@@ -113,7 +113,7 @@ function EditBookGroupScreen({ route, navigation }) {
     }
   };
 
-  const handleSubmit = (bookInfo) => {
+  const trySubmit = (bookInfo) => {
     const { book_name, price, published_date, description, publish_com, author, category } = bookInfo;
 
     if (!book_detail_id) {
@@ -140,34 +140,59 @@ function EditBookGroupScreen({ route, navigation }) {
     formData.append("author_id", author?.author_id);
     formData.append("category_id", category?.category_id);
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "PUT",
-          url: `http://10.0.2.2:5000/books/book-groups`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "PUT",
+            url: `http://10.0.2.2:5000/books/book-groups`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-        axios(configurations)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.goBack();
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+            })
+            .catch((err) => {
+              reject(err);
+              console.log("err", err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  };
+
+  const handleSubmit = (bookInfo) => {
+    trySubmit(bookInfo)
+      .then((result) => {
+        navigation.navigate("Book Group Detail", { book_info: { book_detail_id } });
+        setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
         console.log(err);
+        if (err?.message === "Network Error") {
+          trySubmit(bookInfo)
+            .then((result) => {
+              navigation.navigate("Book Group Detail", { book_info: { book_detail_id } });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            })
+            .finally((result) => {
+              setIsLoading(false);
+            });
+        }
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -185,7 +210,6 @@ function EditBookGroupScreen({ route, navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
           handleSubmit(values);
         }}
       >

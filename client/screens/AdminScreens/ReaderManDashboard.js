@@ -14,6 +14,7 @@ function ReaderManDashboard({ navigation }) {
   const [readers, setReaders] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
+
   useEffect(() => {
     setSearchValue("");
 
@@ -39,7 +40,7 @@ function ReaderManDashboard({ navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    navigation.navigate("Search Results", {
+    navigation.navigate("Reader Search Results", {
       search_value: searchValue,
       placeholder: "search readers...",
       type: "readers",
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
   readerItem: {
     width: "44%",
     padding: normalize(10),
-    margin: normalize(10),
+    margin: 10,
     borderRadius: normalize(10),
   },
 });

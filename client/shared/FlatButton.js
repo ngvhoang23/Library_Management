@@ -6,17 +6,19 @@ export default function FlatButton({ text, _styles, onPress, textColor, fontSize
   return (
     <TouchableOpacity style={[styles.wrapper, _styles]} onPress={onPress}>
       {children}
-      <View style={[styles.button, { marginLeft: children ? normalize(6) : 0 }]}>
-        <Text
-          style={[
-            styles.buttonText,
-            { fontSize: fontSize || styles.buttonText.fontSize },
-            { color: textColor || styles.buttonText.color },
-          ]}
-        >
-          {text}
-        </Text>
-      </View>
+      {text && (
+        <View style={[styles.button, { marginLeft: children ? normalize(6) : 0 }]}>
+          <Text
+            style={[
+              styles.buttonText,
+              { fontSize: fontSize || styles.buttonText.fontSize },
+              { color: textColor || styles.buttonText.color },
+            ]}
+          >
+            {text}
+          </Text>
+        </View>
+      )}
     </TouchableOpacity>
   );
 }

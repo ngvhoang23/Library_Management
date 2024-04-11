@@ -5,15 +5,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import FlatButton from "../../shared/FlatButton";
 import LoadingModal from "../../components/LoadingModal";
 import PreviewInfoItem from "../../components/PreviewInfoItem";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMoneyBill1, faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
-import {
-  faArrowRightFromBracket,
-  faHandHoldingHand,
-  faArrowRotateLeft,
-  FontAwesome,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightFromBracket, faHandHoldingHand, faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import AlertModal from "../../components/AlertModal";
@@ -61,7 +56,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           .put(`http://10.0.2.2:5000/borrowed-books/return-book/${borrow_id}`, payload, config)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.goBack();
+            navigation.goBack();
           })
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
@@ -83,6 +78,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           headers: { Authorization: `Bearer ${access_token}` },
           params: {
             borrow_id,
+            book_id,
           },
         };
 
@@ -90,7 +86,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           .delete(`http://10.0.2.2:5000/borrowed-books/${borrow_id}`, config)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.goBack();
+            navigation.goBack();
           })
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
@@ -126,16 +122,15 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
           lableTitle="Borrow Date"
-          value={borrow_date ? new Date(borrow_date).toISOString().split("T")[0] : ""}
+          value={borrow_date ? new Date(borrow_date).toISOString().split("T")[0] : " "}
           icon={<FontAwesome name="hourglass-1" size={normalize(16)} color="#6fa4f8" />}
           read_only
         />
-
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: new Date() > new Date(return_date) ? "#f02849" : "#676768" }}
           lableTitle="Return Date"
-          value={return_date ? new Date(return_date).toISOString().split("T")[0] : ""}
+          value={return_date ? new Date(return_date).toISOString().split("T")[0] : " "}
           icon={<FontAwesome name="hourglass-end" size={normalize(16)} color="#6fa4f8" />}
           read_only
         />
@@ -145,7 +140,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Actual Return Date"
           value={actual_return_date ? new Date(actual_return_date).toISOString().split("T")[0] : ""}
-          icon={<FontAwesomeIcon icon={faCalendarCheck} size={normalize(18)} style={{ color: "#949498" }} />}
+          icon={<MaterialCommunityIcons name="update" size={normalize(20)} color="#6fa4f8" />}
           read_only
         />
 
@@ -155,7 +150,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
             textStyles={{ color: "#f02849" }}
             lableTitle="Fine"
             value={`${Math.abs(Math.floor((new Date(return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)} VNĐ`}
-            icon={<FontAwesomeIcon icon={faMoneyBill1} size={normalize(18)} style={{ color: "#949498" }} />}
+            icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#6fa4f8" />}
             read_only
           />
         )}

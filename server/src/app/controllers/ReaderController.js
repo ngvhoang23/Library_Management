@@ -208,22 +208,7 @@ class ReaderController {
       });
     };
 
-    const deleteUserInfo = () => {
-      return new Promise((resolve, reject) => {
-        db.query(`delete from user_info where user_id = ${user_id}`, (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        });
-      });
-    };
-
-    deleteUserInfo()
-      .then((result) => {
-        return deleteAuthInfo();
-      })
+    deleteAuthInfo()
       .then((result) => {
         res.status(200).send(result);
       })

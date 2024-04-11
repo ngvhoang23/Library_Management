@@ -14,6 +14,7 @@ function ReaderManDashboard({ navigation }) {
   const [readers, setReaders] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
+
   useEffect(() => {
     setSearchValue("");
 
@@ -39,7 +40,7 @@ function ReaderManDashboard({ navigation }) {
   }, [isFocused]);
 
   const onSearch = () => {
-    navigation.navigate("Search Results", {
+    navigation.navigate("Reader Search Results", {
       search_value: searchValue,
       placeholder: "search readers...",
       type: "readers",
@@ -50,7 +51,7 @@ function ReaderManDashboard({ navigation }) {
     <View style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search employees..."
+        placeholder="search readers..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}

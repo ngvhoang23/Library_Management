@@ -57,7 +57,7 @@ function BorrowedBookManDashBoard({ route, navigation }) {
         onSearch={onSearch}
       />
 
-      <ScrollView>
+      <ScrollView style={styles.listWrapper}>
         <View style={styles.bookList}>
           {books.map((book, index) => {
             return (
@@ -88,18 +88,25 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "center",
+    flex: 1,
   },
+
+  listWrapper: {
+    flex: 1,
+  },
+
   bookList: {
     width: SCREEN_WIDTH,
     flex: 1,
+    height: "100%",
     paddingVertical: normalize(14),
     paddingHorizontal: normalize(14),
-    overflow: "scroll",
-    flexDirection: "column",
+    flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     flexWrap: "wrap",
   },
+
   bookItem: {
     width: "100%",
     paddingTop: normalize(10),

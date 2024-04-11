@@ -131,17 +131,11 @@ function EditReaderScreen({ route, navigation }) {
           axios(configurations)
             .then((result) => {
               resolve(result);
-              // setResultStatus({ isSuccess: 1, visible: true });
-              // navigation.goBack();
             })
             .catch((err) => {
               reject(err);
-              // setResultStatus({ isSuccess: 0, visible: true });
               console.log("err", err);
             });
-          // .finally((result) => {
-          //   setIsLoading(false);
-          // });
         })
         .catch((err) => {
           reject(err);
@@ -153,16 +147,21 @@ function EditReaderScreen({ route, navigation }) {
   const handleSubmit = (readerInfo) => {
     trySubmit(readerInfo)
       .then((result) => {
+        navigation.navigate("Reader Detail", { reader_info: { user_id: user_id } });
         setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
-        trySubmit(readerInfo)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-          });
+        if (err?.message === "Network Error") {
+          trySubmit(readerInfo)
+            .then((result) => {
+              navigation.navigate("Reader Detail", { reader_info: { user_id: user_id } });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            });
+          console.log(err);
+        }
       })
       .finally((result) => {
         setIsLoading(false);
@@ -183,7 +182,6 @@ function EditReaderScreen({ route, navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
           handleSubmit(values);
         }}
       >
@@ -246,6 +244,7 @@ function EditReaderScreen({ route, navigation }) {
               <MenuPickers
                 _styles={[styles.input]}
                 lableTitle="Gender"
+                initIndex={gender === 0 ? 1 : 0}
                 value={props.values.gender}
                 errorText={props.errors.gender}
                 options={[

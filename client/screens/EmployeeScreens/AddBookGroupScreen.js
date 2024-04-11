@@ -15,6 +15,7 @@ import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
 import { _retrieveData, normalize, validateEmail } from "../../defined_function/index.js";
 import { useIsFocused } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 const formSchema = yup.object({
   book_name: yup.string().trim().required(),
@@ -38,6 +39,8 @@ function AddBookGroupScreen({ navigation }) {
   const [categories, setCategories] = useState([]);
   const [authors, setAuthors] = useState([]);
   const isFocused = useIsFocused();
+
+  const _navigation = useNavigation();
 
   useEffect(() => {
     if (isFocused) {
@@ -85,8 +88,8 @@ function AddBookGroupScreen({ navigation }) {
     }
   };
 
-  const handleSubmit = (bookInfo) => {
-    const { book_name, price, published_date, description, publish_com, author, category } = bookInfo;
+  const trySubmit = (bookInfo) => {
+    const { book_name, price, published_date, description, publish_com, author, category, for_reader } = bookInfo;
 
     setIsLoading(true);
     const formData = new FormData();
@@ -105,163 +108,210 @@ function AddBookGroupScreen({ navigation }) {
     publish_com && formData.append("publish_com", publish_com.trim());
     formData.append("author_id", author?.author_id);
     formData.append("category_id", category?.category_id);
+    formData.append("for_reader", for_reader);
+    return new Promise((resolve, reject) => {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const configurations = {
+            method: "POST",
+            url: `http://10.0.2.2:5000/books/book-groups`,
+            data: formData,
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${access_token}`,
+            },
+          };
 
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const configurations = {
-          method: "POST",
-          url: `http://10.0.2.2:5000/books/book-groups`,
-          data: formData,
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${access_token}`,
-          },
-        };
+          axios(configurations)
+            .then((result) => {
+              resolve(result);
+            })
+            .catch((err) => {
+              reject(err);
+              console.log("err", err);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  };
 
-        axios(configurations)
-          .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.navigate("Book Groups");
-          })
-          .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
-            console.log("err", err);
-          })
-          .finally((result) => {
-            setIsLoading(false);
-          });
+  const handleSubmit = (bookInfo) => {
+    trySubmit(bookInfo)
+      .then((result) => {
+        navigation.navigate("Dashboard", { screen: "Book Groups" });
+        setResultStatus({ isSuccess: 1, visible: true });
       })
       .catch((err) => {
         console.log(err);
+        if (err?.message === "Network Error") {
+          trySubmit(bookInfo)
+            .then((result) => {
+              navigation.navigate("Dashboard", { screen: "Book Groups" });
+              setResultStatus({ isSuccess: 1, visible: true });
+            })
+            .catch((err) => {
+              setResultStatus({ isSuccess: 0, visible: true });
+            })
+            .finally((result) => {
+              setIsLoading(false);
+            });
+        }
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
   return (
     <View style={styles.wrapper}>
-      <Formik
-        initialValues={{
-          book_name: "",
-          price: "",
-          published_date: new Date().toISOString().split("T")[0],
-          description: "",
-          publish_com: "",
-          author: authors[0],
-          category: categories[0],
-        }}
-        validationSchema={formSchema}
-        onSubmit={(values, actions) => {
-          actions.resetForm();
-          handleSubmit(values);
-        }}
-      >
-        {(props) => (
-          <TouchableOpacity style={styles.formWrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
-            <ScrollView
-              style={styles.formContainer}
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <AvatarPicker
-                _styles={styles.avatarPicker}
-                avatar={coverPhoto}
-                setAvatar={setCoverPhoto}
-                onPickImage={pickImage}
-                title={"Choose cover photo"}
-              />
-
-              <InputItem
-                _styles={[styles.input]}
-                placeholder="Book name"
-                lableTitle="Book name"
-                onChange={props.handleChange("book_name")}
-                value={props.values.book_name}
-                errorText={props.errors.book_name}
-              />
-
-              <InputItem
-                _styles={[styles.input]}
-                placeholder="Price"
-                lableTitle="Price"
-                onChange={props.handleChange("price")}
-                value={props.values.price}
-                errorText={props.errors.price}
-                numberOnly
-              />
-
-              <MyDateTimePicker
-                _styles={[styles.input]}
-                lableTitle="Published date"
-                value={props.values.published_date}
-                errorText={props.errors.published_date}
-                onPress={() => setIsShowDatePicker(true)}
-              />
-              {isShowDatePicker && (
-                <DateTimePicker
-                  mode="date"
-                  display="spinner"
-                  value={new Date(props.values.published_date)}
-                  onChange={(event, selectedDate) => {
-                    setIsShowDatePicker(false);
-                    props.setFieldValue("published_date", selectedDate.toISOString().split("T")[0]);
-                  }}
+      {categories.length > 0 && authors.length > 0 && (
+        <Formik
+          initialValues={{
+            book_name: "",
+            price: "",
+            published_date: new Date().toISOString().split("T")[0],
+            description: "",
+            publish_com: "",
+            author: authors[0],
+            category: categories[0],
+            for_reader: 1,
+          }}
+          validationSchema={formSchema}
+          onSubmit={(values, actions) => {
+            handleSubmit(values);
+          }}
+        >
+          {(props) => (
+            <TouchableOpacity style={styles.formWrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
+              <ScrollView
+                style={styles.formContainer}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <AvatarPicker
+                  _styles={styles.avatarPicker}
+                  avatar={coverPhoto}
+                  setAvatar={setCoverPhoto}
+                  onPickImage={pickImage}
+                  title={"Choose cover photo"}
                 />
-              )}
 
-              <InputItem
-                _styles={[styles.input]}
-                placeholder="Description"
-                lableTitle="Description"
-                multiline
-                onChange={props.handleChange("description")}
-                value={props.values.description}
-                errorText={props.errors.description}
-                numberOfLines={4}
-              />
+                <InputItem
+                  _styles={[styles.input]}
+                  placeholder="Book name"
+                  lableTitle="Book name"
+                  onChange={props.handleChange("book_name")}
+                  value={props.values.book_name}
+                  errorText={props.errors.book_name}
+                />
 
-              <InputItem
-                _styles={[styles.input]}
-                placeholder="Publish Comany"
-                lableTitle="Publish Comany"
-                onChange={props.handleChange("publish_com")}
-                value={props.values.publish_com}
-                errorText={props.errors.publish_com}
-              />
+                <InputItem
+                  _styles={[styles.input]}
+                  placeholder="Price"
+                  lableTitle="Price"
+                  onChange={(value) => {
+                    props.setFieldValue("price", value.replace(/[^0-9]/g, ""));
+                  }}
+                  value={props.values.price}
+                  errorText={props.errors.price}
+                  numberOnly
+                />
 
-              <MenuPickers
-                _styles={[styles.input]}
-                lableTitle="Author"
-                errorText={props.errors.author}
-                options={authors?.map((author) => {
-                  return { title: author.author_name, value: author.author_id };
-                })}
-                onChange={(selectedValue, selectedIndex) => props.setFieldValue("author", authors[selectedIndex])}
-              />
+                <MyDateTimePicker
+                  _styles={[styles.input]}
+                  lableTitle="Published date"
+                  value={props.values.published_date}
+                  errorText={props.errors.published_date}
+                  onPress={() => setIsShowDatePicker(true)}
+                />
+                {isShowDatePicker && (
+                  <DateTimePicker
+                    mode="date"
+                    display="spinner"
+                    value={new Date(props.values.published_date)}
+                    onChange={(event, selectedDate) => {
+                      setIsShowDatePicker(false);
+                      props.setFieldValue("published_date", selectedDate.toISOString().split("T")[0]);
+                    }}
+                  />
+                )}
 
-              <MenuPickers
-                _styles={[styles.input]}
-                lableTitle="Category"
-                errorText={props.errors.category}
-                options={categories?.map((category) => {
-                  return { title: category.category_name, value: category.category_id };
-                })}
-                onChange={(selectedValue, selectedIndex) => props.setFieldValue("category", categories[selectedIndex])}
-              />
-              <FlatButton
-                _styles={styles.submitBtn}
-                onPress={props.handleSubmit}
-                text="submit"
-                fontSize={normalize(10)}
-              />
-            </ScrollView>
-          </TouchableOpacity>
-        )}
-      </Formik>
+                <InputItem
+                  _styles={[styles.input]}
+                  placeholder="Description"
+                  lableTitle="Description"
+                  multiline
+                  onChange={props.handleChange("description")}
+                  value={props.values.description}
+                  errorText={props.errors.description}
+                  numberOfLines={4}
+                />
+
+                <InputItem
+                  _styles={[styles.input]}
+                  placeholder="Publish Comany"
+                  lableTitle="Publish Comany"
+                  onChange={props.handleChange("publish_com")}
+                  value={props.values.publish_com}
+                  errorText={props.errors.publish_com}
+                />
+
+                <MenuPickers
+                  _styles={[styles.input]}
+                  initIndex={0}
+                  lableTitle="For reader"
+                  errorText={props.errors.for_reader}
+                  options={[
+                    { title: "Student", value: 1 },
+                    { title: "Lecturer", value: 2 },
+                    { title: "All", value: 3 },
+                  ]}
+                  onChange={(selectedValue, selectedIndex) => props.setFieldValue("for_reader", selectedValue)}
+                />
+
+                <MenuPickers
+                  _styles={[styles.input]}
+                  initIndex={0}
+                  lableTitle="Author"
+                  errorText={props.errors.author}
+                  options={authors?.map((author) => {
+                    return { title: author.author_name, value: author.author_id };
+                  })}
+                  onChange={(selectedValue, selectedIndex) => props.setFieldValue("author", authors[selectedIndex])}
+                />
+
+                <MenuPickers
+                  _styles={[styles.input]}
+                  initIndex={0}
+                  lableTitle="Category"
+                  errorText={props.errors.category}
+                  options={categories?.map((category) => {
+                    return { title: category.category_name, value: category.category_id };
+                  })}
+                  onChange={(selectedValue, selectedIndex) =>
+                    props.setFieldValue("category", categories[selectedIndex])
+                  }
+                />
+
+                <FlatButton
+                  _styles={styles.submitBtn}
+                  onPress={props.handleSubmit}
+                  text="submit"
+                  fontSize={normalize(10)}
+                />
+              </ScrollView>
+            </TouchableOpacity>
+          )}
+        </Formik>
+      )}
       <LoadingModal visible={isLoading} />
       <AlertModal
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
