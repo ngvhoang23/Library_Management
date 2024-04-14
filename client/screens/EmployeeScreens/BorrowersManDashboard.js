@@ -62,6 +62,7 @@ function BorrowersManDashboard({ navigation }) {
               <BorrowerItem
                 key={borrower?.user_id}
                 _style={[styles.borrowerItem]}
+                borrowing_progress={true}
                 data={borrower}
                 borrowing_books={borrower.borrowed_books || 0}
                 onPress={() =>
@@ -100,7 +101,8 @@ const styles = StyleSheet.create({
   },
   borrowerItem: {
     width: "100%",
-    padding: normalize(10),
+    padding: normalize(8),
+    paddingVertical: normalize(4),
     borderRadius: normalize(10),
     marginBottom: normalize(14),
   },

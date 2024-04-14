@@ -105,12 +105,14 @@ function BorrowingBookDetailScreen({ route, navigation }) {
     <View style={styles.wrapper}>
       <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
         <BriefUserInfoPreview
+          small
           _styles={styles.userInfoContainer}
           full_name={reader_name}
           phone_num={reader_phone_num}
           avatar={`http://10.0.2.2:5000${reader_avatar}`}
         />
         <BriefBookInfoPreview
+          small
           _styles={styles.bookInfoContainer}
           book_name={book_name}
           author_name={author_name}
@@ -123,7 +125,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Borrow Date"
           value={borrow_date ? new Date(borrow_date).toISOString().split("T")[0] : " "}
-          icon={<FontAwesome name="hourglass-1" size={normalize(16)} color="#6fa4f8" />}
+          icon={<FontAwesome name="hourglass-1" size={normalize(14)} color="#3c3c3c" />}
           read_only
         />
         <PreviewInfoItem
@@ -131,7 +133,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           textStyles={{ color: new Date() > new Date(return_date) ? "#f02849" : "#676768" }}
           lableTitle="Return Date"
           value={return_date ? new Date(return_date).toISOString().split("T")[0] : " "}
-          icon={<FontAwesome name="hourglass-end" size={normalize(16)} color="#6fa4f8" />}
+          icon={<FontAwesome name="hourglass-end" size={normalize(14)} color="#3c3c3c" />}
           read_only
         />
 
@@ -140,7 +142,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Actual Return Date"
           value={actual_return_date ? new Date(actual_return_date).toISOString().split("T")[0] : ""}
-          icon={<MaterialCommunityIcons name="update" size={normalize(20)} color="#6fa4f8" />}
+          icon={<MaterialCommunityIcons name="update" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
@@ -150,7 +152,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
             textStyles={{ color: "#f02849" }}
             lableTitle="Fine"
             value={`${Math.abs(Math.floor((new Date(return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)} VNĐ`}
-            icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#6fa4f8" />}
+            icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#3c3c3c" />}
             read_only
           />
         )}
@@ -181,12 +183,14 @@ const styles = StyleSheet.create({
 
   userInfoContainer: {
     width: "100%",
-    marginBottom: normalize(16),
+    marginBottom: normalize(0),
+    paddingHorizontal: normalize(10),
   },
 
   bookInfoContainer: {
     width: "100%",
-    marginBottom: normalize(20),
+    marginBottom: normalize(30),
+    paddingHorizontal: normalize(10),
   },
 
   avatarContainer: {
@@ -210,13 +214,6 @@ const styles = StyleSheet.create({
     marginLeft: normalize(40),
   },
 
-  formWrapper: {
-    width: "100%",
-    marginHorizontal: normalize(20),
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
   formContainer: {
     width: "90%",
     height: normalize(420),
@@ -224,13 +221,15 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     borderBottomWidth: 1,
     borderColor: "#eee",
-    marginTop: normalize(30),
+    marginTop: normalize(0),
   },
 
   input: {
     marginBottom: normalize(20),
     width: "100%",
     marginBottom: normalize(30),
+    paddingLeft: normalize(10),
+    paddingRight: normalize(20),
   },
 
   deleteBtn: {
@@ -242,6 +241,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f02849",
+    borderRadius: normalize(100),
   },
 
   returnBookBtn: {
@@ -253,6 +253,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1e74fd",
+    borderRadius: normalize(100),
   },
 
   options: {

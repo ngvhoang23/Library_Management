@@ -1,12 +1,12 @@
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { useAuthContext } from "./context/roleContext";
-import { Text, View } from "react-native";
 import AdminDrawerNavigator from "./routes/AdminRoutes/AdminDrawerNavigator";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { _retrieveData } from "./defined_function";
 import LoginScreen from "./screens/AdminScreens/login";
 import EmployeeDrawerNavigator from "./routes/EmployeeRoutes/EmployeeDrawerNavigator";
+import ReaderDrawerNavigator from "./routes/ReaderRoutes/ReaderDrawerNavigator";
 
 function LogicWrapper() {
   const { auth, setAuth } = useAuthContext();
@@ -74,17 +74,24 @@ function LogicWrapper() {
   };
 
   const render = () => {
-    if (auth === "admin" || 1) {
+    if (auth === "admin") {
       return (
         <NavigationContainer theme={MyTheme}>
           <AdminDrawerNavigator />
         </NavigationContainer>
       );
     }
-    if (auth === "emp") {
+    if (auth === "emp" || 1) {
       return (
         <NavigationContainer theme={MyTheme}>
           <EmployeeDrawerNavigator />
+        </NavigationContainer>
+      );
+    }
+    if (auth === "reader" || 1) {
+      return (
+        <NavigationContainer theme={MyTheme}>
+          <ReaderDrawerNavigator />
         </NavigationContainer>
       );
     }

@@ -125,6 +125,77 @@ class BookController {
       });
   }
 
+  // [GET] /books/book-groups-by-reader
+  getBookGroupsByReader(req, res) {
+    const { reader_type } = req.query;
+
+    console.log("reader_type", reader_type);
+
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        db.query(
+          `        
+        select * from book_detail
+        inner join authors on book_detail.author_id = authors.author_id
+        inner join categories on book_detail.category_id = categories.category_id
+        where book_detail.for_reader = ${reader_type === "student" ? 1 : 2} or book_detail.for_reader = 3
+        `,
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          },
+        );
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /books-by-reader/:book_detail_id
+  getBooksByReaderByGroup(req, res) {
+    const { reader_type, book_detail_id } = req.query;
+
+    const promise = () => {
+      const sql = `
+        select * from books 
+          inner join book_detail on books.book_detail_id = book_detail.book_detail_id
+          inner join authors on book_detail.author_id = authors.author_id
+          inner join categories on book_detail.category_id = categories.category_id
+        where books.book_detail_id = ${book_detail_id} 
+        and book_detail.for_reader = ${reader_type === "student" ? 1 : 2} or book_detail.for_reader = 3
+        `;
+
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
   // [GET] /books/book-groups/:book_detail_id
   getBookGroup(req, res) {
     const { book_detail_id } = req.query;

@@ -67,9 +67,6 @@ function MenuPickers({ _styles, lableTitle, errorText, options, onChange, initIn
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
-    borderBottomWidth: 0.5,
-    borderColor: "#ced0d4",
-    borderRadius: 4,
   },
 
   container: {
@@ -84,12 +81,11 @@ const styles = StyleSheet.create({
     zIndex: 10,
     left: normalize(6),
     top: normalize(2),
-    fontSize: normalize(10),
     letterSpacing: 1,
-    color: "#1e74fd",
-    backgroundColor: "#fff",
-    textTransform: "uppercase",
-    fontFamily: "nunito-regular",
+    backgroundColor: "transparent",
+    fontSize: normalize(11),
+    color: "#3c3c3c",
+    fontFamily: "nunito-bold",
   },
   input: {
     marginTop: normalize(14),
@@ -98,6 +94,7 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
     letterSpacing: 1,
     color: "#676768",
+    marginLeft: normalize(6),
   },
   errorText: {
     marginBottom: normalize(4),

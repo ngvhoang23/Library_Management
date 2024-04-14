@@ -3,12 +3,12 @@ const db = require("../../config/db");
 const moment = require("moment");
 
 class UserController {
-  // [GET] /users/user-info
+  // [GET] /users/user-info ****
   getUserInfo(req, res) {
-    const { user_id } = req.userInfo;
+    // const { user_id } = req.userInfo;
     const promise = () => {
       return new Promise((resolve, reject) => {
-        db.query(`select * from user_info where user_id = ${user_id}`, (err, result) => {
+        db.query(`select * from user_info where user_id = 103`, (err, result) => {
           if (err) {
             reject(err);
           } else {

@@ -7,6 +7,11 @@ const BookController = require("../app/controllers/BookController");
 const BorrowedBooksController = require("../app/controllers/BorrowedBooksController");
 const { reader_auth, emp_auth, admin_auth } = require("../auth/auth");
 
+// reader role
+
+router.get("/book-groups-by-reader", BookController.getBookGroupsByReader);
+router.get("/books-by-reader/:book_detail_id", BookController.getBookGroupsByReader);
+
 router.get("/", BookController.getBooks);
 router.get("/book-groups", BookController.getBookGroups);
 router.get("/book-groups/:book_detail_id", BookController.getBookGroup);

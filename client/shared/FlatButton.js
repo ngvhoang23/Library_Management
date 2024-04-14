@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: "nunito-bold",
     color: "#fff",
-    textTransform: "uppercase",
     fontSize: normalize(9),
     textAlign: "center",
   },

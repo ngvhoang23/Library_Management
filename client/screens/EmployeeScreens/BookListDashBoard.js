@@ -159,7 +159,9 @@ function BookListDashBoard({ route, navigation }) {
           _styles={styles.addBookBtn}
           fontSize={normalize(10)}
           onPress={() => navigation.navigate("Add Books", { book_detail_info: book_info })}
-        />
+        >
+          <AntDesign name="book" size={normalize(14)} color="#fff" />
+        </FlatButton>
       )}
       <LoadingModal visible={isLoading} />
       <AlertModal
@@ -223,12 +225,14 @@ const styles = StyleSheet.create({
   addBookBtn: {
     padding: normalize(10),
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
     position: "absolute",
     bottom: normalize(20),
     right: normalize(20),
+    borderRadius: normalize(40),
+    backgroundColor: "#6c60ff",
   },
 });
 

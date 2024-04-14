@@ -8,7 +8,7 @@ const EmployeeController = require("../app/controllers/EmployeeController");
 const ReaderController = require("../app/controllers/ReaderController");
 const { reader_auth, emp_auth, admin_auth } = require("../auth/auth");
 
-router.get("/user-info", reader_auth, UserController.getUserInfo);
+router.get("/user-info", UserController.getUserInfo);
 
 router.get("/employees", EmployeeController.getEmployees);
 router.get("/employees/searching/:search_value", EmployeeController.searchEmployees);

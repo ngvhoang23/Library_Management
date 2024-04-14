@@ -39,31 +39,27 @@ function InputItem({
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
-    borderBottomWidth: 0.6,
-    borderColor: "#ced0d4",
-    borderRadius: 4,
   },
   lableTitle: {
     position: "absolute",
     zIndex: 10,
     left: normalize(6),
     top: normalize(2),
-    fontSize: normalize(10),
+    fontSize: normalize(11),
     letterSpacing: 1,
-    color: "#1e74fd",
-    backgroundColor: "#fff",
-    textTransform: "uppercase",
-    fontFamily: "nunito-regular",
+    color: "#3c3c3c",
+    fontFamily: "nunito-bold",
   },
   submitBtn: {
     marginTop: normalize(16),
   },
   input: {
     marginTop: normalize(14),
-    fontSize: normalize(13),
+    fontSize: normalize(12),
     fontFamily: "nunito-regular",
     borderColor: "transparent",
     letterSpacing: 1,
+    marginLeft: normalize(6),
   },
   errorText: {
     marginBottom: normalize(4),

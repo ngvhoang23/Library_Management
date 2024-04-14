@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import InputItem from "../../components/InputItem";
 import AvatarPicker from "../../components/AvatarPicker";
 import { ScrollView } from "react-native-gesture-handler";
@@ -24,7 +24,9 @@ import { Picker } from "@react-native-picker/picker";
 import AlertModal from "../../components/AlertModal";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
-import { _retrieveData, normalize } from "../../defined_function";
+import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
+
+import MarqueeView from "react-native-marquee-view";
 
 function BookGroupDetailScreen({ route, navigation }) {
   const { book_info } = route.params;
@@ -108,21 +110,38 @@ function BookGroupDetailScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
-        <View style={[styles.avatarContainer]}>
-          <View>
-            <Image source={{ uri: `http://10.0.2.2:5000${cover_photo}` }} style={styles.avatarPreview} />
-          </View>
-        </View>
+        <ImageBackground source={require("../../assets/images/page_bg.jpg")} style={styles.headerWrapper}>
+          <TouchableOpacity
+            style={[styles.headerContainer]}
+            onPress={() => navigation.navigate("Edit Book Group", { book_info: bookInfo })}
+          >
+            <View style={[styles.bookInfo, styles.elevation]}>
+              <MarqueeView style={styles.marqueeView} playing={book_name?.length > 24} autoPlay={false}>
+                <Text style={styles.bookNameHeader}>{book_name}</Text>
+              </MarqueeView>
+              {author_name && <Text style={styles.authorNameHeader}>{author_name}</Text>}
 
+              {/* <View style={styles.desWrapper}>
+                <Text style={styles.desContent}>{description}</Text>
+              </View> */}
+            </View>
+            {/* <View style={styles.bookCoverPhoto}>
+              <Image source={{ uri: `http://10.0.2.2:5000/${cover_photo}` }} style={styles.avatarPreview} />
+              <FlatButton _styles={styles.editBtn} text="Edit">
+                <AntDesign name="edit" size={normalize(12)} color="#fff" />
+              </FlatButton>
+            </View> */}
+          </TouchableOpacity>
+        </ImageBackground>
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
           lableTitle="Book name"
           value={book_name}
           multiline
-          icon={<Ionicons name="book-outline" size={normalize(18)} color="#6fa4f8" />}
+          icon={<Ionicons name="book-outline" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
@@ -131,7 +150,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Price"
           value={price?.toString()}
-          icon={<MaterialIcons name="attach-money" size={normalize(18)} color="#6fa4f8" />}
+          icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
@@ -140,7 +159,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Published Date"
           value={published_date ? new Date(published_date).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(18)} color="#6fa4f8" />}
+          icon={<Fontisto name="date" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
@@ -158,7 +177,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Publish company"
           value={publish_com}
-          icon={<SimpleLineIcons name="cloud-upload" size={normalize(18)} color="#6fa4f8" />}
+          icon={<SimpleLineIcons name="cloud-upload" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
@@ -167,7 +186,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="For reader"
           value={`${for_reader == 1 ? "Student" : for_reader == 2 ? "Lecturer" : "All"}`}
-          icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
+          icon={<AntDesign name="user" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
@@ -176,7 +195,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Author"
           value={author_name}
-          icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
+          icon={<AntDesign name="user" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
@@ -185,7 +204,7 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Category"
           value={category_name}
-          icon={<MaterialIcons name="checklist-rtl" size={normalize(18)} color="#6fa4f8" />}
+          icon={<MaterialIcons name="checklist-rtl" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
       </ScrollView>
@@ -197,47 +216,119 @@ function BookGroupDetailScreen({ route, navigation }) {
           onPress={() => navigation.navigate("Book List", { book_info: bookInfo })}
         />
         <FlatButton _styles={styles.deleteBtn} text="Delete Book Group" onPress={handleDeleteBookGroup} />
-        <FlatButton
-          _styles={styles.editBtn}
-          text="Edit"
-          onPress={() => navigation.navigate("Edit Book Group", { book_info: bookInfo })}
-        />
       </View>
+
       <LoadingModal visible={isLoading} />
       <AlertModal
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
-    width: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: normalize(20),
+    width: SCREEN_WIDTH,
   },
 
-  avatarContainer: {
-    position: "relative",
-    with: "100%",
-    minHeight: normalize(50),
-    backgroundColor: "#eee",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#ced0d4",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: normalize(12),
+  headerWrapper: {
     marginBottom: normalize(20),
   },
 
-  avatarPreview: { width: normalize(120), height: normalize(120), borderRadius: 99999 },
+  headerContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-end",
+    height: normalize(120),
+    position: "relative",
+    marginTop: normalize(20),
+    marginBottom: normalize(30),
+    padding: normalize(10),
+    elevation: 200,
+    shadowColor: "#52006A",
+  },
+
+  elevation: {
+    elevation: 20,
+    shadowColor: "#52006A",
+  },
+
+  avatarPreview: {
+    width: normalize(80),
+    height: normalize(100),
+    borderRadius: normalize(10),
+  },
+
+  bookInfo: {
+    width: "100%",
+    backgroundColor: "transparent",
+    borderWidth: 1,
+    borderColor: "#dbe3ef",
+    padding: normalize(14),
+    borderRadius: normalize(10),
+    backgroundColor: "#fff",
+  },
+
+  marqueeView: {
+    height: normalize(20),
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    marginBottom: normalize(6),
+    width: "70%",
+  },
+
+  bookNameHeader: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(14),
+    letterSpacing: normalize(2),
+    color: "#676768",
+  },
+
+  authorNameHeader: {
+    width: "100%",
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    letterSpacing: normalize(2),
+    marginBottom: normalize(4),
+    color: "#aaabaf",
+  },
+
+  bookCoverPhoto: {
+    position: "absolute",
+    right: normalize(20),
+    bottom: normalize(30),
+    zIndex: 10,
+    elevation: 20,
+    shadowColor: "#52006A",
+  },
+
+  desWrapper: {},
+
+  desContent: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    color: "#676768",
+  },
+
+  editBtn: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#1e74fd",
+    position: "absolute",
+    padding: normalize(6),
+    left: normalize(-14),
+    top: normalize(-6),
+  },
 
   headerTitle: {
     fontFamily: "nunito-medium",
@@ -251,15 +342,8 @@ const styles = StyleSheet.create({
     marginBottom: normalize(20),
   },
 
-  formWrapper: {
-    width: "100%",
-    margin: normalize(20),
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-
   formContainer: {
-    width: "90%",
+    width: "100%",
     height: normalize(420),
     flex: 1,
     flexGrow: 1,
@@ -271,6 +355,8 @@ const styles = StyleSheet.create({
     marginBottom: normalize(20),
     width: "100%",
     marginBottom: normalize(30),
+    paddingRight: normalize(20),
+    paddingLeft: normalize(16),
   },
 
   openBookListBtn: {
@@ -281,7 +367,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(40),
   },
 
   deleteBtn: {
@@ -293,17 +380,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f02849",
-  },
-
-  editBtn: {
-    height: normalize(32),
-    width: "100%",
-    paddingVertical: 0,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1e74fd",
-    marginTop: normalize(10),
+    borderRadius: normalize(40),
   },
 
   options: {

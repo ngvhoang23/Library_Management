@@ -11,20 +11,20 @@ function MainHeader({ title, navigation, is_stack, back_key }) {
   };
 
   return (
-    <View source={require("../assets/images/header_bg.png")} style={styles.header}>
+    <ImageBackground source={require("../assets/images/page_bg2.jpg")} style={styles.header}>
       {is_stack ? (
         <Pressable onPress={() => navigation.goBack()} style={styles.icon}>
-          <AntDesign name="left" size={normalize(16)} color="#fff" />
+          <AntDesign name="left" size={normalize(16)} color="#3c3c3c" />
         </Pressable>
       ) : (
         <Pressable onPress={openMenu} style={styles.icon}>
-          <SimpleLineIcons name="menu" size={normalize(15)} color="#fff" />
+          <SimpleLineIcons name="menu" size={normalize(15)} color="#3c3c3c" />
         </Pressable>
       )}
       <View style={styles.headerTitle}>
         <Text style={styles.headerText}>{title}</Text>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -36,22 +36,24 @@ const styles = StyleSheet.create({
     paddingBottom: normalize(6),
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#fff",
     justifyContent: "center",
+    borderBottomWidth: 0.5,
+    borderColor: "#ced0d4",
   },
   headerText: {
     fontFamily: "nunito-bold",
     fontSize: normalize(13),
     color: "#333",
     letterSpacing: 1,
-    color: "#fff",
+    color: "#3c3c3c",
   },
   icon: {
     paddingTop: StatusBar.currentHeight + normalize(2),
     paddingBottom: normalize(6),
     position: "absolute",
     left: normalize(8),
-    color: "#fff",
+    color: "#3c3c3c",
     paddingHorizontal: normalize(14),
     alignItems: "center",
     justifyContent: "center",

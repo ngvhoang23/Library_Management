@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { globalStyles } from "../../styles/global.js";
 import { Formik } from "formik";
@@ -197,7 +198,7 @@ function EditBookGroupScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           book_name: book_name,
@@ -307,7 +308,7 @@ function EditBookGroupScreen({ route, navigation }) {
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="submit"
+                text="Submit"
                 fontSize={normalize(10)}
               />
             </ScrollView>
@@ -320,7 +321,7 @@ function EditBookGroupScreen({ route, navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -367,13 +368,13 @@ const styles = StyleSheet.create({
   submitBtn: {
     width: "100%",
     height: normalize(32),
-
+    borderRadius: normalize(40),
     marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
   },
 });
 

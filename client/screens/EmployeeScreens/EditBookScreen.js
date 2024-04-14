@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { globalStyles } from "../../styles/global.js";
 import { Formik } from "formik";
@@ -91,11 +92,12 @@ function EditBookScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <BriefBookInfoPreview
         book_name={book_name}
         author_name={author_name}
         cover_photo={`http://10.0.2.2:5000${cover_photo}`}
+        _styles={styles.bookInfo}
       />
       <Formik
         initialValues={{
@@ -168,7 +170,7 @@ function EditBookScreen({ route, navigation }) {
             <FlatButton
               _styles={styles.submitBtn}
               onPress={props.handleSubmit}
-              text="submit"
+              text="Submit"
               fontSize={normalize(10)}
             />
           </TouchableOpacity>
@@ -180,7 +182,7 @@ function EditBookScreen({ route, navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -191,6 +193,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
+  },
+
+  bookInfo: {
+    paddingHorizontal: normalize(20),
+    marginTop: normalize(20),
   },
 
   headerTitle: {
@@ -209,7 +216,7 @@ const styles = StyleSheet.create({
   },
 
   formContainer: {
-    width: "90%",
+    width: "86%",
     height: normalize(640),
     flex: 1,
   },
@@ -220,15 +227,15 @@ const styles = StyleSheet.create({
   },
 
   submitBtn: {
-    width: "90%",
+    width: "80%",
     height: normalize(32),
-
-    marginBottom: normalize(16),
+    borderRadius: normalize(40),
+    marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
   },
 
   positionValidate: {

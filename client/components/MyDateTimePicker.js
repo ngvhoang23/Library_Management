@@ -18,21 +18,18 @@ function MyDateTimePicker({ _styles, lableTitle, value, errorText, onPress }) {
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
-    borderBottomWidth: 0.5,
     borderColor: "#ced0d4",
-    borderRadius: 4,
   },
   lableTitle: {
     position: "absolute",
     zIndex: 10,
     left: normalize(6),
     top: normalize(2),
-    fontSize: normalize(10),
+    fontSize: normalize(11),
     letterSpacing: 1,
-    color: "#1e74fd",
-    backgroundColor: "#fff",
-    textTransform: "uppercase",
-    fontFamily: "nunito-regular",
+    color: "#3c3c3c",
+    backgroundColor: "transparent",
+    fontFamily: "nunito-bold",
   },
   input: {
     marginTop: normalize(14),
@@ -41,6 +38,7 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
     letterSpacing: 1,
     color: "#676768",
+    marginLeft: normalize(6),
   },
   errorText: {
     marginBottom: normalize(4),

@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { globalStyles } from "../../styles/global.js";
 import { Formik } from "formik";
@@ -188,7 +189,7 @@ function AddReaderScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           user_name: "",
@@ -351,7 +352,7 @@ function AddReaderScreen({ navigation }) {
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="submit"
+                text="Submit"
                 fontSize={normalize(10)}
               />
             </ScrollView>
@@ -364,7 +365,7 @@ function AddReaderScreen({ navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -415,7 +416,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(1000),
   },
 });
 

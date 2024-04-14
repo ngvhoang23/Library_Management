@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   readerList: {
     width: SCREEN_WIDTH,
     flex: 1,
-    paddingVertical: normalize(14),
+    paddingVertical: normalize(6),
     paddingHorizontal: normalize(6),
     overflow: "scroll",
     flexDirection: "row",
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   },
 
   readerItem: {
-    width: "44%",
+    width: "100%",
     padding: normalize(10),
     margin: 10,
     borderRadius: normalize(10),

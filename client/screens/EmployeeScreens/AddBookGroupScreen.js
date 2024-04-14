@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, ScrollView, Keyboard, TouchableOpacity, Text } from "react-native";
+import { StyleSheet, View, ScrollView, Keyboard, TouchableOpacity, Text, ImageBackground } from "react-native";
 import { Formik } from "formik";
 import FlatButton from "../../shared/FlatButton.js";
 import * as yup from "yup";
@@ -166,7 +166,7 @@ function AddBookGroupScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} resizeMode="cover" style={styles.wrapper}>
       {categories.length > 0 && authors.length > 0 && (
         <Formik
           initialValues={{
@@ -318,7 +318,7 @@ function AddBookGroupScreen({ navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 

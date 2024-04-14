@@ -9,6 +9,7 @@ import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import BookItem from "../../components/BookItem";
 import { ScrollView } from "react-native-gesture-handler";
+import BookGroupItem from "../../components/BookGroupItem";
 
 function BookGroupSearchResult({ route, navigation }) {
   const { search_value, placeholder, navigate_to } = route.params;
@@ -60,12 +61,16 @@ function BookGroupSearchResult({ route, navigation }) {
           <View style={styles.bookList}>
             {results.map((item, index) => {
               return (
-                <BookItem
-                  key={index}
+                <BookGroupItem
+                  key={item.book_detail_id}
                   _style={[styles.bookItem]}
-                  data={item}
+                  cover_photo={item.cover_photo}
+                  book_name={item.book_name}
+                  author={item.author_name}
+                  borrowed_books={5}
+                  total_books={12}
                   onPress={() =>
-                    navigation.navigate(navigate_to || "Book Group Detail", {
+                    navigation.navigate("Book Group Detail", {
                       book_info: item,
                     })
                   }
@@ -86,6 +91,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "center",
+    flex: 1,
   },
 
   searchBar: {
@@ -99,16 +105,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(6),
     overflow: "scroll",
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "flex-start",
     flexWrap: "wrap",
   },
 
   bookItem: {
-    width: "100%",
-    padding: normalize(10),
-    marginBottom: normalize(10),
-    borderRadius: normalize(6),
+    width: "46%",
+    margin: normalize(5),
+    marginBottom: normalize(16),
   },
 
   messageText: {

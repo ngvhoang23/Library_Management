@@ -60,8 +60,9 @@ function BorrowingReaderSearchResult({ route, navigation }) {
             {results.map((item, index) => {
               return (
                 <BorrowerItem
-                  key={index}
+                  key={item?.user_id}
                   _style={[styles.borrowerItem]}
+                  borrowing_progress={true}
                   data={item}
                   borrowing_books={item.borrowed_books || 0}
                   onPress={() =>

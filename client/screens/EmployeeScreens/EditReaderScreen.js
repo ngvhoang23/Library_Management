@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { globalStyles } from "../../styles/global.js";
 import { Formik } from "formik";
@@ -169,7 +170,7 @@ function EditReaderScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           phone_num: phone_num || "",
@@ -275,7 +276,7 @@ function EditReaderScreen({ route, navigation }) {
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="submit"
+                text="Submit"
                 fontSize={normalize(10)}
               />
             </ScrollView>
@@ -288,7 +289,7 @@ function EditReaderScreen({ route, navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -310,19 +311,22 @@ const styles = StyleSheet.create({
 
   avatarPicker: {
     width: "100%",
-    marginBottom: normalize(20),
+    borderRadius: normalize(10),
+    marginBottom: normalize(10),
   },
 
   formWrapper: {
     width: "100%",
-    marginTop: normalize(20),
+    marginTop: normalize(10),
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
+    paddingLeft: normalize(20),
+    paddingRight: normalize(20),
   },
 
   formContainer: {
-    width: "90%",
+    width: "100%",
     height: normalize(640),
     flex: 1,
   },
@@ -335,13 +339,13 @@ const styles = StyleSheet.create({
   submitBtn: {
     width: "100%",
     height: normalize(32),
-
+    borderRadius: normalize(40),
     marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
   },
 });
 
