@@ -7,6 +7,7 @@ import {
   BookManStackNavigation,
   BorrowBookStackNavigation,
   EmpManStackNavigator,
+  NotificationStackNavigation,
   ReaderManStackNavigation,
 } from "./StackNavigator";
 import { useAuthContext } from "../../context/roleContext";
@@ -17,21 +18,14 @@ import {
   BookManTabNavigation,
   BorrowedBookManTabNavigation,
   BorrowerManTabNavigation,
+  ProfileTabNavigation,
   ReaderManTabNavigation,
 } from "./TabNavigation";
-import FlatButton from "../../shared/FlatButton";
-import LoginForm from "../../components/loginForm";
-import {
-  faBook,
-  faBookOpenReader,
-  faChartLine,
-  faBookmark,
-  faUser,
-  faArrowRightFromBracket,
-} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { StyleSheet, View, StatusBar } from "react-native";
-import { AntDesign, MaterialCommunityIcons, Feather, MaterialIcons } from "@expo/vector-icons";
+import { StyleSheet, View, StatusBar, Image, Text } from "react-native";
+import { AntDesign, MaterialCommunityIcons, Feather, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import socket from "../../socket";
+import { useNotiContext } from "../../context/notiContext";
 
 const Drawer = createDrawerNavigator();
 
@@ -39,6 +33,8 @@ const EmployeeDrawerNavigator = () => {
   const { auth, setAuth } = useAuthContext();
 
   const { user, setUser } = useUserInfoContext();
+
+  const { notiQuantity, setNotiQuantity } = useNotiContext();
 
   useEffect(() => {
     _retrieveData("ACCESS_TOKEN").then((access_token) => {
@@ -50,6 +46,7 @@ const EmployeeDrawerNavigator = () => {
         .get(`http://10.0.2.2:5000/users/user-info`, config)
         .then((result) => {
           setUser(result.data);
+          socket.emit("addUser", result.data.user_id);
         })
         .catch((error) => {
           console.log(error);
@@ -57,7 +54,19 @@ const EmployeeDrawerNavigator = () => {
     });
   }, []);
 
-  return (
+  useEffect(() => {}, [socket]);
+
+  useEffect(() => {
+    socket.on("borrow-book", (borrow_info) => {
+      setNotiQuantity((prev) => prev + 1);
+    });
+
+    socket.on("pay-fine", (pay_info) => {
+      setNotiQuantity((prev) => prev + 1);
+    });
+  }, [socket]);
+
+  return user ? (
     <Drawer.Navigator
       screenOptions={{
         drawerStyle: {
@@ -105,11 +114,40 @@ const EmployeeDrawerNavigator = () => {
       }}
     >
       <Drawer.Screen
+        name={user?.full_name}
+        component={ProfileTabNavigation}
+        options={{
+          headerShown: false,
+          unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
+          drawerLabelStyle: {
+            fontSize: normalize(11),
+            fontFamily: "nunito-bold",
+            color: "#3c3c3c",
+          },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.profileInfo}>
+              <Text style={styles.userName}>{user?.full_name}</Text>
+              <Text style={styles.role}>Employee</Text>
+            </View>
+          ),
+          drawerIcon: ({ focused, color, size }) => (
+            <View style={styles.userAvatarContainer}>
+              <Image source={{ uri: `http://10.0.2.2:5000${user?.user_avatar}` }} style={styles.userAvatar} />
+            </View>
+          ),
+        }}
+      />
+
+      <Drawer.Screen
         name="Manage Readers"
         component={ReaderManTabNavigation}
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
@@ -123,6 +161,8 @@ const EmployeeDrawerNavigator = () => {
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
@@ -136,6 +176,8 @@ const EmployeeDrawerNavigator = () => {
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
@@ -151,6 +193,8 @@ const EmployeeDrawerNavigator = () => {
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
@@ -158,7 +202,40 @@ const EmployeeDrawerNavigator = () => {
           drawerIcon: ({ focused, color, size }) => <AntDesign name="book" size={normalize(19)} color={color} />,
         }}
       />
+
+      <Drawer.Screen
+        name="Notifications"
+        component={NotificationStackNavigation}
+        options={{
+          headerShown: false,
+          unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
+          drawerLabelStyle: {
+            fontSize: normalize(11),
+            fontFamily: "nunito-bold",
+            backgroundColor: "yellow",
+          },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={styles.userName}>Notifications</Text>
+              {notiQuantity > 0 ? <View style={styles.notiDot}></View> : ""}
+            </View>
+          ),
+          drawerIcon: ({ focused, color, size }) =>
+            notiQuantity > 0 ? (
+              <Image
+                source={require("../../assets/images/noti_icon.gif")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            ) : (
+              <FontAwesome name="bell-o" size={normalize(19)} color={color} />
+            ),
+        }}
+      />
     </Drawer.Navigator>
+  ) : (
+    <View></View>
   );
 };
 
@@ -173,6 +250,48 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: normalize(10),
+  },
+
+  profileInfo: {},
+  userName: {
+    fontSize: normalize(11),
+    fontFamily: "nunito-bold",
+    color: "#3c3c3c",
+  },
+  role: {
+    fontSize: normalize(10),
+    fontFamily: "nunito-medium",
+    color: "#8c8c8d",
+  },
+
+  userAvatarContainer: {
+    elevation: 8,
+    shadowColor: "#000",
+    borderRadius: normalize(1000),
+    borderWidth: 2,
+    borderColor: "#6ec531",
+    padding: normalize(2),
+  },
+
+  userAvatar: {
+    aspectRatio: 1,
+    height: normalize(30),
+    borderRadius: normalize(1000),
+  },
+
+  notiTitleWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    // backgroundColor: "blue",
+    flex: 1,
+  },
+
+  notiDot: {
+    width: normalize(8),
+    height: normalize(8),
+    backgroundColor: "#f02849",
+    borderRadius: normalize(1000),
   },
 });
 

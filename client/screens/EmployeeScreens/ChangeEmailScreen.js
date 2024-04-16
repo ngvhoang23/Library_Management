@@ -5,39 +5,36 @@ import FlatButton from "../../shared/FlatButton.js";
 import * as yup from "yup";
 import InputItem from "../../components/InputItem.js";
 import axios from "axios";
-import AvatarPicker from "../../components/AvatarPicker.js";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import MyDateTimePicker from "../../components/MyDateTimePicker.js";
-import MenuPickers from "../../components/MenuPicker.js";
 import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
-import { _retrieveData, normalize } from "../../defined_function/index.js";
+import { _retrieveData, normalize, validateEmail } from "../../defined_function/index.js";
+import { useUserInfoContext } from "../../context/userInfoContext";
+import CountDown from "../../components/CountDown.js";
+import { duration } from "moment";
 
 const formSchema = yup.object({
-  password: yup
-    .string()
-    .trim()
-    .required()
-    .test("", "Password should contains atleast 8 charaters and containing uppercase,lowercase and numbers", (val) => {
-      return new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/).test(val);
-    }),
+  email_address: yup.string().test("email pattern", "Enter a valid email address", (val) => {
+    return validateEmail(val);
+  }),
 });
 
-function ChangePasswordScreen({ route, navigation }) {
-  const { user_id } = route.params;
+function ChangeEmailScreen({ route, navigation }) {
+  const { user, setUser } = useUserInfoContext();
 
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
 
   const handleSubmit = (values) => {
-    const { password } = values;
+    const { email_address } = values;
+
+    setIsLoading(true);
 
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
         const configurations = {
-          method: "PUT",
-          url: `http://10.0.2.2:5000/users/password-by-admin`,
-          data: { password, user_id },
+          method: "GET",
+          url: `http://10.0.2.2:5000/email/validation-token`,
+          params: { email_address },
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${access_token}`,
@@ -46,11 +43,10 @@ function ChangePasswordScreen({ route, navigation }) {
 
         axios(configurations)
           .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            navigation.goBack();
+            console.log(result.data);
+            navigation.navigate("Enter Email Code", { duration: result?.data?.duration || 0 });
           })
           .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
             console.log("err", err);
           })
           .finally((result) => {
@@ -60,6 +56,8 @@ function ChangePasswordScreen({ route, navigation }) {
       .catch((err) => {
         console.log(err);
       });
+
+    return;
   };
 
   return (
@@ -67,11 +65,10 @@ function ChangePasswordScreen({ route, navigation }) {
       <TouchableOpacity style={styles.wrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
         <Formik
           initialValues={{
-            password: "",
+            email_address: "",
           }}
           validationSchema={formSchema}
           onSubmit={(values, actions) => {
-            actions.resetForm();
             handleSubmit(values);
           }}
         >
@@ -79,11 +76,11 @@ function ChangePasswordScreen({ route, navigation }) {
             <View style={styles.formWrapper}>
               <InputItem
                 _styles={[styles.input]}
-                placeholder="New Password"
-                lableTitle="New Password"
-                onChange={props.handleChange("password")}
-                value={props.values.password}
-                errorText={props.errors.password}
+                placeholder="Enter Email Address"
+                lableTitle="Enter Email Address"
+                onChange={props.handleChange("email_address")}
+                value={props.values.email_address}
+                errorText={props.errors.email_address}
               />
               <FlatButton
                 _styles={styles.submitBtn}
@@ -145,4 +142,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChangePasswordScreen;
+export default ChangeEmailScreen;

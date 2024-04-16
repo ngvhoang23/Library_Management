@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ImageBackground } from "react-native";
 import { globalStyles } from "../../styles/global";
 import axios from "axios";
 import EmployeeItem from "../../components/EmployeeItem";
@@ -10,6 +10,7 @@ import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import { ScrollView } from "react-native-gesture-handler";
 import BookItem from "../../components/BookItem";
+import BookGroupItem from "../../components/BookGroupItem";
 
 function SelectBookGroupScreen({ route, navigation }) {
   const { reader_info } = route.params;
@@ -54,7 +55,7 @@ function SelectBookGroupScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
         placeholder="search books by name..."
@@ -67,11 +68,30 @@ function SelectBookGroupScreen({ route, navigation }) {
         <View style={styles.bookList}>
           {books.map((book, index) => {
             return (
-              <BookItem
+              // <BookItem
+              //   key={book.book_detail_id}
+              //   _style={[styles.bookItem]}
+              //   data={book}
+              //   remaining={book.remaining || 0}
+              //   onPress={() => {
+              //     if (book.remaining <= 0) {
+              //       alert("There are no books available for borrowing");
+              //     }
+              //     navigation.navigate("Select Borrowed Book", {
+              //       book_group_info: book,
+              //       reader_info,
+              //     });
+              //   }}
+              // />
+
+              <BookGroupItem
                 key={book.book_detail_id}
                 _style={[styles.bookItem]}
-                data={book}
-                remaining={book.remaining || 0}
+                cover_photo={book.cover_photo}
+                book_name={book.book_name}
+                author={book.author_name}
+                borrowed_books={5}
+                total_books={12}
                 onPress={() => {
                   if (book.remaining <= 0) {
                     alert("There are no books available for borrowing");
@@ -86,7 +106,7 @@ function SelectBookGroupScreen({ route, navigation }) {
           })}
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -97,6 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
+
   bookList: {
     width: SCREEN_WIDTH,
     flex: 1,
@@ -104,15 +125,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(6),
     overflow: "scroll",
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "flex-start",
     flexWrap: "wrap",
+    marginTop: normalize(10),
   },
   bookItem: {
-    width: "100%",
-    padding: normalize(10),
-    borderRadius: normalize(10),
-    marginBottom: normalize(10),
+    width: "46%",
+    margin: normalize(5),
+    marginBottom: normalize(16),
   },
 });
 

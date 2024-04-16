@@ -154,9 +154,7 @@ const ReaderDrawerNavigator = () => {
       />
     </Drawer.Navigator>
   ) : (
-    <View>
-      <Text>123</Text>
-    </View>
+    <View></View>
   );
 };
 

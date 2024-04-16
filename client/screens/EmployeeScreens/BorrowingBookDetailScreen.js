@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import InputItem from "../../components/InputItem";
 import AvatarPicker from "../../components/AvatarPicker";
 import { ScrollView } from "react-native-gesture-handler";
@@ -17,28 +17,38 @@ import { useIsFocused } from "@react-navigation/native";
 import { _retrieveData, normalize } from "../../defined_function";
 import BriefBookInfoPreview from "../../components/BriefBookInfoPreview";
 import BriefUserInfoPreview from "../../components/BriefUserInfoPreview";
+import BriefBorrowingInfoPreview from "../../components/BriefBorrowingInfoPreview";
 
 function BorrowingBookDetailScreen({ route, navigation }) {
-  const { borrowing_book_info } = route.params;
-  const {
-    borrow_id,
-    book_id,
-    book_name,
-    cover_photo,
-    author_name,
-    position,
-    category_name,
-    borrow_date,
-    return_date,
-    actual_return_date,
-    reader_name,
-    reader_phone_num,
-    reader_avatar,
-  } = borrowing_book_info;
+  const { borrow_id } = route.params;
 
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
+
+  const [borrowInfo, setBorrowInfo] = useState();
+
+  useEffect(() => {
+    _retrieveData("ACCESS_TOKEN")
+      .then((access_token) => {
+        const config = {
+          headers: { Authorization: `Bearer ${access_token}` },
+          params: { borrow_id },
+        };
+        axios
+          .get(`http://10.0.2.2:5000/borrowed-books/borrowing-books/detail/${borrow_id}`, config)
+          .then((result) => {
+            setBorrowInfo(result.data);
+            console.log(result.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [borrow_id]);
 
   const returnBook = () => {
     _retrieveData("ACCESS_TOKEN")
@@ -101,25 +111,34 @@ function BorrowingBookDetailScreen({ route, navigation }) {
       });
   };
 
+  const {
+    book_id,
+    book_name,
+    cover_photo,
+    author_name,
+    position,
+    category_name,
+    borrow_date,
+    return_date,
+    actual_return_date,
+    reader_name,
+    reader_phone_num,
+    reader_avatar,
+  } = borrowInfo ? borrowInfo : {};
+
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
-        <BriefUserInfoPreview
-          small
-          _styles={styles.userInfoContainer}
-          full_name={reader_name}
-          phone_num={reader_phone_num}
-          avatar={`http://10.0.2.2:5000${reader_avatar}`}
-        />
-        <BriefBookInfoPreview
-          small
-          _styles={styles.bookInfoContainer}
+        <BriefBorrowingInfoPreview
+          _styles={styles.borrowingInfo}
           book_name={book_name}
-          author_name={author_name}
           position={position}
-          overdue={new Date() > new Date(return_date)}
           cover_photo={`http://10.0.2.2:5000${cover_photo}`}
+          reader_name={reader_name}
+          phone_num={reader_phone_num}
+          user_avatar={`http://10.0.2.2:5000${reader_avatar}`}
         />
+
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
@@ -160,7 +179,9 @@ function BorrowingBookDetailScreen({ route, navigation }) {
 
       <View style={styles.options}>
         <FlatButton _styles={styles.deleteBtn} text="Delete" onPress={deleteBorrowedBook} />
-        <FlatButton _styles={styles.returnBookBtn} text="Return this book" onPress={returnBook} />
+        <FlatButton _styles={styles.returnBookBtn} text="Return this book" onPress={returnBook}>
+          <MaterialCommunityIcons name="update" size={normalize(16)} color="#fff" />
+        </FlatButton>
       </View>
       <LoadingModal visible={isLoading} />
       <AlertModal
@@ -168,7 +189,7 @@ function BorrowingBookDetailScreen({ route, navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -190,6 +211,13 @@ const styles = StyleSheet.create({
   bookInfoContainer: {
     width: "100%",
     marginBottom: normalize(30),
+    paddingHorizontal: normalize(10),
+  },
+
+  borrowingInfo: {
+    width: "100%",
+    marginBottom: normalize(30),
+    marginTop: normalize(20),
     paddingHorizontal: normalize(10),
   },
 
@@ -250,9 +278,10 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     marginLeft: normalize(10),
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
     borderRadius: normalize(100),
   },
 

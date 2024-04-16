@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, Dimensions, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Image,
+  FlatList,
+  SafeAreaView,
+  Dimensions,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import axios from "axios";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
@@ -46,7 +57,7 @@ function BorrowersManDashboard({ navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
         placeholder="search borrowers..."
@@ -75,7 +86,7 @@ function BorrowersManDashboard({ navigation }) {
           })}
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 

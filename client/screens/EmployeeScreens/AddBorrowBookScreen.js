@@ -15,8 +15,24 @@ import BriefBookInfoPreview from "../../components/BriefBookInfoPreview.js";
 import BriefUserInfoPreview from "../../components/BriefUserInfoPreview.js";
 import PickerBtn from "../../components/PickerBtn.js";
 import PreviewInfoItem from "../../components/PreviewInfoItem.js";
-import { Fontisto } from "@expo/vector-icons";
 import PickerModal from "../../components/PickerModal.js";
+import BriefBorrowingInfoPreview from "../../components/BriefBorrowingInfoPreview.js";
+import {
+  FontAwesome,
+  MaterialIcons,
+  Feather,
+  Fontisto,
+  FontAwesome5,
+  MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome6,
+  EvilIcons,
+  SimpleLineIcons,
+  Entypo,
+  Ionicons,
+} from "@expo/vector-icons";
+
+import socket from "../../socket.js";
 
 const formSchema = yup.object({});
 
@@ -119,6 +135,7 @@ function AddBorrowBookScreen({ route, navigation }) {
         axios(configurations)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
+            socket?.emit("borrow-book", data);
             navigation.goBack();
           })
           .catch((err) => {
@@ -178,25 +195,6 @@ function AddBorrowBookScreen({ route, navigation }) {
 
   return (
     <View style={styles.wrapper}>
-      <BriefUserInfoPreview
-        _styles={styles.userInfoContainer}
-        full_name={full_name}
-        phone_num={phone_num}
-        avatar={`http://10.0.2.2:5000${user_avatar}`}
-      />
-
-      {selectedBook ? (
-        <BriefBookInfoPreview
-          book_name={selectedBook?.book_name}
-          author_name={selectedBook?.author_name}
-          position={selectedBook?.position}
-          cover_photo={`http://10.0.2.2:5000${selectedBook?.cover_photo}`}
-          onPress={() => setShowModal(true)}
-        />
-      ) : (
-        <PickerBtn _styles={styles.selectBookBtn} title={"Select Book"} onPress={() => setShowModal(true)} />
-      )}
-
       <Formik
         initialValues={{
           borrow_date: new Date().toISOString().split("T")[0],
@@ -220,12 +218,22 @@ function AddBorrowBookScreen({ route, navigation }) {
                 flexWrap: "wrap",
               }}
             >
+              <BriefBorrowingInfoPreview
+                _styles={styles.borrowingInfo}
+                book_name={selectedBook?.book_name}
+                position={selectedBook?.position}
+                cover_photo={`http://10.0.2.2:5000${selectedBook?.cover_photo}`}
+                reader_name={full_name}
+                phone_num={phone_num}
+                user_avatar={`http://10.0.2.2:5000${user_avatar}`}
+              />
+
               <PreviewInfoItem
                 _styles={[styles.input]}
                 textStyles={{ color: "#676768" }}
                 lableTitle="Borrow Date"
                 value={props.values.borrow_date}
-                icon={<Fontisto name="date" size={normalize(16)} color="#949498" />}
+                icon={<FontAwesome name="hourglass-1" size={normalize(15)} color="#3c3c3c" />}
                 read_only
               />
 
@@ -234,14 +242,14 @@ function AddBorrowBookScreen({ route, navigation }) {
                 textStyles={{ color: "#676768" }}
                 lableTitle="Return Date"
                 value={props.values.return_date}
-                icon={<Fontisto name="date" size={normalize(16)} color="#949498" />}
+                icon={<FontAwesome name="hourglass-end" size={normalize(15)} color="#3c3c3c" />}
                 read_only
               />
             </ScrollView>
             <FlatButton
               _styles={styles.submitBtn}
               onPress={props.handleSubmit}
-              text="submit"
+              text="Submit"
               fontSize={normalize(10)}
             />
           </TouchableOpacity>
@@ -275,23 +283,34 @@ function AddBorrowBookScreen({ route, navigation }) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
   },
 
-  headerTitle: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(18),
+  userInfoContainer: {
     width: "100%",
-    marginLeft: normalize(40),
+    marginBottom: normalize(0),
+    paddingHorizontal: normalize(10),
+  },
+
+  bookInfoContainer: {
+    width: "100%",
+    marginBottom: normalize(0),
+    paddingHorizontal: normalize(10),
+  },
+
+  borrowingInfo: {
+    width: "100%",
+    marginBottom: normalize(30),
+    marginTop: normalize(20),
+    paddingHorizontal: normalize(10),
   },
 
   formWrapper: {
     width: "100%",
-    marginTop: normalize(20),
+    marginTop: normalize(10),
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
@@ -299,7 +318,7 @@ const styles = StyleSheet.create({
 
   formContainer: {
     width: "90%",
-    height: normalize(640),
+    // height: normalize(640),
     flex: 1,
   },
 
@@ -309,15 +328,15 @@ const styles = StyleSheet.create({
   },
 
   submitBtn: {
-    width: "90%",
+    width: "80%",
     height: normalize(32),
-
     marginBottom: normalize(16),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(100),
   },
 
   positionValidate: {
@@ -335,11 +354,6 @@ const styles = StyleSheet.create({
   selectBookBtn: {
     borderRadius: 0,
     height: normalize(100),
-  },
-
-  userInfoContainer: {
-    marginBottom: normalize(20),
-    marginTop: normalize(20),
   },
 });
 

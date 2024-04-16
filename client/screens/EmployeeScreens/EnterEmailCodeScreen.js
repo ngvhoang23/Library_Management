@@ -12,32 +12,30 @@ import MenuPickers from "../../components/MenuPicker.js";
 import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
 import { _retrieveData, normalize } from "../../defined_function/index.js";
+import { useUserInfoContext } from "../../context/userInfoContext.js";
+import ErrorAlertModal from "../../components/ErrorAlertModal.js";
+import WarningAlertModal from "../../components/WarningAlertModal.js";
+import CountDown from "../../components/CountDown.js";
 
-const formSchema = yup.object({
-  password: yup
-    .string()
-    .trim()
-    .required()
-    .test("", "Password should contains atleast 8 charaters and containing uppercase,lowercase and numbers", (val) => {
-      return new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/).test(val);
-    }),
-});
+const formSchema = yup.object({});
 
-function ChangePasswordScreen({ route, navigation }) {
-  const { user_id } = route.params;
+function EnterEmailCodeScreen({ route, navigation }) {
+  const { duration } = route.params;
+
+  const { user, setUser } = useUserInfoContext();
 
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
 
   const handleSubmit = (values) => {
-    const { password } = values;
+    const { token } = values;
 
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
         const configurations = {
-          method: "PUT",
-          url: `http://10.0.2.2:5000/users/password-by-admin`,
-          data: { password, user_id },
+          method: "POST",
+          url: `http://10.0.2.2:5000/users/email`,
+          data: { user_id: user.user_id, email_address: "ngvhoang03@gmail.com", token },
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${access_token}`,
@@ -46,11 +44,15 @@ function ChangePasswordScreen({ route, navigation }) {
 
         axios(configurations)
           .then((result) => {
-            setResultStatus({ isSuccess: 1, visible: true });
-            navigation.goBack();
+            setResultStatus({ isSuccess: 1, visible: true, message: "Success" });
+            navigation.navigate("Profile");
           })
           .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
+            if (err?.response?.data?.message == "INVALID_VALIDATION_CODE") {
+              setResultStatus({ isSuccess: 0, visible: true, message: "Invalid Code" });
+            } else {
+              setResultStatus({ isSuccess: 0, visible: true, message: "Failed" });
+            }
             console.log("err", err);
           })
           .finally((result) => {
@@ -59,6 +61,9 @@ function ChangePasswordScreen({ route, navigation }) {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
@@ -67,7 +72,7 @@ function ChangePasswordScreen({ route, navigation }) {
       <TouchableOpacity style={styles.wrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
         <Formik
           initialValues={{
-            password: "",
+            token: "",
           }}
           validationSchema={formSchema}
           onSubmit={(values, actions) => {
@@ -79,11 +84,22 @@ function ChangePasswordScreen({ route, navigation }) {
             <View style={styles.formWrapper}>
               <InputItem
                 _styles={[styles.input]}
-                placeholder="New Password"
-                lableTitle="New Password"
-                onChange={props.handleChange("password")}
-                value={props.values.password}
-                errorText={props.errors.password}
+                placeholder="Enter confirmation code"
+                lableTitle="Enter confirmation code"
+                onChange={props.handleChange("token")}
+                value={props.values.token}
+                errorText={props.errors.token}
+              />
+              <CountDown
+                _styles={styles.countDown}
+                title={"Code will expired in "}
+                initValue={duration / 1000}
+                onTimeOut={() => {
+                  setResultStatus({ isSuccess: 0, visible: true, message: "Code expired" });
+                  setTimeout(() => {
+                    navigation.goBack();
+                  }, 1000);
+                }}
               />
               <FlatButton
                 _styles={styles.submitBtn}
@@ -95,10 +111,12 @@ function ChangePasswordScreen({ route, navigation }) {
           )}
         </Formik>
         <LoadingModal visible={isLoading} />
+
         <AlertModal
           onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
           isSuccess={resultStatus?.isSuccess}
           visible={resultStatus?.visible ? true : false}
+          text={resultStatus?.message}
         />
       </TouchableOpacity>
     </ImageBackground>
@@ -127,9 +145,11 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    marginBottom: normalize(20),
+    marginBottom: normalize(10),
     width: "100%",
   },
+
+  // countDown: { backgroundColor: "red" },
 
   submitBtn: {
     width: "100%",
@@ -145,4 +165,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChangePasswordScreen;
+export default EnterEmailCodeScreen;

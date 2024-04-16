@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ImageBackground } from "react-native";
 import { globalStyles } from "../../styles/global";
 import axios from "axios";
 import EmployeeItem from "../../components/EmployeeItem";
@@ -46,7 +46,7 @@ function SelectBorrowerScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
         placeholder="search borrower..."
@@ -82,7 +82,7 @@ function SelectBorrowerScreen({ navigation }) {
           })}
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
 
   readerItem: {
-    width: "44%",
+    width: "100%",
     padding: normalize(10),
     margin: normalize(8),
     borderRadius: normalize(10),

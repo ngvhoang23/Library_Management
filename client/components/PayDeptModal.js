@@ -8,6 +8,21 @@ import { useIsFocused } from "@react-navigation/native";
 import LoadingModal from "./LoadingModal";
 import AlertModal from "./AlertModal";
 import axios from "axios";
+import {
+  FontAwesome,
+  MaterialIcons,
+  Feather,
+  Fontisto,
+  FontAwesome5,
+  MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome6,
+  EvilIcons,
+  SimpleLineIcons,
+  Entypo,
+  Ionicons,
+} from "@expo/vector-icons";
+import socket from "../socket";
 
 function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
   const [userInfo, setUserInfo] = useState();
@@ -56,14 +71,11 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
 
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
+        const data = { emp_id: userInfo.user_id, reader_id: reader_id, amount_collected: ammount };
         const configurations = {
           method: "POST",
           url: `http://10.0.2.2:5000/borrowed-books/fine/`,
-          data: {
-            emp_id: userInfo.user_id,
-            reader_id: reader_id,
-            amount_collected: ammount,
-          },
+          data: data,
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
@@ -72,7 +84,8 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
         axios(configurations)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
-            // navigation.goBack();
+            setVisible(false);
+            socket?.emit("pay-fine", data);
           })
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
@@ -92,7 +105,11 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Pay The Fine</Text>
+            <View style={styles.headerTitleWrapper}>
+              <MaterialIcons name="attach-money" size={normalize(20)} color="#6c60ff" />
+              <Text style={styles.headerTitle}>Pay The Fine</Text>
+            </View>
+
             <TouchableOpacity onPress={() => setVisible(false)}>
               <FontAwesomeIcon icon={faCircleXmark} size={normalize(20)} style={{ color: "#949498" }} />
             </TouchableOpacity>
@@ -175,27 +192,32 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
     padding: normalize(20),
     paddingVertical: normalize(10),
     marginTop: normalize(16),
+    borderRadius: normalize(1000),
   },
 
   header: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "flex-end",
+    alignItems: "center",
     marginBottom: normalize(14),
   },
 
+  headerTitleWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+
   headerTitle: {
-    position: "absolute",
-    zIndex: 10,
-    left: normalize(6),
-    top: normalize(2),
     fontSize: normalize(12),
     letterSpacing: 1,
-    color: "#1e74fd",
+    color: "#6c60ff",
     backgroundColor: "#fff",
     textTransform: "uppercase",
     fontFamily: "nunito-bold",

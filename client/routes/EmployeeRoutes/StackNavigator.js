@@ -35,6 +35,13 @@ import FineDetailScreen from "../../screens/EmployeeScreens/FineDetailScreen";
 import OverdueBookListScreen from "../../screens/EmployeeScreens/OverdueBookListScreen";
 import FineSearchResult from "../../screens/EmployeeScreens/FineSearchResult";
 import ReaderSearchResults from "../../screens/EmployeeScreens/ReaderSearchResults";
+import ProfileScreen from "../../screens/EmployeeScreens/ProfileScreen";
+import EditProfileScreen from "../../screens/EmployeeScreens/EditProfileScreen";
+import SettingScreen from "../../screens/EmployeeScreens/SettingScreen";
+import ChangeUserPasswordScreen from "../../screens/EmployeeScreens/ChangeUserPasswordScreen";
+import ChangeEmailScreen from "../../screens/EmployeeScreens/ChangeEmailScreen";
+import EnterEmailCodeScreen from "../../screens/EmployeeScreens/EnterEmailCodeScreen";
+import NotificationsScreen from "../../screens/EmployeeScreens/NotificationsScreen";
 
 const Stack = createStackNavigator();
 
@@ -363,6 +370,84 @@ const FineManStackNavigation = () => {
   );
 };
 
+const ProfileStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Profile">
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ header: (props) => <MainHeader title="Profile" {...props} /> }}
+      />
+
+      <Stack.Screen
+        name="Edit Profile"
+        component={EditProfileScreen}
+        options={{ header: (props) => <MainHeader title="Edit Profile" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Settings"
+        component={SettingScreen}
+        options={{ header: (props) => <MainHeader title="Settings" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Change Password"
+        component={ChangeUserPasswordScreen}
+        options={{ header: (props) => <MainHeader title="Change Password" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Change Email"
+        component={ChangeEmailScreen}
+        options={{ header: (props) => <MainHeader title="Change Email" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Enter Email Code"
+        component={EnterEmailCodeScreen}
+        options={{ header: (props) => <MainHeader title="Enter Email Code" {...props} is_stack /> }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const NotificationStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Notifications">
+      <Stack.Screen
+        name="Notifications"
+        component={NotificationsScreen}
+        options={{ header: (props) => <MainHeader title="Notifications" {...props} /> }}
+      />
+
+      <Stack.Screen
+        name="Fine Detail"
+        component={FineDetailScreen}
+        options={{
+          header: (props) => <MainHeader title="Fine Detail" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Overdue Books Detail"
+        component={OverdueBookListScreen}
+        options={{
+          header: (props) => <MainHeader title="Overdue Books" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Borrowing Book Detail"
+        component={BorrowingBookDetailScreen}
+        options={{
+          header: (props) => <MainHeader title="Borrowing Book Detail" {...props} is_stack />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
 export {
   ReaderManStackNavigation,
   AddReaderStackNavigation,
@@ -372,4 +457,6 @@ export {
   AddBorrowBookStackNavigation,
   BorrowedBookManStackNavigation,
   FineManStackNavigation,
+  ProfileStackNavigation,
+  NotificationStackNavigation,
 };

@@ -271,6 +271,45 @@ class BorrowedBooksController {
       });
   }
 
+  // [GET] /borrowing-books/detail/:borrow_id
+  getBorrowingBookDetail(req, res) {
+    const { borrow_id } = req.query;
+
+    const promise = () => {
+      const sql = `
+          select bb.*, b.*, bd.*, authors.*, categories.*, 
+          ui.full_name as reader_name, ui.user_avatar as reader_avatar,
+          ui.phone_num as reader_phone_num
+          from borrowed_books bb
+          inner join user_info ui on ui.user_id = bb.reader_id
+          inner join books b on bb.book_id = b.book_id
+          inner join book_detail bd on bd.book_detail_id = b.book_detail_id
+          inner join authors on bd.author_id = authors.author_id
+          inner join categories on bd.category_id = categories.category_id
+          where bb.borrow_id = ${borrow_id}
+        `;
+
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result[0]);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
   // [GET] /borrowing-books/searching/:search_value
   searchBorrowingBooksByBorrower(req, res) {
     const { borrower_id, search_value } = req.query;
@@ -464,8 +503,6 @@ class BorrowedBooksController {
         where for_reader = ${reader_type == "student" ? 1 : 2} or for_reader = 3
       `;
 
-      console.log(sql);
-
       return new Promise((resolve, reject) => {
         db.query(sql, (err, result) => {
           if (err) {
@@ -533,7 +570,14 @@ class BorrowedBooksController {
 
     const data = [];
 
-    data.push([emp_id || null, reader_id || null, book_id || null, borrow_date || null, return_date || null]);
+    data.push([
+      emp_id || null,
+      reader_id || null,
+      book_id || null,
+      borrow_date || null,
+      return_date || null,
+      moment().format(),
+    ]);
 
     const checkingBookStatus = () => {
       return new Promise((resolve, reject) => {
@@ -566,7 +610,7 @@ class BorrowedBooksController {
     const promise = () => {
       return new Promise((resolve, reject) => {
         db.query(
-          `insert into borrowed_books(emp_id, reader_id, book_id, borrow_date, return_date) values ?`,
+          `insert into borrowed_books(emp_id, reader_id, book_id, borrow_date, return_date, created_at) values ?`,
           [data],
           (err, result) => {
             if (err) {
@@ -747,6 +791,100 @@ class BorrowedBooksController {
           });
         });
         res.status(200).send(fine_collected);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /fine/:reader_id
+  getFineByReader(req, res) {
+    const { reader_id } = req.query;
+
+    const getReaderInfo = () => {
+      const sql = `
+      select user_id as reader_id, full_name as reader_name, phone_num as reader_phone_num, user_avatar as reader_avatar
+      from user_info where user_id = ${reader_id}
+    `;
+
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result[0]);
+          }
+        });
+      });
+    };
+
+    const getAmountCollected = () => {
+      const sql = `
+        select reader_id, sum(amount_collected) as total_amount_collected from fine_management
+        where reader_id = ${reader_id}
+        group by reader_id
+      `;
+
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    const getFineAmount = () => {
+      const sql = `
+      select bb.borrow_id, ui2.user_id as emp_id, ui2.full_name as emp_name,
+            ui1.user_id as reader_id, ui1.full_name as reader_name, ui1.user_avatar as reader_avatar, ui1.phone_num as reader_phone_num,
+            b.book_id, b.book_detail_id, b.position,
+            bd.book_name, bd.author_id, bd.cover_photo,
+            a.author_name,
+            bb.borrow_date, bb.return_date, bb.actual_return_date
+        from borrowed_books bb
+        inner join user_info ui1 on bb.reader_id = ui1.user_id
+        inner join user_info ui2 on bb.emp_id = ui2.user_id
+        inner join books b on b.book_id = bb.book_id
+        inner join book_detail bd on bd.book_detail_id = b.book_detail_id
+        inner join authors a on a.author_id = bd.author_id
+      where CURDATE() > bb.return_date and bb.actual_return_date is null or bb.actual_return_date > bb.return_date and bb.reader_id = ${reader_id}
+      `;
+
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            let data;
+            const groupByBooks = groupBy(result, "reader_id");
+            for (const [key, value] of Object.entries(groupByBooks)) {
+              const total_fine = value.reduce((fine, book) => {
+                return (
+                  fine + Math.abs(Math.floor((new Date(book.return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)
+                );
+              }, 0);
+
+              data = { total_fine: total_fine, borrowed_books: value };
+            }
+            console.log(data);
+            resolve(data);
+          }
+        });
+      });
+    };
+
+    Promise.all([getAmountCollected(), getFineAmount(), getReaderInfo()])
+      .then(([res1, res2, reader_info]) => {
+        const fine_amount = res2 || {};
+        const fine_collected = res1[0] || {};
+
+        const data = { ...fine_amount, ...fine_collected, reader_info };
+
+        res.status(200).send(data);
       })
       .catch((err) => {
         console.log(err);

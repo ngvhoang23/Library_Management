@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ImageBackground } from "react-native";
 import { globalStyles } from "../../styles/global";
 import axios from "axios";
 import EmployeeItem from "../../components/EmployeeItem";
@@ -48,7 +48,7 @@ function BorrowedBookManDashBoard({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
         placeholder="search books by position..."
@@ -70,7 +70,7 @@ function BorrowedBookManDashBoard({ route, navigation }) {
                 data={book}
                 onPress={() =>
                   navigation.navigate("Borrowing Book Detail", {
-                    borrowing_book_info: book,
+                    borrow_id: book.borrow_id,
                   })
                 }
               />
@@ -78,7 +78,7 @@ function BorrowedBookManDashBoard({ route, navigation }) {
           })}
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 

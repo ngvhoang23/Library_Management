@@ -7,6 +7,7 @@ import { _retrieveData } from "./defined_function";
 import LoginScreen from "./screens/AdminScreens/login";
 import EmployeeDrawerNavigator from "./routes/EmployeeRoutes/EmployeeDrawerNavigator";
 import ReaderDrawerNavigator from "./routes/ReaderRoutes/ReaderDrawerNavigator";
+import socket from "./socket";
 
 function LogicWrapper() {
   const { auth, setAuth } = useAuthContext();
@@ -81,14 +82,14 @@ function LogicWrapper() {
         </NavigationContainer>
       );
     }
-    if (auth === "emp" || 1) {
+    if (auth === "emp") {
       return (
         <NavigationContainer theme={MyTheme}>
           <EmployeeDrawerNavigator />
         </NavigationContainer>
       );
     }
-    if (auth === "reader" || 1) {
+    if (auth === "reader") {
       return (
         <NavigationContainer theme={MyTheme}>
           <ReaderDrawerNavigator />

@@ -66,6 +66,7 @@ function BorrowingBooksByBorrowersScreen({ route, navigation }) {
       <ScrollView style={styles.listWrapper}>
         <View style={styles.bookList}>
           {books.map((book, index) => {
+            console.log(book);
             return (
               <BookItem
                 key={book.book_id}
@@ -75,12 +76,7 @@ function BorrowingBooksByBorrowersScreen({ route, navigation }) {
                 data={book}
                 onPress={() =>
                   navigation.navigate("Borrowing Book Detail", {
-                    borrowing_book_info: {
-                      ...book,
-                      reader_name: full_name,
-                      reader_phone_num: phone_num,
-                      reader_avatar: user_avatar,
-                    },
+                    borrow_id: book.borrow_id,
                   })
                 }
               />

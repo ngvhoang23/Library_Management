@@ -25,8 +25,7 @@ import AlertModal from "../../components/AlertModal";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
-
-import MarqueeView from "react-native-marquee-view";
+import { LinearGradient } from "expo-linear-gradient";
 
 function BookGroupDetailScreen({ route, navigation }) {
   const { book_info } = route.params;
@@ -112,29 +111,31 @@ function BookGroupDetailScreen({ route, navigation }) {
   return (
     <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
       <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
-        <ImageBackground source={require("../../assets/images/page_bg.jpg")} style={styles.headerWrapper}>
+        <ImageBackground source={require("../../assets/images/page_bg.jpg")} style={[styles.headerWrapper]}>
           <TouchableOpacity
             style={[styles.headerContainer]}
             onPress={() => navigation.navigate("Edit Book Group", { book_info: bookInfo })}
           >
             <View style={[styles.bookInfo, styles.elevation]}>
-              <MarqueeView style={styles.marqueeView} playing={book_name?.length > 24} autoPlay={false}>
-                <Text style={styles.bookNameHeader}>{book_name}</Text>
-              </MarqueeView>
-              {author_name && <Text style={styles.authorNameHeader}>{author_name}</Text>}
-
-              {/* <View style={styles.desWrapper}>
-                <Text style={styles.desContent}>{description}</Text>
-              </View> */}
+              <Text style={styles.bookNameHeader} numberOfLines={3}>
+                {book_name}
+              </Text>
+              {author_name && <Text style={styles.authorNameHeader}>by {author_name}</Text>}
+              {description && (
+                <Text style={styles.desContent} numberOfLines={3}>
+                  {description}
+                </Text>
+              )}
             </View>
-            {/* <View style={styles.bookCoverPhoto}>
+            <View style={styles.bookCoverPhoto}>
               <Image source={{ uri: `http://10.0.2.2:5000/${cover_photo}` }} style={styles.avatarPreview} />
               <FlatButton _styles={styles.editBtn} text="Edit">
                 <AntDesign name="edit" size={normalize(12)} color="#fff" />
               </FlatButton>
-            </View> */}
+            </View>
           </TouchableOpacity>
         </ImageBackground>
+
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
@@ -214,7 +215,9 @@ function BookGroupDetailScreen({ route, navigation }) {
           _styles={styles.openBookListBtn}
           text="Book List"
           onPress={() => navigation.navigate("Book List", { book_info: bookInfo })}
-        />
+        >
+          <Entypo name="open-book" size={normalize(14)} color="#fff" />
+        </FlatButton>
         <FlatButton _styles={styles.deleteBtn} text="Delete Book Group" onPress={handleDeleteBookGroup} />
       </View>
 
@@ -238,58 +241,44 @@ const styles = StyleSheet.create({
   },
 
   headerWrapper: {
+    flex: 1,
     marginBottom: normalize(20),
   },
 
   headerContainer: {
     width: "100%",
+    flex: 1,
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     alignItems: "flex-end",
-    height: normalize(120),
     position: "relative",
-    marginTop: normalize(20),
-    marginBottom: normalize(30),
+    marginTop: normalize(10),
     padding: normalize(10),
-    elevation: 200,
-    shadowColor: "#52006A",
+    paddingLeft: normalize(20),
+    paddingTop: normalize(20),
+    paddingBottom: normalize(30),
   },
 
-  elevation: {
-    elevation: 20,
-    shadowColor: "#52006A",
+  bookCoverPhoto: {
+    marginRight: normalize(10),
   },
 
   avatarPreview: {
-    width: normalize(80),
-    height: normalize(100),
-    borderRadius: normalize(10),
+    width: normalize(100),
+    height: normalize(140),
+    borderRadius: normalize(8),
   },
 
   bookInfo: {
-    width: "100%",
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#dbe3ef",
-    padding: normalize(14),
+    width: "50%",
     borderRadius: normalize(10),
-    backgroundColor: "#fff",
-  },
-
-  marqueeView: {
-    height: normalize(20),
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    marginBottom: normalize(6),
-    width: "70%",
   },
 
   bookNameHeader: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(14),
+    fontFamily: "nunito-bold",
+    fontSize: normalize(18),
     letterSpacing: normalize(2),
-    color: "#676768",
+    color: "#3c3c3c",
   },
 
   authorNameHeader: {
@@ -298,24 +287,14 @@ const styles = StyleSheet.create({
     fontSize: normalize(10),
     letterSpacing: normalize(2),
     marginBottom: normalize(4),
-    color: "#aaabaf",
+    color: "#6c60ff",
   },
-
-  bookCoverPhoto: {
-    position: "absolute",
-    right: normalize(20),
-    bottom: normalize(30),
-    zIndex: 10,
-    elevation: 20,
-    shadowColor: "#52006A",
-  },
-
-  desWrapper: {},
 
   desContent: {
     fontFamily: "nunito-medium",
     fontSize: normalize(10),
     color: "#676768",
+    marginTop: normalize(6),
   },
 
   editBtn: {
@@ -365,6 +344,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     marginRight: normalize(10),
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#6c60ff",

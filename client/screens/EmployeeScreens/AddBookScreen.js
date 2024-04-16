@@ -1,5 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View, ScrollView, Keyboard, TouchableOpacity, Text, Button } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Keyboard,
+  TouchableOpacity,
+  Text,
+  Button,
+  ImageBackground,
+  Image,
+} from "react-native";
 import { Formik } from "formik";
 import FlatButton from "../../shared/FlatButton.js";
 import * as yup from "yup";
@@ -27,7 +37,7 @@ const formSchema = yup.object({
 
 function AddBookScreen({ route, navigation }) {
   const { book_detail_info } = route.params;
-  const { book_detail_id, book_name, author_name, cover_photo } = book_detail_info;
+  const { book_detail_id, book_name, author_name, cover_photo, description } = book_detail_info;
   const [isShowDatePicker, setIsShowDatePicker] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
@@ -82,19 +92,33 @@ function AddBookScreen({ route, navigation }) {
       })
       .catch((err) => {
         console.log(err);
+      })
+      .finally((result) => {
+        setIsLoading(false);
       });
   };
 
   return (
     <TouchableOpacity style={styles.wrapper} activeOpacity={1}>
       {book_detail_info && (
-        <BriefBookInfoPreview
-          book_name={book_name}
-          author_name={author_name}
-          cover_photo={`http://10.0.2.2:5000${cover_photo}`}
-          onPress={() => setShowModal(true)}
-          _styles={styles.bookInfoPreview}
-        />
+        <ImageBackground source={require("../../assets/images/page_bg.jpg")} style={[styles.headerWrapper]}>
+          <View style={[styles.headerContainer]}>
+            <View style={[styles.bookInfo, styles.elevation]}>
+              <Text style={styles.bookNameHeader} numberOfLines={3}>
+                {book_name}
+              </Text>
+              {author_name && <Text style={styles.authorNameHeader}>by {author_name}</Text>}
+              {description && (
+                <Text style={styles.desContent} numberOfLines={3}>
+                  {description}
+                </Text>
+              )}
+            </View>
+            <View style={styles.bookCoverPhoto}>
+              <Image source={{ uri: `http://10.0.2.2:5000/${cover_photo}` }} style={styles.avatarPreview} />
+            </View>
+          </View>
+        </ImageBackground>
       )}
 
       <Formik
@@ -192,6 +216,63 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  headerWrapper: {
+    flex: 1,
+    marginBottom: normalize(0),
+  },
+
+  headerContainer: {
+    width: "100%",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    position: "relative",
+    marginTop: normalize(10),
+    padding: normalize(10),
+    paddingLeft: normalize(20),
+    paddingTop: normalize(20),
+    paddingBottom: normalize(30),
+  },
+
+  bookCoverPhoto: {
+    marginRight: normalize(10),
+  },
+
+  avatarPreview: {
+    width: normalize(100),
+    height: normalize(140),
+    borderRadius: normalize(8),
+  },
+
+  bookInfo: {
+    width: "50%",
+    borderRadius: normalize(10),
+  },
+
+  bookNameHeader: {
+    fontFamily: "nunito-bold",
+    fontSize: normalize(18),
+    letterSpacing: normalize(2),
+    color: "#3c3c3c",
+  },
+
+  authorNameHeader: {
+    width: "100%",
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    letterSpacing: normalize(2),
+    marginBottom: normalize(4),
+    color: "#6c60ff",
+  },
+
+  desContent: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    color: "#676768",
+    marginTop: normalize(6),
+  },
+
   selectBookBtn: {
     marginTop: 30,
   },
@@ -205,14 +286,14 @@ const styles = StyleSheet.create({
 
   formWrapper: {
     width: "100%",
-    marginTop: normalize(20),
+    marginTop: normalize(10),
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
   },
 
   formContainer: {
-    width: "90%",
+    width: "86%",
     height: normalize(640),
     flex: 1,
   },
@@ -238,10 +319,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1e74fd",
-  },
-
-  bookInfoPreview: {
-    marginTop: normalize(30),
   },
 });
 

@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, Dimensions, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Image,
+  FlatList,
+  SafeAreaView,
+  Dimensions,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
 import axios from "axios";
 import FlatButton from "../../shared/FlatButton";
 import { useIsFocused } from "@react-navigation/native";
@@ -47,7 +58,7 @@ function FineManDashBoard({ navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
         placeholder="search borrowers..."
@@ -69,10 +80,11 @@ function FineManDashBoard({ navigation }) {
                 total_fine={borrowing.total_fine - borrowing.amount_collected}
                 onPress={() =>
                   navigation.navigate("Fine Detail", {
-                    reader_info: borrowing.reader_info,
-                    borrowed_books: borrowing.borrowed_books,
-                    total_fine: borrowing.total_fine,
-                    total_amount_collected: borrowing.amount_collected,
+                    // reader_info: borrowing.reader_info,
+                    // borrowed_books: borrowing.borrowed_books,
+                    // total_fine: borrowing.total_fine,
+                    // total_amount_collected: borrowing.amount_collected,
+                    reader_id: borrowing?.reader_info?.reader_id,
                   })
                 }
               />
@@ -80,7 +92,7 @@ function FineManDashBoard({ navigation }) {
           })}
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 

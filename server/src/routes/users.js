@@ -8,7 +8,8 @@ const EmployeeController = require("../app/controllers/EmployeeController");
 const ReaderController = require("../app/controllers/ReaderController");
 const { reader_auth, emp_auth, admin_auth } = require("../auth/auth");
 
-router.get("/user-info", UserController.getUserInfo);
+router.get("/user-info", reader_auth, UserController.getUserInfo);
+router.put("/user-info", uploadUserAvatar.single("avatar"), reader_auth, UserController.changeuserInfo);
 
 router.get("/employees", EmployeeController.getEmployees);
 router.get("/employees/searching/:search_value", EmployeeController.searchEmployees);
@@ -27,5 +28,7 @@ router.delete("/reader", ReaderController.deleteReader);
 
 router.put("/password-by-admin", UserController.changePasswordByAdmin);
 router.put("/password", reader_auth, UserController.changePasswordUser);
+
+router.post("/email", UserController.changeEmail);
 
 module.exports = router;

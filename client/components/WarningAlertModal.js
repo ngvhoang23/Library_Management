@@ -1,9 +1,9 @@
-import { ActivityIndicator, Button, Modal, StyleSheet, Text, View } from "react-native";
+import { Modal, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { useEffect, useRef } from "react";
 import { normalize } from "../defined_function";
 
-function AlertModal({ visible, isSuccess, onClose, text }) {
+function WarningAlertModal({ text, visible, onClose }) {
   const timeoutRef = useRef();
 
   useEffect(() => {
@@ -18,17 +18,10 @@ function AlertModal({ visible, isSuccess, onClose, text }) {
   return (
     <Modal animationType="fade" transparent={true} visible={visible} statusBarTranslucent={true}>
       <View style={styles.centeredView}>
-        {isSuccess ? (
-          <View style={styles.modalView}>
-            <AntDesign name="checkcircleo" size={40} color="#5cb85c" />
-            <Text style={styles.modalText}>{text || "Success"}</Text>
-          </View>
-        ) : (
-          <View style={styles.modalView}>
-            <AntDesign name="closecircleo" size={40} color="#ff3333" />
-            <Text style={styles.modalText}>{text || "Failed"}</Text>
-          </View>
-        )}
+        <View style={styles.modalView}>
+          <AntDesign name="warning" size={40} color="#FFCC00" />
+          <Text style={styles.modalText}>{text}</Text>
+        </View>
       </View>
     </Modal>
   );
@@ -71,4 +64,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AlertModal;
+export default WarningAlertModal;

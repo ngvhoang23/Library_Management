@@ -10,6 +10,7 @@ router.get("/", BorrowedBooksController.getBorrowedBooks);
 router.get("/checking-borrowing-conditions", BorrowedBooksController.checkValidReaderToBorrow);
 
 router.get("/fine", BorrowedBooksController.getFine);
+router.get("/fine/:reader_id", BorrowedBooksController.getFineByReader);
 router.get("/fine/searching/:search_value", BorrowedBooksController.searchFine);
 
 router.get("/borrowers", BorrowedBooksController.getBorrowers);
@@ -19,6 +20,7 @@ router.get("/borrowing-readers", BorrowedBooksController.getBorrowingReaders);
 router.get("/borrowing-readers/searching/:search_value", BorrowedBooksController.searchBorrowingReaders);
 
 router.get("/borrowing-books/", BorrowedBooksController.getBorrowingBooks);
+router.get("/borrowing-books/detail/:borrow_id", BorrowedBooksController.getBorrowingBookDetail);
 router.get("/borrowing-books/searching/:search_value", BorrowedBooksController.searchBorrowingBooks);
 router.get(
   "/borrowing-books/searching-by-borrower/:search_value",

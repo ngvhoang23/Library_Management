@@ -73,16 +73,16 @@ const styles = StyleSheet.create({
   },
   borrowerName: {
     width: "90%",
-    fontFamily: "nunito-medium",
-    color: "#676768",
-
     fontSize: normalize(12),
+    fontFamily: "nunito-bold",
+    marginTop: normalize(8),
+    color: "#3c3c3c",
   },
   phoneNum: {
-    fontFamily: "nunito-medium",
-    color: "#676768",
     marginTop: normalize(6),
-    fontSize: normalize(10),
+    fontFamily: "nunito-bold",
+    color: "#8c8c8d",
+    fontSize: normalize(9),
   },
 
   borrowingBooks: {

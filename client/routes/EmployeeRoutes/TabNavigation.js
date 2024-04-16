@@ -9,6 +9,7 @@ import {
   BorrowedBookManStackNavigation,
   BorrowersManagementDashboardStackNavigation,
   FineManStackNavigation,
+  ProfileStackNavigation,
   ReaderManStackNavigation,
 } from "./StackNavigator";
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
@@ -73,6 +74,7 @@ const ReaderManTabNavigation = () => {
           height: normalize(44),
           paddingTop: normalize(6),
           paddingBottom: normalize(4),
+          activeTintColor: "red",
         },
         tabBarLabelStyle: {
           fontSize: normalize(10),
@@ -87,7 +89,8 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={color} />;
+            console.log(focused);
+            return <AntDesign name="home" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
           },
         }}
       />
@@ -97,7 +100,7 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Reader",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name="user-plus" size={normalize(16)} color={color} />;
+            return <Feather name="user-plus" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
           },
         }}
       />
@@ -121,6 +124,8 @@ const BookManTabNavigation = () => {
           fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
         tabBarLabelPosition: "below-icon",
       }}
     >
@@ -130,7 +135,7 @@ const BookManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={color} />;
+            return <AntDesign name="home" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
           },
         }}
       />
@@ -140,7 +145,7 @@ const BookManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Book Group",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name="book-outline" size={normalize(16)} color={color} />;
+            return <Ionicons name="book-outline" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
           },
         }}
       />
@@ -173,7 +178,7 @@ const BorrowedBookManTabNavigation = () => {
         options={{
           tabBarLabel: "Borrowed Books",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={color} />;
+            return <AntDesign name="home" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
           },
         }}
       />
@@ -183,7 +188,7 @@ const BorrowedBookManTabNavigation = () => {
         options={{
           tabBarLabel: "Fine Management",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialIcons name="attach-money" size={normalize(16)} color={color} />;
+            return <MaterialIcons name="attach-money" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
           },
         }}
       />
@@ -191,4 +196,44 @@ const BorrowedBookManTabNavigation = () => {
   );
 };
 
-export { BorrowerManTabNavigation, ReaderManTabNavigation, BookManTabNavigation, BorrowedBookManTabNavigation };
+const ProfileTabNavigation = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="Dashboard"
+      screenOptions={{
+        unmountOnBlur: true,
+        headerShown: false,
+        tabBarStyle: {
+          height: normalize(50),
+          paddingTop: normalize(8),
+          paddingBottom: normalize(4),
+          display: "none",
+        },
+        tabBarLabelStyle: {
+          fontSize: normalize(12),
+          fontFamily: "nunito-medium",
+        },
+        tabBarLabelPosition: "below-icon",
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={ProfileStackNavigation}
+        options={{
+          tabBarLabel: "Dashboard",
+          tabBarIcon: ({ focused, color, size }) => {
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
+          },
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+export {
+  BorrowerManTabNavigation,
+  ReaderManTabNavigation,
+  BookManTabNavigation,
+  BorrowedBookManTabNavigation,
+  ProfileTabNavigation,
+};

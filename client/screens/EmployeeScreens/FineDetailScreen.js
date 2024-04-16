@@ -1,49 +1,113 @@
-import { Image, StyleSheet, Text, View } from "react-native";
-import InputItem from "../../components/InputItem";
-import AvatarPicker from "../../components/AvatarPicker";
-import { ScrollView } from "react-native-gesture-handler";
+import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
 import FlatButton from "../../shared/FlatButton";
 import LoadingModal from "../../components/LoadingModal";
 import PreviewInfoItem from "../../components/PreviewInfoItem";
-import { Entypo } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMoneyBill1, faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
-import { faArrowRightFromBracket, faHandHoldingHand, faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { Picker } from "@react-native-picker/picker";
 import AlertModal from "../../components/AlertModal";
-import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import { _retrieveData, normalize } from "../../defined_function";
-import BriefBookInfoPreview from "../../components/BriefBookInfoPreview";
 import BriefUserInfoPreview from "../../components/BriefUserInfoPreview";
-import OverdueBookItem from "../../components/OverdueBookItem";
 import PayDeptModal from "../../components/PayDeptModal";
+import RoundUserInfoPreview from "../../components/RoundUserInfoPreview";
+import {
+  FontAwesome,
+  MaterialIcons,
+  Feather,
+  Fontisto,
+  FontAwesome5,
+  MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome6,
+  EvilIcons,
+  SimpleLineIcons,
+  Entypo,
+  Ionicons,
+} from "@expo/vector-icons";
+import axios from "axios";
 
 function FineDetailScreen({ route, navigation }) {
-  const { reader_info, borrowed_books, total_fine, total_amount_collected } = route.params;
-  const { reader_id, reader_name, reader_avatar, reader_phone_num } = reader_info;
+  const { reader_id } = route.params;
+  // const { reader_info, borrowed_books, total_fine, total_amount_collected } = route.params;
+  // const { reader_id, reader_name, reader_avatar, reader_phone_num } = reader_info;
 
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
   const [isShowPayDeptModal, setIsShowPayDeptModal] = useState(false);
+  const [fineData, setFineData] = useState();
+
+  useEffect(() => {
+    if (isFocused) {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const config = {
+            headers: { Authorization: `Bearer ${access_token}` },
+            params: { reader_id },
+          };
+          axios
+            .get(`http://10.0.2.2:5000/borrowed-books/fine/${reader_id}`, config)
+            .then((result) => {
+              setFineData(result.data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (!isShowPayDeptModal) {
+      _retrieveData("ACCESS_TOKEN")
+        .then((access_token) => {
+          const config = {
+            headers: { Authorization: `Bearer ${access_token}` },
+            params: { reader_id },
+          };
+          axios
+            .get(`http://10.0.2.2:5000/borrowed-books/fine/${reader_id}`, config)
+            .then((result) => {
+              setFineData(result.data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [isShowPayDeptModal]);
+
+  const {
+    borrowed_books = [],
+    reader_info = {},
+    total_amount_collected = 0,
+    total_fine = 0,
+  } = fineData ? fineData : {};
+  const { reader_name, reader_avatar, reader_phone_num } = reader_info;
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} style={styles.wrapper}>
       <View style={styles.container}>
-        <BriefUserInfoPreview
+        <RoundUserInfoPreview
           _styles={styles.userInfoContainer}
-          full_name={reader_name}
+          reader_name={reader_name}
           phone_num={reader_phone_num}
-          avatar={`http://10.0.2.2:5000${reader_avatar}`}
+          user_avatar={`http://10.0.2.2:5000${reader_avatar}`}
+          borderColor={"#f02849"}
         />
         <PreviewInfoItem
           _styles={[styles.infoPreview]}
           textStyles={{ color: "#f02849" }}
           lableTitle="Total fine"
           value={`${total_fine} VNĐ`}
-          icon={<FontAwesomeIcon icon={faMoneyBill1} size={normalize(18)} style={{ color: "#949498" }} />}
+          icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#f02849" />}
           read_only
         />
 
@@ -52,7 +116,7 @@ function FineDetailScreen({ route, navigation }) {
           textStyles={{ color: "#6ec531" }}
           lableTitle="Amount Collected"
           value={`${total_amount_collected || 0} VNĐ`}
-          icon={<FontAwesomeIcon icon={faMoneyBill1} size={normalize(18)} style={{ color: "#949498" }} />}
+          icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#6ec531" />}
           read_only
         />
 
@@ -61,7 +125,7 @@ function FineDetailScreen({ route, navigation }) {
           textStyles={{ color: "#f02849" }}
           lableTitle="Remaining"
           value={`${total_fine - total_amount_collected || 0} VNĐ`}
-          icon={<FontAwesomeIcon icon={faMoneyBill1} size={normalize(18)} style={{ color: "#949498" }} />}
+          icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#f02849" />}
           read_only
         />
       </View>
@@ -70,13 +134,16 @@ function FineDetailScreen({ route, navigation }) {
         <FlatButton
           _styles={styles.seeDetailBtn}
           text="See Detail"
+          textColor={"#5b4cfd"}
           onPress={() =>
             navigation.navigate("Overdue Books Detail", {
               overdue_books: borrowed_books,
             })
           }
         />
-        <FlatButton _styles={styles.payFineBtn} text="Pay the fine" onPress={() => setIsShowPayDeptModal(true)} />
+        <FlatButton _styles={styles.payFineBtn} text="Pay the fine" onPress={() => setIsShowPayDeptModal(true)}>
+          <MaterialIcons name="attach-money" size={normalize(15)} color="#fff" />
+        </FlatButton>
       </View>
       <LoadingModal visible={isLoading} />
       <AlertModal
@@ -89,8 +156,8 @@ function FineDetailScreen({ route, navigation }) {
         reader_id={reader_id}
         visible={isShowPayDeptModal}
         setVisible={setIsShowPayDeptModal}
-      />
-    </View>
+      ></PayDeptModal>
+    </ImageBackground>
   );
 }
 
@@ -101,7 +168,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
-    padding: normalize(20),
     paddingBottom: 0,
   },
 
@@ -112,11 +178,12 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     paddingBottom: 0,
+    padding: normalize(20),
   },
 
   userInfoContainer: {
     width: "100%",
-    marginBottom: normalize(16),
+    marginBottom: normalize(30),
   },
 
   infoPreview: {
@@ -128,10 +195,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 0,
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
     marginLeft: normalize(10),
+    borderRadius: normalize(100),
   },
 
   seeDetailBtn: {
@@ -139,10 +208,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 0,
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#e1e0ed",
     marginRight: normalize(10),
+    borderRadius: normalize(100),
   },
 
   totalFine: {
@@ -155,6 +226,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginVertical: normalize(10),
+    paddingHorizontal: normalize(20),
   },
 });
 

@@ -14,30 +14,30 @@ import AlertModal from "../../components/AlertModal.js";
 import { _retrieveData, normalize } from "../../defined_function/index.js";
 
 const formSchema = yup.object({
-  password: yup
+  new_password: yup
     .string()
-    .trim()
-    .required()
     .test("", "Password should contains atleast 8 charaters and containing uppercase,lowercase and numbers", (val) => {
       return new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/).test(val);
     }),
+
+  retype_password: yup.string().test("", "New password does not match", (val, form) => {
+    return val == form.parent.new_password;
+  }),
 });
 
-function ChangePasswordScreen({ route, navigation }) {
-  const { user_id } = route.params;
-
+function ChangeUserPasswordScreen({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
 
   const handleSubmit = (values) => {
-    const { password } = values;
+    const { old_password, new_password } = values;
 
     _retrieveData("ACCESS_TOKEN")
       .then((access_token) => {
         const configurations = {
           method: "PUT",
-          url: `http://10.0.2.2:5000/users/password-by-admin`,
-          data: { password, user_id },
+          url: `http://10.0.2.2:5000/users/password`,
+          data: { old_password, new_password },
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${access_token}`,
@@ -50,7 +50,11 @@ function ChangePasswordScreen({ route, navigation }) {
             navigation.goBack();
           })
           .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
+            if (err?.response?.data?.message == "WRONG_PASSWORD") {
+              setResultStatus({ isSuccess: 0, visible: true, message: "Current password is incorrect" });
+            } else {
+              setResultStatus({ isSuccess: 0, visible: true });
+            }
             console.log("err", err);
           })
           .finally((result) => {
@@ -63,15 +67,16 @@ function ChangePasswordScreen({ route, navigation }) {
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg1.jpg")}>
+    <ImageBackground source={require("../../assets/images/page_bg.jpg")}>
       <TouchableOpacity style={styles.wrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
         <Formik
           initialValues={{
-            password: "",
+            old_password: "",
+            new_password: "",
+            retype_password: "",
           }}
           validationSchema={formSchema}
           onSubmit={(values, actions) => {
-            actions.resetForm();
             handleSubmit(values);
           }}
         >
@@ -79,11 +84,29 @@ function ChangePasswordScreen({ route, navigation }) {
             <View style={styles.formWrapper}>
               <InputItem
                 _styles={[styles.input]}
+                placeholder="Current Password"
+                lableTitle="Current Password"
+                onChange={props.handleChange("old_password")}
+                value={props.values.old_password}
+                errorText={props.errors.old_password}
+              />
+
+              <InputItem
+                _styles={[styles.input]}
                 placeholder="New Password"
                 lableTitle="New Password"
-                onChange={props.handleChange("password")}
-                value={props.values.password}
-                errorText={props.errors.password}
+                onChange={props.handleChange("new_password")}
+                value={props.values.new_password}
+                errorText={props.errors.new_password}
+              />
+
+              <InputItem
+                _styles={[styles.input]}
+                placeholder="Re-type New Password"
+                lableTitle="Re-type New Password"
+                onChange={props.handleChange("retype_password")}
+                value={props.values.retype_password}
+                errorText={props.errors.retype_password}
               />
               <FlatButton
                 _styles={styles.submitBtn}
@@ -99,6 +122,7 @@ function ChangePasswordScreen({ route, navigation }) {
           onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
           isSuccess={resultStatus?.isSuccess}
           visible={resultStatus?.visible ? true : false}
+          text={resultStatus?.message}
         />
       </TouchableOpacity>
     </ImageBackground>
@@ -145,4 +169,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ChangePasswordScreen;
+export default ChangeUserPasswordScreen;

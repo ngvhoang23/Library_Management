@@ -1,24 +1,33 @@
 const bcrypt = require("bcrypt");
 const db = require("../../config/db");
 const moment = require("moment");
+const { generateString } = require("../../DefinedFunctions");
+const sendVerificationEmail = require("../../sendVerificationEmail/sendVerificationEmail");
+const EmailController = require("../controllers/EmailController");
 
 class UserController {
   // [GET] /users/user-info ****
   getUserInfo(req, res) {
-    // const { user_id } = req.userInfo;
+    const { user_id } = req.userInfo;
     const promise = () => {
       return new Promise((resolve, reject) => {
-        db.query(`select * from user_info where user_id = 103`, (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            if (result?.length > 0) {
-              resolve(result[0]);
+        db.query(
+          `select ui.*, uai.role from user_info ui 
+            inner join user_auth_info uai
+            on ui.user_id = uai.user_id
+          where ui.user_id = ${user_id}`,
+          (err, result) => {
+            if (err) {
+              reject(err);
             } else {
-              reject({ status: 400, message: "User not found" });
+              if (result?.length > 0) {
+                resolve(result[0]);
+              } else {
+                reject({ status: 400, message: "User not found" });
+              }
             }
-          }
-        });
+          },
+        );
       });
     };
 
@@ -31,11 +40,56 @@ class UserController {
       });
   }
 
+  // [PUT] /user-info/:user_id
+  changeuserInfo(req, res) {
+    const { user_id } = req.userInfo;
+
+    const { phone_num, birth_date, address, gender, first_name, last_name } = req.body;
+
+    const user_avatar = `/user-avatars/${req?.file?.filename}`;
+
+    const updateUserInfo = () => {
+      const updateUserInfoSql = `
+            update user_info set 
+            ${req?.file?.filename ? `user_avatar=${user_avatar ? `'${user_avatar}'` : null},` : ""} 
+            phone_num=${phone_num ? `'${phone_num}'` : null}, 
+            address=${address ? `'${address}'` : null}, 
+            birth_date=${birth_date ? `'${birth_date}'` : null},
+            gender=${gender ? `'${gender}'` : null}, 
+            first_name=${first_name ? `'${first_name}'` : null}, 
+            last_name=${last_name ? `'${last_name}'` : null},
+            full_name='${first_name ? first_name : ""} ${last_name ? last_name : ""}'
+            where user_id=${user_id}
+          `;
+
+      console.log(updateUserInfoSql);
+      return new Promise((resolve, reject) => {
+        db.query(updateUserInfoSql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    updateUserInfo()
+      .then((result) => {
+        console.log(result);
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
   //[PUT] /users/password
   changePasswordUser(req, res) {
     const { old_password, new_password } = req.body;
 
-    const { user_id } = req.userInfo;
+    const { user_id, user_name } = req.userInfo;
 
     const comparePassword = () => {
       return new Promise((resolve, reject) => {
@@ -45,10 +99,11 @@ class UserController {
           } else {
             if (result.length > 0) {
               const user = result[0];
+              console.log(user);
               bcrypt.compare(old_password, user.password).then((passwordCheck) => {
                 if (!passwordCheck) {
                   return res.status(400).send({
-                    message: "password_was_wrong",
+                    message: "WRONG_PASSWORD",
                   });
                 } else {
                   resolve(1);
@@ -148,6 +203,46 @@ class UserController {
         res.status(400).send(err);
       });
   }
+
+  // [POST] /email/
+  changeEmail(req, res) {
+    const user_id = req.userInfo;
+    const { email_address, token } = req.body;
+
+    const promise = () => {
+      const data = [email_address, user_id];
+
+      const sql = `
+        update user_info set email_address = ? where user_id = ?
+      `;
+
+      return new Promise((resolve, reject) => {
+        if (!EmailController.validateToken(token)) {
+          reject({ status: 400, message: "INVALID_VALIDATION_CODE" });
+          return;
+        }
+        db.query(sql, data, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [PUT] /passowrd
+  changePassword;
 }
 
 module.exports = new UserController();

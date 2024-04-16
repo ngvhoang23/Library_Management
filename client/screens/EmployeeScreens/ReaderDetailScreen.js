@@ -17,7 +17,7 @@ import {
   EvilIcons,
   SimpleLineIcons,
   Entypo,
-  Ionicons,
+  Octicons,
 } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -280,7 +280,9 @@ function ReaderDetailScreen({ route, navigation }) {
           _styles={styles.changePasswordBtn}
           text="Change Password"
           onPress={() => navigation.navigate("Change Password", { user_id: reader_info?.user_id })}
-        />
+        >
+          <FontAwesome6 name="key" size={normalize(12)} color="#fff" />
+        </FlatButton>
         <FlatButton _styles={styles.deleteBtn} text="Delete Reader" onPress={handleDeleteReader} />
       </View>
       <LoadingModal visible={isLoading} />
@@ -377,6 +379,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     marginRight: normalize(10),
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#6c60ff",
