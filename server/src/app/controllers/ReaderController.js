@@ -34,6 +34,36 @@ class ReaderController {
       });
   }
 
+  // [GET] /users/reader-quantity
+  getReaderQuantity(req, res) {
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        db.query(
+          `
+          select role, count(*) as count from user_auth_info uai
+          where role = 'reader'
+          group by role
+            `,
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          },
+        );
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(400).send(err);
+      });
+  }
+
   // [GET] /users/readers/:user_id
   getReaderById(req, res) {
     const { user_id } = req.query;
@@ -107,7 +137,6 @@ class ReaderController {
       address,
       phone_num,
       birth_date,
-      email_address,
       gender,
       first_name,
       last_name,
@@ -116,7 +145,13 @@ class ReaderController {
       expired_date,
     } = req.body;
 
-    const user_avatar = `/user-avatars/${req?.file?.filename}`;
+    let user_avatar = `/user-avatars/${req?.file?.filename}`;
+
+    if (req?.file) {
+      user_avatar = `/user-avatars/${req?.file.filename}`;
+    } else {
+      user_avatar = `/user-avatars/default_avatar.png`;
+    }
 
     const hashPassword = () => {
       return new Promise((resolve, reject) => {
@@ -156,7 +191,7 @@ class ReaderController {
             ${phone_num ? `'${phone_num}'` : null},
             ${address ? `'${address}'` : null}, 
             ${birth_date ? `'${birth_date}'` : null}, 
-            ${email_address ? `'${email_address}'` : null}, 
+            ${user_name ? `'${user_name}'` : null}, 
             ${gender}, 
             ${first_name ? `'${first_name}'` : null}, 
             ${last_name ? `'${last_name}'` : null}, 

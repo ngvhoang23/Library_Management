@@ -1,6 +1,21 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { normalize } from "../defined_function";
 import MarqueeView from "react-native-marquee-view";
+import {
+  FontAwesome,
+  MaterialIcons,
+  Feather,
+  Fontisto,
+  FontAwesome5,
+  MaterialCommunityIcons,
+  AntDesign,
+  FontAwesome6,
+  EvilIcons,
+  SimpleLineIcons,
+  Entypo,
+  Ionicons,
+} from "@expo/vector-icons";
+import FlatButton from "../shared/FlatButton";
 
 function BriefBorrowingInfoPreview({ _styles, book_name, position, cover_photo, reader_name, phone_num, user_avatar }) {
   const renderPosition = () => {
@@ -20,161 +35,113 @@ function BriefBorrowingInfoPreview({ _styles, book_name, position, cover_photo, 
   };
 
   return (
-    <View style={[styles.wrapper, _styles]}>
-      <View style={styles.userContainer}>
-        <View style={styles.readerAvatarContainer}>
-          <Image source={{ uri: user_avatar }} style={[styles.readerAvatar]} />
+    <ImageBackground source={require("../assets/images/page_bg2.jpg")} style={[styles.headerContainer, _styles]}>
+      <View style={styles.coverPhotoContainer}>
+        <Image source={{ uri: cover_photo }} style={styles.coverPhoto} />
+      </View>
+      <View style={styles.container}>
+        <View style={[styles.bookInfo]}>
+          <Text style={styles.bookName} numberOfLines={2}>
+            {book_name}
+          </Text>
+          <Text style={styles.authorName}>{"Tran Thi Kim Phung"}</Text>
         </View>
-        <View style={[styles.userInfo, styles.elevation]}>
-          <MarqueeView style={[styles.marqueeView]} autoPlay={reader_name?.length > 20}>
-            <Text style={[styles.readerName]}>{reader_name}</Text>
-          </MarqueeView>
-          {phone_num && <Text style={[styles.phoneNum]}>{phone_num}</Text>}
+        <View style={[styles.readerInfo]}>
+          <Image source={{ uri: user_avatar }} style={styles.readerAvatar} />
+          <View>
+            <Text style={styles.readerName}>{reader_name}</Text>
+            <Text style={styles.phoneNum}>{phone_num}</Text>
+          </View>
         </View>
       </View>
-      <View style={styles.bookContainer}>
-        <Image source={{ uri: cover_photo }} style={[styles.coverPhoto]} />
-        <View style={[styles.bookInfo, styles.elevation]}>
-          <MarqueeView style={[styles.marqueeView]} autoPlay={book_name?.length > 20}>
-            <Text style={[styles.bookName]}>{book_name}</Text>
-          </MarqueeView>
-          {position && <Text style={[styles.authorName]}>Position: {renderPosition()}</Text>}
-        </View>
-      </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   wrapper: {},
 
-  bookContainer: {
+  headerWrapper: {},
+
+  headerContainer: {
+    flex: 1,
     width: "100%",
     flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-    height: normalize(120),
-    position: "relative",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
-  elevation: {
-    elevation: 20,
-    shadowColor: "#52006A",
-  },
+  coverPhotoContainer: {},
 
   coverPhoto: {
-    width: normalize(70),
-    height: normalize(90),
-    position: "absolute",
-    right: normalize(10),
-    bottom: normalize(20),
+    width: normalize(100),
+    height: normalize(150),
+  },
+
+  container: {
+    flex: 1,
+    height: "100%",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    paddingHorizontal: normalize(10),
+  },
+
+  readerInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginTop: normalize(12),
+    width: "100%",
+    padding: normalize(8),
     borderRadius: normalize(10),
-    zIndex: 10,
+  },
+
+  readerAvatar: {
+    width: normalize(40),
+    height: normalize(40),
+    borderRadius: normalize(1000),
+    marginRight: normalize(10),
+  },
+
+  readerName: {
+    fontFamily: "nunito-bold",
+    fontSize: normalize(12),
+    color: "#292929",
+    marginTop: normalize(6),
+  },
+
+  phoneNum: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(10),
+    color: "#8c8c8d",
+    marginTop: normalize(6),
   },
 
   bookInfo: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    marginBottom: normalize(12),
     width: "100%",
-    backgroundColor: "transparent",
-    borderWidth: 1,
-    borderColor: "#dbe3ef",
-    padding: normalize(10),
+    padding: normalize(8),
     borderRadius: normalize(10),
-    backgroundColor: "#fff",
   },
-
   bookName: {
-    width: "100%",
-    fontFamily: "nunito-medium",
+    fontFamily: "nunito-bold",
     fontSize: normalize(12),
-    letterSpacing: normalize(2),
-    color: "#676768",
+    color: "#292929",
+    marginTop: normalize(6),
+    textAlign: "left",
+    width: "100%",
   },
-
-  marqueeView: {
-    height: normalize(30),
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    width: "60%",
-  },
-
   authorName: {
-    width: "100%",
     fontFamily: "nunito-medium",
     fontSize: normalize(10),
-    letterSpacing: normalize(2),
-    marginBottom: normalize(4),
-    color: "#aaabaf",
-  },
-
-  position: {
-    width: "100%",
-    fontFamily: "nunito-medium",
-    fontSize: normalize(9),
-    letterSpacing: normalize(2),
-    color: "#aaabaf",
-  },
-
-  overdue: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(10),
-    position: "absolute",
-    bottom: normalize(0),
-    right: normalize(0),
-    borderWidth: 1,
-    borderColor: "#f02849",
-    borderStyle: "solid",
-    borderRadius: normalize(6),
-    paddingHorizontal: normalize(6),
-    paddingVertical: normalize(4),
-    backgroundColor: "rgba(240, 40, 73, 0.1)",
-    color: "#f02849",
-  },
-
-  userContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    marginBottom: normalize(-30),
-  },
-
-  readerAvatarContainer: {
-    padding: normalize(4),
-    borderBottomWidth: 4,
-    borderTopWidth: 4,
-    borderLeftWidth: 4,
-    borderColor: "#6ec531",
-    borderRadius: normalize(100),
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "row",
-    alignSelf: "flex-start",
-    elevation: 10,
-    shadowColor: "#52006A",
-  },
-  readerAvatar: {
-    width: normalize(50),
-    height: normalize(50),
-    borderRadius: normalize(1000),
-  },
-  userInfo: {
-    flex: 1,
-    marginLeft: normalize(10),
-  },
-  readerName: {
-    width: "100%",
-    fontFamily: "nunito-bold",
-    fontSize: normalize(12),
-    letterSpacing: normalize(2),
     color: "#676768",
-    marginBottom: normalize(0),
-  },
-  phoneNum: {
+    marginTop: normalize(6),
     width: "100%",
-    fontFamily: "nunito-bold",
-    fontSize: normalize(10),
-    letterSpacing: normalize(2),
-    color: "#aaabaf",
+    textAlign: "left",
   },
 });
 

@@ -147,7 +147,7 @@ class EmployeeController {
             ${phone_num ? `'${phone_num}'` : null},
             ${address ? `'${address}'` : null}, 
             ${birth_date ? `'${birth_date}'` : null}, 
-            ${email_address ? `'${email_address}'` : null}, 
+            ${user_name ? `'${user_name}'` : null}, 
             ${gender}, 
             ${first_name ? `'${first_name}'` : null}, 
             ${last_name ? `'${last_name}'` : null}, 

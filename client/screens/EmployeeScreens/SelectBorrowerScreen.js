@@ -26,7 +26,7 @@ function SelectBorrowerScreen({ navigation }) {
           axios
             .get(`http://10.0.2.2:5000/borrowed-books/borrowers`, config)
             .then((result) => {
-              setReaders([...result.data]);
+              setReaders(result.data);
             })
             .catch((error) => {
               console.log(error);
@@ -41,15 +41,15 @@ function SelectBorrowerScreen({ navigation }) {
   const onSearch = () => {
     navigation.navigate("Borrowers Search Result", {
       search_value: searchValue,
-      placeholder: "search borrower...",
+      placeholder: "Tìm kiếm người mượn...",
     });
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search borrower..."
+        placeholder="Tìm kiếm người mượn..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
@@ -66,11 +66,11 @@ function SelectBorrowerScreen({ navigation }) {
                 data={reader}
                 onPress={() => {
                   if (reader.borrowed_books >= 4) {
-                    alert("Cannot borrow because the reader has borrowed 4 books within 4 days");
+                    alert("Độc giả đã mượn 4 quyền trong vòng 4 ngày gần đây");
                     return;
                   }
                   if (new Date(reader.expire_date) <= new Date()) {
-                    alert("Reader card has expired");
+                    alert("Thẻ độc giả hết hạn");
                     return;
                   }
                   navigation.navigate("Select Book Group", {

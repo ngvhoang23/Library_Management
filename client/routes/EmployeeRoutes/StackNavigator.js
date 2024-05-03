@@ -42,6 +42,10 @@ import ChangeUserPasswordScreen from "../../screens/EmployeeScreens/ChangeUserPa
 import ChangeEmailScreen from "../../screens/EmployeeScreens/ChangeEmailScreen";
 import EnterEmailCodeScreen from "../../screens/EmployeeScreens/EnterEmailCodeScreen";
 import NotificationsScreen from "../../screens/EmployeeScreens/NotificationsScreen";
+import StatisticScreen from "../../screens/EmployeeScreens/StatisticScreen";
+import StatisticByCategoryScreen from "../../screens/EmployeeScreens/StatisticByCategoryScreen";
+import StatisticOverdueBookScreen from "../../screens/EmployeeScreens/StatisticOverdueBookScreen";
+import StatisticBookStatusScreen from "../../screens/EmployeeScreens/StatisticBookStatusScreen";
 
 const Stack = createStackNavigator();
 
@@ -54,38 +58,38 @@ const ReaderManStackNavigation = () => {
         name="Readers"
         component={ReaderManDashboard}
         options={{
-          header: (props) => <MainHeader title="Readers" {...props} />,
+          header: (props) => <MainHeader title="Quán lý độc giả" {...props} />,
         }}
       />
 
       <Stack.Screen
         name="Add Readers"
         component={AddReaderScreen}
-        options={{ header: (props) => <MainHeader title="Add Readers" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Thêm độc giả" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Reader Detail"
         component={ReaderDetailScreen}
-        options={{ header: (props) => <MainHeader title="Readers Detail" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Thông tin độc giả" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Edit Reader"
         component={EditReaderScreen}
-        options={{ header: (props) => <MainHeader title="Edit Reader" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Sửa độc giả" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Change Password"
         component={ChangePasswordScreen}
-        options={{ header: (props) => <MainHeader title="Change Reader Password" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Đổi mật khẩu độc giả" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Reader Search Results"
         component={ReaderSearchResults}
-        options={{ header: (props) => <MainHeader title="Search Result" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack /> }}
       />
     </Stack.Navigator>
   );
@@ -97,7 +101,7 @@ const AddReaderStackNavigation = () => {
       <Stack.Screen
         name="Add Readers"
         component={AddReaderScreen}
-        options={{ header: (props) => <MainHeader title="Add Readers" {...props} /> }}
+        options={{ header: (props) => <MainHeader title="Thêm độc giả" {...props} /> }}
       />
     </Stack.Navigator>
   );
@@ -110,14 +114,14 @@ const BookManStackNavigation = () => {
         name="Book Groups"
         component={BookGroupManDashboard}
         options={{
-          header: (props) => <MainHeader title="Book Groups" {...props} />,
+          header: (props) => <MainHeader title="Quản lý nhóm sách" {...props} />,
         }}
       />
       <Stack.Screen
         name="Add Book Groups"
         component={AddBookGroupScreen}
         options={{
-          header: (props) => <MainHeader title="Add Book Group" {...props} is_stack />,
+          header: (props) => <MainHeader title="Thêm nhóm sách" {...props} is_stack />,
         }}
       />
 
@@ -125,7 +129,7 @@ const BookManStackNavigation = () => {
         name="Add Books"
         component={AddBookScreen}
         options={{
-          header: (props) => <MainHeader title="Add Book" {...props} is_stack />,
+          header: (props) => <MainHeader title="Thêm sách" {...props} is_stack />,
         }}
       />
 
@@ -133,7 +137,7 @@ const BookManStackNavigation = () => {
         name="Book Group Detail"
         component={BookGroupDetailScreen}
         options={{
-          header: (props) => <MainHeader title="Book Group Detail" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chi tiết nhóm sách" {...props} is_stack />,
         }}
       />
 
@@ -141,7 +145,7 @@ const BookManStackNavigation = () => {
         name="Edit Book Group"
         component={EditBookGroupScreen}
         options={{
-          header: (props) => <MainHeader title="Edit Book Group" {...props} is_stack />,
+          header: (props) => <MainHeader title="Sửa nhóm sách" {...props} is_stack />,
         }}
       />
 
@@ -149,7 +153,7 @@ const BookManStackNavigation = () => {
         name="Book List"
         component={BookListDashBoard}
         options={{
-          header: (props) => <MainHeader title="Book List" {...props} is_stack />,
+          header: (props) => <MainHeader title="Quản lý sách" {...props} is_stack />,
         }}
       />
 
@@ -157,7 +161,7 @@ const BookManStackNavigation = () => {
         name="Edit Book"
         component={EditBookScreen}
         options={{
-          header: (props) => <MainHeader title="Edit Book" {...props} is_stack />,
+          header: (props) => <MainHeader title="Sửa sách" {...props} is_stack />,
         }}
       />
 
@@ -165,7 +169,7 @@ const BookManStackNavigation = () => {
         name="Book Group Search Result"
         component={BookGroupSearchResult}
         options={{
-          header: (props) => <MainHeader title="Book Group Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
 
@@ -173,7 +177,7 @@ const BookManStackNavigation = () => {
         name="Book Search Result"
         component={BookSearchResult}
         options={{
-          header: (props) => <MainHeader title="Book Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -187,7 +191,7 @@ const AddBookStackNavigation = () => {
         name="Add Book Groups"
         component={AddBookGroupScreen}
         options={{
-          header: (props) => <MainHeader title="Add Book Group" {...props} />,
+          header: (props) => <MainHeader title="Thêm nhóm sách" {...props} />,
         }}
       />
     </Stack.Navigator>
@@ -201,7 +205,7 @@ const BorrowersManagementDashboardStackNavigation = () => {
         name="Borrowers Management"
         component={BorrowersManDashboard}
         options={{
-          header: (props) => <MainHeader title="Borrowers Management" {...props} />,
+          header: (props) => <MainHeader title="Quản lý người mượn" {...props} />,
         }}
       />
 
@@ -209,7 +213,7 @@ const BorrowersManagementDashboardStackNavigation = () => {
         name="Borrowing Books"
         component={BorrowingBooksByBorrowersScreen}
         options={{
-          header: (props) => <MainHeader title="Borrowing Books" {...props} is_stack />,
+          header: (props) => <MainHeader title="Mượn sách" {...props} is_stack />,
         }}
       />
 
@@ -217,7 +221,7 @@ const BorrowersManagementDashboardStackNavigation = () => {
         name="Borrowing Book Detail"
         component={BorrowingBookDetailScreen}
         options={{
-          header: (props) => <MainHeader title="Borrowing Book Detail" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chi tiết mượn trả sách" {...props} is_stack />,
         }}
       />
 
@@ -225,7 +229,7 @@ const BorrowersManagementDashboardStackNavigation = () => {
         name="Borrowers Search Result"
         component={BorrowingReaderSearchResult}
         options={{
-          header: (props) => <MainHeader title="Borrowers Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
 
@@ -233,7 +237,7 @@ const BorrowersManagementDashboardStackNavigation = () => {
         name="Borrowing Books Search Result"
         component={BorrowingBookByBorrowerSearchResult}
         options={{
-          header: (props) => <MainHeader title="Books Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -247,7 +251,7 @@ const AddBorrowBookStackNavigation = () => {
         name="Select Borrower"
         component={SelectBorrowerScreen}
         options={{
-          header: (props) => <MainHeader title="Select Borrower" {...props} />,
+          header: (props) => <MainHeader title="Chọn độc giả" {...props} />,
         }}
       />
 
@@ -255,7 +259,7 @@ const AddBorrowBookStackNavigation = () => {
         name="Select Book Group"
         component={SelectBookGroupScreen}
         options={{
-          header: (props) => <MainHeader title="Select Book Group" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chọn nhóm sách" {...props} is_stack />,
         }}
       />
 
@@ -263,7 +267,7 @@ const AddBorrowBookStackNavigation = () => {
         name="Select Borrowed Book"
         component={SelectBorrowedBookScreen}
         options={{
-          header: (props) => <MainHeader title="Select Book" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chọn sách" {...props} is_stack />,
         }}
       />
 
@@ -271,7 +275,7 @@ const AddBorrowBookStackNavigation = () => {
         name="Borrow Book"
         component={AddBorrowBookScreen}
         options={{
-          header: (props) => <MainHeader title="Borrow Book" {...props} is_stack />,
+          header: (props) => <MainHeader title="Cho mượn sách" {...props} is_stack />,
         }}
       />
 
@@ -279,7 +283,7 @@ const AddBorrowBookStackNavigation = () => {
         name="Borrowers Search Result"
         component={BorrowersSearchResult}
         options={{
-          header: (props) => <MainHeader title="Borrowers Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
 
@@ -287,7 +291,7 @@ const AddBorrowBookStackNavigation = () => {
         name="Book Group To Borrow Search Result"
         component={BookGroupToBorrowSearchResult}
         options={{
-          header: (props) => <MainHeader title="Book Groups Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
 
@@ -295,7 +299,7 @@ const AddBorrowBookStackNavigation = () => {
         name="Book To Borrow Search Result"
         component={BookToBorrowSearchResult}
         options={{
-          header: (props) => <MainHeader title="Books Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -309,7 +313,7 @@ const BorrowedBookManStackNavigation = () => {
         name="Borrowed Books"
         component={BorrowedBookManDashBoard}
         options={{
-          header: (props) => <MainHeader title="Borrowed Books" {...props} />,
+          header: (props) => <MainHeader title="Quản lý sách mượn" {...props} />,
         }}
       />
 
@@ -317,7 +321,7 @@ const BorrowedBookManStackNavigation = () => {
         name="Borrowing Book Detail"
         component={BorrowingBookDetailScreen}
         options={{
-          header: (props) => <MainHeader title="Borrowing Book Detail" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chi tiết mượn trả sách" {...props} is_stack />,
         }}
       />
 
@@ -325,7 +329,7 @@ const BorrowedBookManStackNavigation = () => {
         name="Borrowing Books Search Result"
         component={BorrowingBookSearchResult}
         options={{
-          header: (props) => <MainHeader title="Books Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -339,7 +343,7 @@ const FineManStackNavigation = () => {
         name="Fine"
         component={FineManDashBoard}
         options={{
-          header: (props) => <MainHeader title="Fine" {...props} />,
+          header: (props) => <MainHeader title="Tiền phạt" {...props} />,
         }}
       />
 
@@ -347,7 +351,7 @@ const FineManStackNavigation = () => {
         name="Fine Detail"
         component={FineDetailScreen}
         options={{
-          header: (props) => <MainHeader title="Fine Detail" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chi tiết phiếu phạt" {...props} is_stack />,
         }}
       />
 
@@ -355,7 +359,7 @@ const FineManStackNavigation = () => {
         name="Overdue Books Detail"
         component={OverdueBookListScreen}
         options={{
-          header: (props) => <MainHeader title="Overdue Books" {...props} is_stack />,
+          header: (props) => <MainHeader title="Sách quá hạn" {...props} is_stack />,
         }}
       />
 
@@ -363,7 +367,7 @@ const FineManStackNavigation = () => {
         name="Fine Search Result"
         component={FineSearchResult}
         options={{
-          header: (props) => <MainHeader title="Fine Search Result" {...props} is_stack />,
+          header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -382,31 +386,31 @@ const ProfileStackNavigation = () => {
       <Stack.Screen
         name="Edit Profile"
         component={EditProfileScreen}
-        options={{ header: (props) => <MainHeader title="Edit Profile" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Chỉnh sửa Profile" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Settings"
         component={SettingScreen}
-        options={{ header: (props) => <MainHeader title="Settings" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Cài đặt" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Change Password"
         component={ChangeUserPasswordScreen}
-        options={{ header: (props) => <MainHeader title="Change Password" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Đổi mật khẩu" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Change Email"
         component={ChangeEmailScreen}
-        options={{ header: (props) => <MainHeader title="Change Email" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Đổi email" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Enter Email Code"
         component={EnterEmailCodeScreen}
-        options={{ header: (props) => <MainHeader title="Enter Email Code" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Nhập mã xác nhận email" {...props} is_stack /> }}
       />
     </Stack.Navigator>
   );
@@ -418,14 +422,14 @@ const NotificationStackNavigation = () => {
       <Stack.Screen
         name="Notifications"
         component={NotificationsScreen}
-        options={{ header: (props) => <MainHeader title="Notifications" {...props} /> }}
+        options={{ header: (props) => <MainHeader title="Thông báo" {...props} /> }}
       />
 
       <Stack.Screen
         name="Fine Detail"
         component={FineDetailScreen}
         options={{
-          header: (props) => <MainHeader title="Fine Detail" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chi tiết phiếu phạt" {...props} is_stack />,
         }}
       />
 
@@ -433,7 +437,7 @@ const NotificationStackNavigation = () => {
         name="Overdue Books Detail"
         component={OverdueBookListScreen}
         options={{
-          header: (props) => <MainHeader title="Overdue Books" {...props} is_stack />,
+          header: (props) => <MainHeader title="Sách trả trễ" {...props} is_stack />,
         }}
       />
 
@@ -441,7 +445,45 @@ const NotificationStackNavigation = () => {
         name="Borrowing Book Detail"
         component={BorrowingBookDetailScreen}
         options={{
-          header: (props) => <MainHeader title="Borrowing Book Detail" {...props} is_stack />,
+          header: (props) => <MainHeader title="Chi tiết mượn trả sách" {...props} is_stack />,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const StatisticStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle}>
+      <Stack.Screen
+        name="Home"
+        component={StatisticScreen}
+        options={{
+          header: (props) => <MainHeader title="Phân tích" {...props} />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Statistic By Category"
+        component={StatisticByCategoryScreen}
+        options={{
+          header: (props) => <MainHeader title="Thống kê mượn trả sách" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Statistic Overdue Books"
+        component={StatisticOverdueBookScreen}
+        options={{
+          header: (props) => <MainHeader title="Thống kê sách trả trễ" {...props} is_stack />,
+        }}
+      />
+
+      <Stack.Screen
+        name="Statistic Book Status"
+        component={StatisticBookStatusScreen}
+        options={{
+          header: (props) => <MainHeader title="Thống kê trạng thái sách" {...props} is_stack />,
         }}
       />
     </Stack.Navigator>
@@ -459,4 +501,5 @@ export {
   FineManStackNavigation,
   ProfileStackNavigation,
   NotificationStackNavigation,
+  StatisticStackNavigation,
 };

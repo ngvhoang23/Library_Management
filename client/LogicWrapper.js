@@ -4,67 +4,15 @@ import AdminDrawerNavigator from "./routes/AdminRoutes/AdminDrawerNavigator";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { _retrieveData } from "./defined_function";
-import LoginScreen from "./screens/AdminScreens/login";
 import EmployeeDrawerNavigator from "./routes/EmployeeRoutes/EmployeeDrawerNavigator";
 import ReaderDrawerNavigator from "./routes/ReaderRoutes/ReaderDrawerNavigator";
 import socket from "./socket";
+import LoginScreen from "./screens/SharedScreens/LoginScreen";
+import WelcomeScreen from "./screens/SharedScreens/WelcomeScreen";
+import { AuthStackNavigation } from "./routes/SharedRoutes/StackNavigator";
 
 function LogicWrapper() {
   const { auth, setAuth } = useAuthContext();
-  const handleLogin = (values) => {
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const { user_name, password } = values;
-
-        const payload = {
-          user_name,
-          password,
-        };
-
-        const config = {
-          headers: { Authorization: `Bearer ${access_token}` },
-        };
-
-        axios
-          .post(`http://10.0.2.2:5000/auth/login`, payload, config)
-          .then((result) => {
-            const { user_info, access_token } = result.data;
-
-            const storeAT = new Promise((resolve, reject) => {
-              _storeData("ACCESS_TOKEN", access_token)
-                .then(resolve({ user_info, access_token }))
-                .catch((err) => {
-                  reject(err);
-                });
-            });
-
-            const storeUI = new Promise((resolve, reject) => {
-              _storeData("USER_INFO", JSON.stringify(user_info))
-                .then(resolve({ user_info, access_token }))
-                .catch((err) => {
-                  reject(err);
-                });
-            });
-
-            return Promise.all([storeAT, storeUI]).then(([resolve1, resolve2]) => {
-              return { user_info, access_token };
-            });
-          })
-          .then(({ user_info, access_token }) => {
-            if (user_info?.role) {
-              setAuth(user_info?.role);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const _storeData = (key, value) => AsyncStorage.setItem(key, value);
 
   const MyTheme = {
     ...DefaultTheme,
@@ -96,7 +44,11 @@ function LogicWrapper() {
         </NavigationContainer>
       );
     }
-    return <LoginScreen handleSubmit={handleLogin} />;
+    return (
+      <NavigationContainer theme={MyTheme}>
+        <AuthStackNavigation />
+      </NavigationContainer>
+    );
   };
 
   return render();

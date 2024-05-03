@@ -9,3 +9,18 @@
 2. books
 3. borrowed books
 4. notification
+
+
+
+1. see available books ==> DONE
+2. description in search result ==> DONE
+3. onPress in search borrowed books ==> DONE
+4. implement notifications
+
+
+
+1. most-popular books => DONE
+2. book borrowed => DONE
+3. view all => DONE
+4. statistics in book detail => DONE
+5. notifications => DONE

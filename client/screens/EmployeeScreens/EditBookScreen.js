@@ -79,7 +79,11 @@ function EditBookScreen({ route, navigation }) {
             // navigation.goBack();
           })
           .catch((err) => {
-            setResultStatus({ isSuccess: 0, visible: true });
+            if (err?.response?.data?.code == "ER_DUP_ENTRY") {
+              setResultStatus({ isSuccess: 0, visible: true, message: "Duplicate position" });
+            } else {
+              setResultStatus({ isSuccess: 0, visible: true });
+            }
             console.log("err", err);
           })
           .finally((result) => {
@@ -92,7 +96,7 @@ function EditBookScreen({ route, navigation }) {
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} style={styles.wrapper}>
       <BriefBookInfoPreview
         book_name={book_name}
         author_name={author_name}
@@ -106,7 +110,6 @@ function EditBookScreen({ route, navigation }) {
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
-          actions.resetForm();
           handleSubmit(values);
         }}
       >
@@ -124,7 +127,7 @@ function EditBookScreen({ route, navigation }) {
             >
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="Import Date"
+                lableTitle="Ngày nhập"
                 value={props.values.import_date}
                 errorText={props.errors.import_date}
                 onPress={() => setIsShowDatePicker(true)}
@@ -143,34 +146,34 @@ function EditBookScreen({ route, navigation }) {
 
               <InputItem
                 _styles={[styles.input, styles.position]}
-                placeholder="Shelf"
-                lableTitle="Shelf"
+                placeholder="Kệ"
+                lableTitle="Kệ"
                 onChange={(val) => props.setFieldValue("position", { ...props.values.position, shelf: val })}
                 value={props.values.position?.shelf}
               />
 
               <InputItem
                 _styles={[styles.input, styles.position]}
-                placeholder="Row"
-                lableTitle="Row"
+                placeholder="Hàng"
+                lableTitle="Hàng"
                 onChange={(val) => props.setFieldValue("position", { ...props.values.position, row: val })}
                 value={props.values.position?.row}
               />
 
               <InputItem
                 _styles={[styles.input, styles.position]}
-                placeholder="Order"
-                lableTitle="Order"
+                placeholder="Thứ tự"
+                lableTitle="Thứ tự"
                 onChange={(val) => props.setFieldValue("position", { ...props.values.position, order: val })}
                 value={props.values.position?.order}
               />
 
-              {props.errors.position && <Text style={styles.positionValidate}>{props.errors.position}</Text>}
+              {props.touched.position ? <Text style={styles.positionValidate}>{props.errors.position}</Text> : ""}
             </ScrollView>
             <FlatButton
               _styles={styles.submitBtn}
               onPress={props.handleSubmit}
-              text="Submit"
+              text="Sửa sách"
               fontSize={normalize(10)}
             />
           </TouchableOpacity>
@@ -181,6 +184,7 @@ function EditBookScreen({ route, navigation }) {
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
+        text={resultStatus?.message}
       />
     </ImageBackground>
   );
@@ -247,7 +251,7 @@ const styles = StyleSheet.create({
 
   position: {
     marginRight: normalize(20),
-    width: "20%",
+    width: "24%",
   },
 });
 

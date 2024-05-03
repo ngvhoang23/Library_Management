@@ -29,8 +29,6 @@ import axios from "axios";
 
 function FineDetailScreen({ route, navigation }) {
   const { reader_id } = route.params;
-  // const { reader_info, borrowed_books, total_fine, total_amount_collected } = route.params;
-  // const { reader_id, reader_name, reader_avatar, reader_phone_num } = reader_info;
 
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState(false);
@@ -105,7 +103,7 @@ function FineDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.infoPreview]}
           textStyles={{ color: "#f02849" }}
-          lableTitle="Total fine"
+          lableTitle="Tổng tiền phạt"
           value={`${total_fine} VNĐ`}
           icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#f02849" />}
           read_only
@@ -114,7 +112,7 @@ function FineDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.infoPreview]}
           textStyles={{ color: "#6ec531" }}
-          lableTitle="Amount Collected"
+          lableTitle="Đã thu"
           value={`${total_amount_collected || 0} VNĐ`}
           icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#6ec531" />}
           read_only
@@ -123,7 +121,7 @@ function FineDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.infoPreview]}
           textStyles={{ color: "#f02849" }}
-          lableTitle="Remaining"
+          lableTitle="Còn lại"
           value={`${total_fine - total_amount_collected || 0} VNĐ`}
           icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#f02849" />}
           read_only
@@ -133,7 +131,7 @@ function FineDetailScreen({ route, navigation }) {
       <View style={styles.options}>
         <FlatButton
           _styles={styles.seeDetailBtn}
-          text="See Detail"
+          text="Xem chi tiết"
           textColor={"#5b4cfd"}
           onPress={() =>
             navigation.navigate("Overdue Books Detail", {
@@ -141,7 +139,7 @@ function FineDetailScreen({ route, navigation }) {
             })
           }
         />
-        <FlatButton _styles={styles.payFineBtn} text="Pay the fine" onPress={() => setIsShowPayDeptModal(true)}>
+        <FlatButton _styles={styles.payFineBtn} text="Thanh toán tiền phạt" onPress={() => setIsShowPayDeptModal(true)}>
           <MaterialIcons name="attach-money" size={normalize(15)} color="#fff" />
         </FlatButton>
       </View>
@@ -177,7 +175,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "center",
-    paddingBottom: 0,
     padding: normalize(20),
   },
 
@@ -188,6 +185,7 @@ const styles = StyleSheet.create({
 
   infoPreview: {
     marginBottom: normalize(20),
+    width: "100%",
   },
 
   payFineBtn: {

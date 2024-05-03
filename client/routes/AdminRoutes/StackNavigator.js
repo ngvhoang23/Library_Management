@@ -12,6 +12,13 @@ import ReaderDetailScreen from "../../screens/AdminScreens/ReaderDetailScreen";
 import EditReaderScreen from "../../screens/AdminScreens/EditReaderScreen";
 import SearchResults from "../../screens/AdminScreens/SearchResults";
 import ReaderSearchResults from "../../screens/AdminScreens/ReaderSearchResults";
+import ProfileScreen from "../../screens/AdminScreens/ProfileScreen";
+import EditProfileScreen from "../../screens/AdminScreens/EditProfileScreen";
+import SettingScreen from "../../screens/AdminScreens/SettingScreen";
+import ChangeEmailScreen from "../../screens/AdminScreens/ChangeEmailScreen";
+import EnterEmailCodeScreen from "../../screens/AdminScreens/EnterEmailCodeScreen";
+import ChangeUserPasswordScreen from "../../screens/AdminScreens/ChangeUserPasswordScreen";
+import EmployeeSearchResults from "../../screens/AdminScreens/EmployeeSearchResults";
 
 const Stack = createStackNavigator();
 
@@ -24,36 +31,36 @@ const EmpManStackNavigator = () => {
         name="Employees"
         component={EmpManDashboard}
         options={{
-          header: (props) => <MainHeader title="Employees" {...props} />,
+          header: (props) => <MainHeader title="Nhân viên" {...props} />,
         }}
       />
       <Stack.Screen
         name="Add Employees"
         component={AddEmployeScreen}
-        options={{ header: (props) => <MainHeader title="Add Employees" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Thêm nhân viên" {...props} is_stack /> }}
       />
       <Stack.Screen
         name="Employee Detail"
         component={EmployeeDetailScreen}
-        options={{ header: (props) => <MainHeader title="Employee Detail" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Chi tiết nhân viên" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Edit Employee"
         component={EditEmployeeScreen}
-        options={{ header: (props) => <MainHeader title="Edit Employee" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Sửa nhân viên" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Change Password"
         component={ChangePasswordScreen}
-        options={{ header: (props) => <MainHeader title="Change Employee Password" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Đổi mật khẩu nhân viên" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Search Results"
-        component={SearchResults}
-        options={{ header: (props) => <MainHeader title="Search Result" {...props} is_stack /> }}
+        component={EmployeeSearchResults}
+        options={{ header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack /> }}
       />
     </Stack.Navigator>
   );
@@ -65,7 +72,7 @@ const AddEmpStackNavigator = () => {
       <Stack.Screen
         name="Add Employees"
         component={AddEmployeScreen}
-        options={{ header: (props) => <MainHeader title="Add Employees" {...props} /> }}
+        options={{ header: (props) => <MainHeader title="Thêm nhân viên" {...props} /> }}
       />
     </Stack.Navigator>
   );
@@ -78,32 +85,32 @@ const ReaderManStackNavigation = () => {
         name="Readers"
         component={ReaderManDashboard}
         options={{
-          header: (props) => <MainHeader title="Readers" {...props} />,
+          header: (props) => <MainHeader title="Độc giả" {...props} />,
         }}
       />
 
       <Stack.Screen
         name="Reader Detail"
         component={ReaderDetailScreen}
-        options={{ header: (props) => <MainHeader title="Readers Detail" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Chi tiết độc giả" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Edit Reader"
         component={EditReaderScreen}
-        options={{ header: (props) => <MainHeader title="Edit Reader" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Sửa độc giả" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Change Password"
         component={ChangePasswordScreen}
-        options={{ header: (props) => <MainHeader title="Change Reader Password" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Đổi mật khẩu độc giả" {...props} is_stack /> }}
       />
 
       <Stack.Screen
         name="Reader Search Results"
         component={ReaderSearchResults}
-        options={{ header: (props) => <MainHeader title="Search Result" {...props} is_stack /> }}
+        options={{ header: (props) => <MainHeader title="Kết quả tìm kiếm" {...props} is_stack /> }}
       />
     </Stack.Navigator>
   );
@@ -115,10 +122,58 @@ const AddReaderStackNavigation = () => {
       <Stack.Screen
         name="Add Readers"
         component={AddReaderScreen}
-        options={{ header: (props) => <MainHeader title="Add Readers" {...props} /> }}
+        options={{ header: (props) => <MainHeader title="Thêm độc giả" {...props} /> }}
       />
     </Stack.Navigator>
   );
 };
 
-export { EmpManStackNavigator, ReaderManStackNavigation, AddEmpStackNavigator, AddReaderStackNavigation };
+const ProfileStackNavigation = () => {
+  return (
+    <Stack.Navigator screenOptions={screenOptionStyle} initialRouteName="Profile">
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ header: (props) => <MainHeader title="Profile" {...props} /> }}
+      />
+
+      <Stack.Screen
+        name="Edit Profile"
+        component={EditProfileScreen}
+        options={{ header: (props) => <MainHeader title="Sửa Profile" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Settings"
+        component={SettingScreen}
+        options={{ header: (props) => <MainHeader title="Cài đặt" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Change Password"
+        component={ChangeUserPasswordScreen}
+        options={{ header: (props) => <MainHeader title="Đổi mật khẩu" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Change Email"
+        component={ChangeEmailScreen}
+        options={{ header: (props) => <MainHeader title="Đổi Email" {...props} is_stack /> }}
+      />
+
+      <Stack.Screen
+        name="Enter Email Code"
+        component={EnterEmailCodeScreen}
+        options={{ header: (props) => <MainHeader title="Nhập mã xác nhận email" {...props} is_stack /> }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export {
+  EmpManStackNavigator,
+  ReaderManStackNavigation,
+  AddEmpStackNavigator,
+  AddReaderStackNavigation,
+  ProfileStackNavigation,
+};

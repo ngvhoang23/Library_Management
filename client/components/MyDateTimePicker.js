@@ -3,12 +3,14 @@ import { StyleSheet, Button, TextInput, View, Text, TouchableOpacity } from "rea
 import { globalStyles } from "../styles/global.js";
 import { normalize } from "../defined_function/index.js";
 
-function MyDateTimePicker({ _styles, lableTitle, value, errorText, onPress }) {
+function MyDateTimePicker({ _styles, lableTitle, value, errorText, onPress, border }) {
   return (
-    <View style={[_styles, styles.wrapper]}>
-      <Text style={styles.lableTitle}>{lableTitle}</Text>
+    <View style={[_styles, styles.wrapper, { borderWidth: border ? 1 : 0 }]}>
+      <Text style={[styles.lableTitle, { backgroundColor: border ? "#fff" : "transparent" }]}>{lableTitle}</Text>
       <TouchableOpacity activeOpacity={1.0} onPress={onPress}>
-        <Text style={[globalStyles.input, styles.input]}>{value}</Text>
+        <Text style={[globalStyles.input, styles.input, { marginTop: border ? normalize(4) : normalize(4) }]}>
+          {value}
+        </Text>
       </TouchableOpacity>
       {errorText && <Text style={[styles.errorText]}>{errorText}</Text>}
     </View>
@@ -18,21 +20,25 @@ function MyDateTimePicker({ _styles, lableTitle, value, errorText, onPress }) {
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
-    borderColor: "#ced0d4",
+    borderWidth: 1,
+    borderColor: "#d8dde7",
+    padding: normalize(6),
+    borderRadius: normalize(6),
   },
   lableTitle: {
     position: "absolute",
     zIndex: 10,
     left: normalize(6),
-    top: normalize(2),
+    top: normalize(-6),
     fontSize: normalize(11),
     letterSpacing: 1,
     color: "#3c3c3c",
-    backgroundColor: "transparent",
+    backgroundColor: "#fff",
+    paddingHorizontal: normalize(6),
     fontFamily: "nunito-bold",
   },
   input: {
-    marginTop: normalize(14),
+    marginTop: normalize(4),
     fontSize: normalize(12),
     fontFamily: "nunito-regular",
     borderColor: "transparent",

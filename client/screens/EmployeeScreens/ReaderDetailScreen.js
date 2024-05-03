@@ -38,7 +38,7 @@ function ReaderDetailScreen({ route, navigation }) {
   const [readerInfo, setReaderInfo] = useState({});
 
   useEffect(() => {
-    if (new Date(expire_date) > new Date()) {
+    if (new Date(expire_date) < new Date()) {
       setStatus(0);
     } else {
       setStatus(1);
@@ -150,7 +150,7 @@ function ReaderDetailScreen({ route, navigation }) {
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} resizeMode="cover" style={styles.wrapper}>
       <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
         <ImageBackground
           source={require("../../assets/images/page_bg.jpg")}
@@ -172,13 +172,13 @@ function ReaderDetailScreen({ route, navigation }) {
             >
               <FontAwesome6 name="check" size={normalize(16)} color="#fff" />
             </View>
-            <FlatButton _styles={styles.editBtn} text="Edit">
+            <FlatButton _styles={styles.editBtn} text="Sửa">
               <AntDesign name="edit" size={normalize(12)} color="#fff" />
             </FlatButton>
           </TouchableOpacity>
           {/* <Text style={[styles.readerName]}>{full_name}</Text> */}
           {!status && (
-            <FlatButton _styles={styles.activeBtn} text="Active" onPress={handleActiveReader}>
+            <FlatButton _styles={styles.activeBtn} text="Kích hoạt" onPress={handleActiveReader}>
               <FontAwesome6 name="check" size={normalize(12)} color="#fff" />
             </FlatButton>
           )}
@@ -187,7 +187,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="User Name"
+          lableTitle="Tên đăng nhập"
           value={user_name}
           icon={<AntDesign name="user" size={normalize(16)} color="#3c3c3c" />}
           read_only
@@ -196,7 +196,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Phone Number"
+          lableTitle="Số điện thoại"
           value={phone_num}
           icon={<AntDesign name="phone" size={normalize(16)} color="#3c3c3c" />}
           read_only
@@ -205,7 +205,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Gender"
+          lableTitle="Giới tính"
           value={gender ? "Male" : "Female"}
           icon={<FontAwesome name="transgender" size={normalize(16)} color="#3c3c3c" />}
           read_only
@@ -214,7 +214,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Reader type"
+          lableTitle="Lọai độc giả"
           value={reader_type === "lecturer" ? "Lecturer" : "Student"}
           icon={<Feather name="users" size={normalize(16)} color="#3c3c3c" />}
           read_only
@@ -223,7 +223,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Birth Date"
+          lableTitle="Ngày sinh"
           value={birth_date ? new Date(birth_date).toISOString().split("T")[0] : ""}
           icon={<Fontisto name="date" size={normalize(16)} color="#3c3c3c" />}
           read_only
@@ -232,7 +232,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Start Date"
+          lableTitle="Ngày tạo"
           value={created_at ? new Date(created_at).toISOString().split("T")[0] : ""}
           icon={<FontAwesome name="hourglass-1" size={normalize(15)} color="#3c3c3c" />}
           read_only
@@ -241,7 +241,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="End Date"
+          lableTitle="Ngày hết hạn"
           value={expire_date ? new Date(expire_date).toISOString().split("T")[0] : ""}
           icon={<FontAwesome name="hourglass-end" size={normalize(15)} color="#3c3c3c" />}
           read_only
@@ -259,7 +259,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Address"
+          lableTitle="Địa chỉ"
           value={address}
           icon={<EvilIcons name="location" size={normalize(22)} color="#3c3c3c" />}
           read_only
@@ -268,7 +268,7 @@ function ReaderDetailScreen({ route, navigation }) {
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Full Name"
+          lableTitle="Họ và tên"
           value={full_name}
           icon={<MaterialIcons name="drive-file-rename-outline" size={normalize(16)} color="#3c3c3c" />}
           read_only
@@ -278,12 +278,12 @@ function ReaderDetailScreen({ route, navigation }) {
       <View style={styles.options}>
         <FlatButton
           _styles={styles.changePasswordBtn}
-          text="Change Password"
+          text="Đổi mật khẩu"
           onPress={() => navigation.navigate("Change Password", { user_id: reader_info?.user_id })}
         >
           <FontAwesome6 name="key" size={normalize(12)} color="#fff" />
         </FlatButton>
-        <FlatButton _styles={styles.deleteBtn} text="Delete Reader" onPress={handleDeleteReader} />
+        <FlatButton _styles={styles.deleteBtn} text="Xóa độc giả" onPress={handleDeleteReader} />
       </View>
       <LoadingModal visible={isLoading} />
       <AlertModal

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, View, ScrollView, Keyboard, TouchableOpacity } from "react-native";
+import { StyleSheet, View, ScrollView, Keyboard, TouchableOpacity, ImageBackground } from "react-native";
 import { Formik } from "formik";
 import FlatButton from "../../shared/FlatButton.js";
 import * as yup from "yup";
@@ -37,7 +37,7 @@ function ChangePasswordScreen({ route, navigation }) {
         const configurations = {
           method: "PUT",
           url: `http://10.0.2.2:5000/users/password-by-admin`,
-          data: { password, user_id },
+          data: { password: password.trim(), user_id },
           headers: {
             Accept: "application/json",
             Authorization: `Bearer ${access_token}`,
@@ -63,43 +63,46 @@ function ChangePasswordScreen({ route, navigation }) {
   };
 
   return (
-    <TouchableOpacity style={styles.wrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
-      <Formik
-        initialValues={{
-          password: "",
-        }}
-        validationSchema={formSchema}
-        onSubmit={(values, actions) => {
-          actions.resetForm();
-          handleSubmit(values);
-        }}
-      >
-        {(props) => (
-          <View style={styles.formWrapper}>
-            <InputItem
-              _styles={[styles.input]}
-              placeholder="New Password"
-              lableTitle="New Password"
-              onChange={props.handleChange("password")}
-              value={props.values.password}
-              errorText={props.errors.password}
-            />
-            <FlatButton
-              _styles={styles.submitBtn}
-              onPress={props.handleSubmit}
-              text="submit"
-              fontSize={normalize(10)}
-            />
-          </View>
-        )}
-      </Formik>
-      <LoadingModal visible={isLoading} />
-      <AlertModal
-        onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
-        isSuccess={resultStatus?.isSuccess}
-        visible={resultStatus?.visible ? true : false}
-      />
-    </TouchableOpacity>
+    <ImageBackground source={require("../../assets/images/page_bg1.jpg")}>
+      <TouchableOpacity style={styles.wrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
+        <Formik
+          initialValues={{
+            password: "",
+          }}
+          validationSchema={formSchema}
+          onSubmit={(values, actions) => {
+            actions.resetForm();
+            handleSubmit(values);
+          }}
+        >
+          {(props) => (
+            <View style={styles.formWrapper}>
+              <InputItem
+                _styles={[styles.input]}
+                placeholder="Mật khẩu mới"
+                lableTitle="Mật khẩu mới"
+                onChange={props.handleChange("password")}
+                value={props.values.password}
+                errorText={props.touched.password ? props.errors.password : undefined}
+                secureTextEntry={true}
+              />
+              <FlatButton
+                _styles={styles.submitBtn}
+                onPress={props.handleSubmit}
+                text="Đổi mật khẩu"
+                fontSize={normalize(10)}
+              />
+            </View>
+          )}
+        </Formik>
+        <LoadingModal visible={isLoading} />
+        <AlertModal
+          onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
+          isSuccess={resultStatus?.isSuccess}
+          visible={resultStatus?.visible ? true : false}
+        />
+      </TouchableOpacity>
+    </ImageBackground>
   );
 }
 
@@ -130,16 +133,16 @@ const styles = StyleSheet.create({
   },
 
   submitBtn: {
-    width: "100%",
+    width: "90%",
     height: normalize(32),
-
     marginTop: normalize(10),
     marginBottom: normalize(20),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(100),
   },
 });
 

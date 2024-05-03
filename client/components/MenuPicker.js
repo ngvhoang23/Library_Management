@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Button, TextInput, View, Text, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/global.js";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { normalize } from "../defined_function/index.js";
 
-function MenuPickers({ _styles, lableTitle, errorText, options, onChange, initIndex }) {
+function MenuPickers({ _styles, lableTitle, errorText, options, onChange, initIndex, border, read_only, onPress }) {
   const initRerender = useRef(false);
   const genderPickerRef = useRef();
   const [val, setVal] = useState();
@@ -29,21 +29,26 @@ function MenuPickers({ _styles, lableTitle, errorText, options, onChange, initIn
   }, [options, initIndex]);
 
   return (
-    <View style={[_styles, styles.wrapper]}>
-      <Text style={styles.lableTitle}>{lableTitle}</Text>
+    <View style={[_styles, styles.wrapper, { borderWidth: border ? 1 : 0 }]}>
+      <Text style={[styles.lableTitle, { backgroundColor: border ? "#fff" : "transparent" }]}>{lableTitle}</Text>
       <TouchableOpacity
         activeOpacity={1.0}
         onPress={() => {
-          openGenderPicker();
+          if (!read_only) {
+            openGenderPicker();
+          }
+          onPress && onPress();
         }}
         style={styles.container}
       >
-        <Text style={[globalStyles.input, styles.input]}>{val?.title}</Text>
-        <Entypo style={styles.icon} name="chevron-small-down" size={28} color="#949498" />
+        <Text style={[globalStyles.input, styles.input, { marginTop: border ? normalize(4) : normalize(6) }]}>
+          {val?.title}
+        </Text>
+        <FontAwesome name="angle-down" style={styles.icon} size={normalize(16)} color="#949498" />
       </TouchableOpacity>
       {errorText && <Text style={[styles.errorText]}>{errorText}</Text>}
 
-      {options?.length > 0 && (
+      {options?.length > 0 && !read_only && (
         <View style={styles.genderPicker}>
           <Picker
             ref={genderPickerRef}
@@ -52,7 +57,11 @@ function MenuPickers({ _styles, lableTitle, errorText, options, onChange, initIn
               onChange(selectedValue, selectedIndex);
               setVal(options[selectedIndex]);
             }}
+            enabled={false}
+            dropdownIconColor={"#fff"}
+            dropdownIconRippleColor={"#fff"}
             pickerStyleType={{ display: "none" }}
+            style={{ display: "none" }}
           >
             {options?.map((option, index) => {
               return <Picker.Item key={option.value} label={option.title} value={option.value} />;
@@ -67,6 +76,10 @@ function MenuPickers({ _styles, lableTitle, errorText, options, onChange, initIn
 const styles = StyleSheet.create({
   wrapper: {
     position: "relative",
+    borderWidth: 1,
+    borderColor: "#d8dde7",
+    padding: normalize(6),
+    borderRadius: normalize(6),
   },
 
   container: {
@@ -76,19 +89,20 @@ const styles = StyleSheet.create({
   },
 
   icon: { marginRight: normalize(8) },
+
   lableTitle: {
     position: "absolute",
     zIndex: 10,
     left: normalize(6),
-    top: normalize(2),
-    letterSpacing: 1,
-    backgroundColor: "transparent",
+    top: normalize(-6),
     fontSize: normalize(11),
+    letterSpacing: 1,
     color: "#3c3c3c",
+    backgroundColor: "#fff",
+    paddingHorizontal: normalize(6),
     fontFamily: "nunito-bold",
   },
   input: {
-    marginTop: normalize(14),
     fontSize: normalize(12),
     fontFamily: "nunito-regular",
     borderColor: "transparent",
@@ -103,7 +117,8 @@ const styles = StyleSheet.create({
     color: "#f02849",
   },
   genderPicker: {
-    display: "none",
+    // display: "none",
+    // backgroundColor: "red",
   },
 });
 

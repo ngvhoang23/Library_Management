@@ -1,15 +1,16 @@
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { normalize } from "../defined_function";
 import { useEffect, useRef, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 
 function CountDown({ _styles, initValue, title, onTimeOut }) {
   const refInterval = useRef();
 
   const [timeOut, setTimeOut] = useState(initValue || 0);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     refInterval.current = setInterval(() => {
-      console.log(title);
       setTimeOut((prev) => {
         return prev - 1;
       });
@@ -19,11 +20,20 @@ function CountDown({ _styles, initValue, title, onTimeOut }) {
   }, []);
 
   useEffect(() => {
-    if (timeOut <= 0) {
-      onTimeOut();
+    if (!isFocused) {
+      setTimeOut(0);
       clearInterval(refInterval?.current);
     }
-  }, [timeOut]);
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused) {
+      if (timeOut <= 0) {
+        onTimeOut();
+        clearInterval(refInterval?.current);
+      }
+    }
+  }, [timeOut, isFocused]);
 
   return (
     <View style={[styles.wrapper, _styles]}>

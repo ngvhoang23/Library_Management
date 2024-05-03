@@ -10,6 +10,7 @@ import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import { ScrollView } from "react-native-gesture-handler";
 import BookItem from "../../components/BookItem";
+import BookBorrowedHorizontal from "../../components/BookBorrowedHorizontal";
 
 function BorrowedBookManDashBoard({ route, navigation }) {
   const [books, setBooks] = useState([]);
@@ -28,7 +29,7 @@ function BorrowedBookManDashBoard({ route, navigation }) {
           axios
             .get(`http://10.0.2.2:5000/borrowed-books/borrowing-books/`, config)
             .then((result) => {
-              setBooks([...result.data]);
+              setBooks(result.data);
             })
             .catch((error) => {
               console.log(error);
@@ -43,7 +44,7 @@ function BorrowedBookManDashBoard({ route, navigation }) {
   const onSearch = () => {
     navigation.navigate("Borrowing Books Search Result", {
       search_value: searchValue,
-      placeholder: "search books by position...",
+      placeholder: "Tìm kiếm sách...",
     });
   };
 
@@ -51,7 +52,7 @@ function BorrowedBookManDashBoard({ route, navigation }) {
     <ImageBackground source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search books by position..."
+        placeholder="Tìm kiếm sách..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
@@ -60,14 +61,20 @@ function BorrowedBookManDashBoard({ route, navigation }) {
       <ScrollView style={styles.listWrapper}>
         <View style={styles.bookList}>
           {books.map((book, index) => {
+            const total_day = Math.round(
+              (new Date(book.return_date) - new Date(book.borrow_date)) / (1000 * 3600 * 24),
+            );
+            const remain_day = Math.round((new Date(book.return_date) - new Date()) / (1000 * 3600 * 24));
             return (
-              <BookItem
-                key={book.book_id}
-                _style={[styles.bookItem]}
-                have_position
-                in_progess={new Date() < new Date(book.return_date)}
-                overdue={new Date() >= new Date(book.return_date)}
-                data={book}
+              <BookBorrowedHorizontal
+                key={book.borrow_id}
+                _styles={[styles.bookItem]}
+                cover_photo={book.cover_photo}
+                book_name={book.book_name}
+                position={book.position}
+                total_day={total_day}
+                remain_day={remain_day}
+                book_detail_id={book.book_detail_id}
                 onPress={() =>
                   navigation.navigate("Borrowing Book Detail", {
                     borrow_id: book.borrow_id,
@@ -101,7 +108,7 @@ const styles = StyleSheet.create({
     height: "100%",
     paddingVertical: normalize(14),
     paddingHorizontal: normalize(14),
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
     flexWrap: "wrap",
@@ -110,7 +117,6 @@ const styles = StyleSheet.create({
   bookItem: {
     width: "100%",
     paddingTop: normalize(10),
-    paddingBottom: normalize(20),
     marginBottom: normalize(10),
     borderBottomWidth: 0.5,
     borderColor: "#ced0d4",

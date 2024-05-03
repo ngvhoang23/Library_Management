@@ -39,6 +39,7 @@ function BookListDashBoard({ route, navigation }) {
           axios
             .get(`http://10.0.2.2:5000/books/${book_detail_id}`, config)
             .then((result) => {
+              console.log(result.data);
               setBooks([...result.data]);
             })
             .catch((error) => {
@@ -103,7 +104,7 @@ function BookListDashBoard({ route, navigation }) {
       {!isDeletingMode && (
         <SearchBar
           _styles={styles.searchBar}
-          placeholder="search books by position..."
+          placeholder="Tìm sách bằng vị trí..."
           value={searchValue}
           onChange={(value) => setSearchValue(value)}
           onSearch={onSearch}
@@ -155,7 +156,7 @@ function BookListDashBoard({ route, navigation }) {
 
       {!isDeletingMode && (
         <FlatButton
-          text="Add Books"
+          text="Thêm sách"
           _styles={styles.addBookBtn}
           fontSize={normalize(10)}
           onPress={() => navigation.navigate("Add Books", { book_detail_info: book_info })}
@@ -187,13 +188,13 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(14),
     paddingHorizontal: normalize(6),
     overflow: "scroll",
-    flexDirection: "column",
-    justifyContent: "flex-start",
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "flex-start",
     flexWrap: "wrap",
   },
   bookItem: {
-    width: "100%",
+    width: "94%",
     padding: normalize(10),
     borderRadius: normalize(10),
     marginBottom: normalize(10),

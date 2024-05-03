@@ -69,10 +69,7 @@ function FineSearchResult({ route, navigation }) {
                   total_fine={item.total_fine}
                   onPress={() =>
                     navigation.navigate("Fine Detail", {
-                      reader_info: item.reader_info,
-                      borrowed_books: item.borrowed_books,
-                      total_fine: item.total_fine,
-                      total_amount_collected: item.amount_collected,
+                      reader_id: item?.reader_info?.reader_id,
                     })
                   }
                 />

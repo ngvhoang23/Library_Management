@@ -7,8 +7,8 @@ import { useAuthContext } from "../../context/roleContext";
 import { useUserInfoContext } from "../../context/userInfoContext";
 import axios from "axios";
 import { SCREEN_HEIGHT, SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function/index";
-import { EmployeeManTabNavigation, ReaderManTabNavigation } from "./TabNavigation";
-import { StyleSheet, View } from "react-native";
+import { EmployeeManTabNavigation, ProfileTabNavigation, ReaderManTabNavigation } from "./TabNavigation";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { AntDesign, MaterialCommunityIcons, Feather, MaterialIcons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
@@ -35,7 +35,7 @@ const AdminDrawerNavigator = () => {
     });
   }, []);
 
-  return (
+  return user ? (
     <Drawer.Navigator
       screenOptions={{
         drawerStyle: {
@@ -65,7 +65,7 @@ const AdminDrawerNavigator = () => {
             <DrawerItemList {...props} />
             <View style={styles.bottomDrawerSection}>
               <DrawerItem
-                label={"Logout"}
+                label={"Đăng xuất"}
                 onPress={() => setAuth(null)}
                 labelStyle={{
                   fontSize: normalize(12),
@@ -83,15 +83,49 @@ const AdminDrawerNavigator = () => {
       }}
     >
       <Drawer.Screen
+        name={user?.full_name}
+        component={ProfileTabNavigation}
+        options={{
+          headerShown: false,
+          unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
+          drawerLabelStyle: {
+            fontSize: normalize(11),
+            fontFamily: "nunito-bold",
+            color: "#3c3c3c",
+          },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.profileInfo}>
+              <Text style={styles.userName}>{user?.full_name}</Text>
+              <Text style={styles.role}>Admin</Text>
+            </View>
+          ),
+          drawerIcon: ({ focused, color, size }) => (
+            <View style={styles.userAvatarContainer}>
+              <Image source={{ uri: `http://10.0.2.2:5000${user?.user_avatar}` }} style={styles.userAvatar} />
+            </View>
+          ),
+        }}
+      />
+
+      <Drawer.Screen
         name="Manage Employees"
         component={EmployeeManTabNavigation}
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={styles.userName}>Quản lý nhân viên</Text>
+            </View>
+          ),
           drawerIcon: ({ focused, color, size }) => <Feather name="users" size={normalize(19)} color={color} />,
         }}
       />
@@ -101,14 +135,23 @@ const AdminDrawerNavigator = () => {
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={styles.userName}>Quản lý độc giả</Text>
+            </View>
+          ),
           drawerIcon: ({ focused, color, size }) => <Feather name="users" size={normalize(19)} color={color} />,
         }}
       />
     </Drawer.Navigator>
+  ) : (
+    <View></View>
   );
 };
 
@@ -123,6 +166,47 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: normalize(10),
+  },
+
+  profileInfo: {},
+  userName: {
+    fontSize: normalize(11),
+    fontFamily: "nunito-bold",
+    color: "#3c3c3c",
+  },
+  role: {
+    fontSize: normalize(10),
+    fontFamily: "nunito-medium",
+    color: "#8c8c8d",
+  },
+
+  userAvatarContainer: {
+    elevation: 8,
+    shadowColor: "#000",
+    borderRadius: normalize(1000),
+    borderWidth: 2,
+    borderColor: "#6ec531",
+    padding: normalize(2),
+  },
+
+  userAvatar: {
+    aspectRatio: 1,
+    height: normalize(30),
+    borderRadius: normalize(1000),
+  },
+
+  notiTitleWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flex: 1,
+  },
+
+  notiDot: {
+    width: normalize(8),
+    height: normalize(8),
+    backgroundColor: "#f02849",
+    borderRadius: normalize(1000),
   },
 });
 

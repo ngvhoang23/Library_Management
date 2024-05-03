@@ -13,10 +13,10 @@ function FineNotificationItem({ user_id, full_name, user_avatar, amount_collecte
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={2}>
           {full_name}
-          <Text style={{ fontFamily: "nunito-medium" }}> has just paid </Text>
+          <Text style={{ fontFamily: "nunito-medium" }}> vừa thanh toán </Text>
           <Text style={{ fontFamily: "nunito-bold", color: "#6ec531" }}>{amount_collected}</Text>
         </Text>
-        <Text style={styles.subTitle}>Payment Date: {new Date(created_at).toLocaleDateString("en-GB")}</Text>
+        <Text style={styles.subTitle}>Ngày: {new Date(created_at).toLocaleDateString("en-GB")}</Text>
       </View>
 
       <View style={styles.timeContainer}>
@@ -39,6 +39,8 @@ const styles = StyleSheet.create({
     width: normalize(42),
     height: normalize(42),
     marginRight: normalize(20),
+    alignItems: "center",
+    justifyContent: "center",
   },
   userAvatar: {
     width: normalize(33),

@@ -95,7 +95,7 @@ function BookItem({
           </Text>
           {status && (
             <Text style={[styles.status, { color: status ? "#6ec531" : "#f02849" }]}>
-              {status ? "available" : "unavailable"}
+              {status ? "có sẵn" : "không có sẵn"}
             </Text>
           )}
           {!have_position ? (
@@ -104,14 +104,14 @@ function BookItem({
             </Text>
           ) : (
             <Text style={styles.position} numberOfLines={1}>
-              Position: {renderPosition()}
+              Vị trí: {renderPosition()}
             </Text>
           )}
 
           {remaining != null && remaining != undefined && (
             <Text
               style={[styles.remaining, { color: remaining > 0 ? "#6ec531" : "#f02849" }]}
-            >{`Remaining: ${remaining}`}</Text>
+            >{`Còn lại: ${remaining}`}</Text>
           )}
 
           {overdue && <Text style={[styles.overdue, { color: "#f02849" }]}>{`Overdue`}</Text>}
@@ -156,12 +156,14 @@ const styles = StyleSheet.create({
     width: normalize(48),
     height: normalize(48),
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#8c8c8d",
   },
   bookName: {
     width: "90%",
     fontFamily: "nunito-medium",
     color: "#676768",
-    fontSize: normalize(12),
+    fontSize: normalize(11),
   },
   authorName: {
     fontFamily: "nunito-medium",

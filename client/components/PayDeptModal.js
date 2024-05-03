@@ -52,13 +52,15 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
 
   useEffect(() => {
     if (ammount > total_dept) {
-      setErrorText("The amount collected does not exceed the amount the borrower owes");
+      setErrorText("Số tiền thu không vượt quá số tiền độc giả đang nợ");
     } else {
       setErrorText("");
     }
   }, [ammount]);
 
   const handlePayFine = () => {
+    setIsLoading(true);
+
     if (!ammount) {
       setErrorText("Please fill in the amount");
       return;
@@ -84,12 +86,16 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
         axios(configurations)
           .then((result) => {
             setResultStatus({ isSuccess: 1, visible: true });
-            setVisible(false);
+            setTimeout(() => {
+              setVisible(false);
+            }, 1000);
             socket?.emit("pay-fine", data);
+            setIsLoading(true);
           })
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
             console.log("err", err);
+            setIsLoading(true);
           })
           .finally((result) => {
             setIsLoading(false);
@@ -97,6 +103,7 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
       })
       .catch((err) => {
         console.log(err);
+        setIsLoading(true);
       });
   };
 
@@ -107,7 +114,7 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
           <View style={styles.header}>
             <View style={styles.headerTitleWrapper}>
               <MaterialIcons name="attach-money" size={normalize(20)} color="#6c60ff" />
-              <Text style={styles.headerTitle}>Pay The Fine</Text>
+              <Text style={styles.headerTitle}>Thanh toán</Text>
             </View>
 
             <TouchableOpacity onPress={() => setVisible(false)}>
@@ -126,10 +133,10 @@ function PayDeptModal({ total_dept, reader_id, visible, setVisible }) {
             />
             {errorText && <Text style={[styles.errorText]}>{errorText}</Text>}
           </View>
-          <FlatButton _styles={styles.payFineBtn} text="Pay the fine" onPress={handlePayFine} />
+          <FlatButton _styles={styles.payFineBtn} text="Trả tiền phạt" onPress={handlePayFine} />
         </View>
       </View>
-      <LoadingModal visible={isLoading} />
+      {/* <LoadingModal visible={isLoading} /> */}
       <AlertModal
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
         isSuccess={resultStatus?.isSuccess}

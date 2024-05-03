@@ -8,6 +8,8 @@ const sendVerificationEmail = require("../../sendVerificationEmail/sendVerificat
 class EmailController {
   static validationTokens = [];
 
+  static resetPwTokens = [];
+
   static sendToken(email_address) {
     return new Promise((resolve, reject) => {
       const token = generateString(6);
@@ -27,6 +29,11 @@ class EmailController {
 
   validateToken(token) {
     const isValid = EmailController.validationTokens.some((_token) => _token === token);
+    return isValid;
+  }
+
+  validateResetPwToken(token) {
+    const isValid = EmailController.resetPwTokens.some((_token) => _token === token);
     return isValid;
   }
 
@@ -54,13 +61,27 @@ class EmailController {
 
     EmailController.sendToken(email_address)
       .then((duration) => {
-        console.log(duration);
         res.status(200).send({ status: 200, message: "successfull", duration });
       })
       .catch((err) => {
         console.log(err);
         res.status(400).send(err);
       });
+  }
+  // [GET] /email/get-ressetpw-token
+  getResetPwToken(req, res) {
+    const { token } = req.query;
+    const isValid = EmailController.validationTokens.some((_token) => _token === token);
+    if (isValid) {
+      const pw_token = generateString(6);
+      EmailController.resetPwTokens.push(pw_token);
+      setTimeout(() => {
+        EmailController.resetPwTokens = EmailController.resetPwTokens.filter((_token) => _token != pw_token);
+      }, process.env.ACCESS_RESET_PW_TOKEN_DURATION);
+      res.status(200).send({ token: pw_token, duration: process.env.ACCESS_RESET_PW_TOKEN_DURATION });
+    } else {
+      res.status(400).send({ message: "INVALID_CODE", status: 400 });
+    }
   }
 }
 

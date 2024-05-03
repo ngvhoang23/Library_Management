@@ -7,6 +7,7 @@ const { reader_auth, emp_auth, admin_auth } = require("../auth/auth");
 
 // reader role
 
-router.get("/validation-token", EmailController.sendTokenToEmail);
+router.get("/validation-token", reader_auth, EmailController.sendTokenToEmail);
+router.get("/get-ressetpw-token", reader_auth, EmailController.getResetPwToken);
 
 module.exports = router;

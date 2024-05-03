@@ -3,21 +3,29 @@ import FlatButton from "../shared/FlatButton";
 import { AntDesign } from "@expo/vector-icons";
 import { normalize } from "../defined_function";
 
-function UserInfoTag({ full_name, role, user_avatar, onEdit, email }) {
+function UserInfoTag({ full_name, role, user_avatar, onEdit, email, reader_type }) {
   return (
     <ImageBackground source={require("../assets/images/page_bg.jpg")} style={styles.wrapper}>
       <View style={styles.leftSide}>
         <Text style={styles.userName} numberOfLines={2}>
           {full_name}
         </Text>
-        <Text style={styles.desContent}>{role === "admin" ? "Admin" : "Employee"}</Text>
+        <Text style={styles.desContent}>
+          {role === "admin"
+            ? "Admin"
+            : role == "emp"
+            ? "Nhân viên"
+            : reader_type == "student"
+            ? "Sinh viên"
+            : "Giảng viên"}
+        </Text>
         {/* {email && <Text style={styles.emailContent}>Email: {email}</Text>} */}
       </View>
       <View style={styles.righSide}>
         <View style={styles.avatarContainer}>
           <Image source={{ uri: `http://10.0.2.2:5000/${user_avatar}` }} style={styles.avatarItem} />
         </View>
-        <FlatButton text={"Edit Profile"} _styles={styles.editBtn} textColor="#5b4cfd" onPress={onEdit}>
+        <FlatButton text={"Chỉnh sửa"} _styles={styles.editBtn} textColor="#5b4cfd" onPress={onEdit}>
           <AntDesign name="edit" size={normalize(14)} color="#5b4cfd" />
         </FlatButton>
       </View>

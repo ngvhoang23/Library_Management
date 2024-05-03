@@ -79,16 +79,17 @@ function ChangePasswordScreen({ route, navigation }) {
             <View style={styles.formWrapper}>
               <InputItem
                 _styles={[styles.input]}
-                placeholder="New Password"
-                lableTitle="New Password"
+                placeholder="Mật khẩu mới"
+                lableTitle="Mật khẩu mới"
                 onChange={props.handleChange("password")}
                 value={props.values.password}
                 errorText={props.errors.password}
+                secureTextEntry={true}
               />
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="Submit"
+                text="Đổi mật khẩu"
                 fontSize={normalize(10)}
               />
             </View>

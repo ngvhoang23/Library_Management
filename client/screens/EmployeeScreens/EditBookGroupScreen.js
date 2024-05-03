@@ -104,7 +104,7 @@ function EditBookGroupScreen({ route, navigation }) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 6],
       quality: 1,
     });
     setIsLoading(false);
@@ -198,7 +198,7 @@ function EditBookGroupScreen({ route, navigation }) {
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           book_name: book_name,
@@ -223,13 +223,13 @@ function EditBookGroupScreen({ route, navigation }) {
                 setAvatar={setCoverPhoto}
                 initAvatar={`http://10.0.2.2:5000${cover_photo}`}
                 onPickImage={pickImage}
-                title={"Choose cover photo"}
+                title={"Chọn bìa sách"}
               />
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Book name"
-                lableTitle="Book name"
+                placeholder="Tên sách"
+                lableTitle="Tên sách"
                 multiline
                 onChange={props.handleChange("book_name")}
                 value={props.values.book_name}
@@ -237,8 +237,8 @@ function EditBookGroupScreen({ route, navigation }) {
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Price"
-                lableTitle="Price"
+                placeholder="Giá"
+                lableTitle="Giá"
                 onChange={props.handleChange("price")}
                 value={props.values.price.toString()}
                 errorText={props.errors.price}
@@ -247,7 +247,7 @@ function EditBookGroupScreen({ route, navigation }) {
 
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="Published date"
+                lableTitle="Ngày xuất bản"
                 value={props.values.published_date}
                 errorText={props.errors.published_date}
                 onPress={() => setIsShowDatePicker(true)}
@@ -266,8 +266,8 @@ function EditBookGroupScreen({ route, navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Description"
-                lableTitle="Description"
+                placeholder="Mô tả"
+                lableTitle="Mô tả"
                 multiline
                 onChange={props.handleChange("description")}
                 value={props.values.description}
@@ -277,8 +277,8 @@ function EditBookGroupScreen({ route, navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Publish Comany"
-                lableTitle="Publish Comany"
+                placeholder="Nhà xuất bản"
+                lableTitle="Nhà xuất bản"
                 onChange={props.handleChange("publish_com")}
                 value={props.values.publish_com}
                 errorText={props.errors.publish_com}
@@ -286,7 +286,7 @@ function EditBookGroupScreen({ route, navigation }) {
 
               <MenuPickers
                 _styles={[styles.input]}
-                lableTitle="Author"
+                lableTitle="Tác giả"
                 initIndex={authors?.findIndex((author) => author.author_id === author_id)}
                 errorText={props.errors.author}
                 options={authors?.map((author) => {
@@ -297,7 +297,7 @@ function EditBookGroupScreen({ route, navigation }) {
 
               <MenuPickers
                 _styles={[styles.input]}
-                lableTitle="Category"
+                lableTitle="Danh mục"
                 initIndex={categories?.findIndex((category) => category.category_id === category_id)}
                 errorText={props.errors.category}
                 options={categories?.map((category) => {
@@ -308,7 +308,7 @@ function EditBookGroupScreen({ route, navigation }) {
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="Submit"
+                text="Sửa nhóm sách"
                 fontSize={normalize(10)}
               />
             </ScrollView>

@@ -101,7 +101,7 @@ class BookController {
       return new Promise((resolve, reject) => {
         db.query(
           `
-        select * from book_detail
+          select *, getAvailableBookQuantity(book_detail.book_detail_id) as available, getTotalOfBookDetail(book_detail.book_detail_id) as total_book from book_detail
           inner join authors on book_detail.author_id = authors.author_id
           inner join categories on book_detail.category_id = categories.category_id
         `,
@@ -129,8 +129,6 @@ class BookController {
   getBookGroupsByReader(req, res) {
     const { reader_type } = req.query;
 
-    console.log("reader_type", reader_type);
-
     const promise = () => {
       return new Promise((resolve, reject) => {
         db.query(
@@ -148,6 +146,35 @@ class BookController {
             }
           },
         );
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /available-books/:book_detail_id
+  getAvailableBooksByBookGroup(req, res) {
+    const { book_detail_id } = req.query;
+
+    const promise = () => {
+      const sql = `select * from books b
+      inner join book_detail bd on b.book_detail_id = bd.book_detail_id
+      where b.book_detail_id = ${book_detail_id} and b.status = 1`;
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
       });
     };
 
@@ -196,18 +223,18 @@ class BookController {
       });
   }
 
-  // [GET] /books/book-groups/:book_detail_id
-  getBookGroup(req, res) {
+  // [GET] /books/book-groups/by-reader/:book_detail_id
+  getBookGroupByReader(req, res) {
     const { book_detail_id } = req.query;
 
     const promise = () => {
       return new Promise((resolve, reject) => {
         db.query(
           `
-          select * from book_detail
-            inner join authors on book_detail.author_id = authors.author_id
-            inner join categories on book_detail.category_id = categories.category_id
-            where book_detail_id=${book_detail_id}
+          select book_detail.*, getAvailableBookQuantity(book_detail.book_detail_id) as remaining from book_detail
+          inner join authors on book_detail.author_id = authors.author_id
+          inner join categories on book_detail.category_id = categories.category_id
+          where book_detail_id=${book_detail_id}
           `,
           (err, result) => {
             if (err) {
@@ -229,6 +256,56 @@ class BookController {
       });
   }
 
+  // [GET] /books/book-groups/:book_detail_id
+  getBookGroup(req, res) {
+    const { user_id, role } = req.userInfo;
+
+    const { book_detail_id } = req.query;
+
+    console.log(role);
+
+    let sql = "";
+
+    if (role == "emp" || role == "admin") {
+      sql = `
+      select * from book_detail
+        inner join authors on book_detail.author_id = authors.author_id
+        inner join categories on book_detail.category_id = categories.category_id
+        where book_detail_id=${book_detail_id}
+      `;
+    }
+
+    if (role === "reader") {
+      sql = `
+      select *, getAvailableBookQuantity(book_detail.book_detail_id) as available, getTotalOfBookDetail(book_detail.book_detail_id) as total_book, getReadsOfBookDetail(book_detail.book_detail_id) as _reads from book_detail
+        inner join authors on book_detail.author_id = authors.author_id
+        inner join categories on book_detail.category_id = categories.category_id
+        where book_detail.book_detail_id=${book_detail_id}
+      `;
+    }
+
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
   // [GET] /books/books-groups/searching/:search_value
   searchBookGroups(req, res) {
     const { search_value } = req.query;
@@ -242,6 +319,41 @@ class BookController {
             inner join authors on book_detail.author_id = authors.author_id
             inner join categories on book_detail.category_id = categories.category_id
             where book_detail.book_name like ?`,
+          data,
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          },
+        );
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log("err", err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /books/books-groups/searching-for-category/:search_value
+  searchBookGroupsForCategory(req, res) {
+    const { category_id, search_value } = req.query;
+
+    const promise = () => {
+      const data = [`%${search_value}%`];
+
+      return new Promise((resolve, reject) => {
+        db.query(
+          `select * from book_detail 
+              inner join authors on book_detail.author_id = authors.author_id
+              inner join categories on book_detail.category_id = categories.category_id
+              where book_detail.book_name like ? and book_detail.category_id = ${category_id}`,
           data,
           (err, result) => {
             if (err) {
@@ -330,11 +442,11 @@ class BookController {
 
   // [GET] /books/by-author
   getBookByAuthor(req, res) {
-    const { category_id } = req.query;
+    const { author_id } = req.query;
 
     const promise = () => {
       return new Promise((resolve, reject) => {
-        db.query(`select * from books where category_id=${category_id}`, (err, result) => {
+        db.query(`select * from book_detail where author_id=${author_id}`, (err, result) => {
           if (err) {
             reject(err);
           } else {
@@ -355,11 +467,11 @@ class BookController {
 
   // [GET] /books/by-category
   getBookByCategory(req, res) {
-    const { author_id } = req.query;
+    const { category_id } = req.query;
 
     const promise = () => {
       return new Promise((resolve, reject) => {
-        db.query(`select * from books where author_id=${author_id}`, (err, result) => {
+        db.query(`select * from book_detail where category_id=${category_id}`, (err, result) => {
           if (err) {
             reject(err);
           } else {
@@ -386,6 +498,8 @@ class BookController {
 
     if (req?.file?.filename) {
       cover_photo = `/book-cover-photos/${req?.file.filename}`;
+    } else {
+      cover_photo = `/book-cover-photos/default_cover_photo.jpg`;
     }
 
     const books = [];

@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ImageBackground, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import InputItem from "../../components/InputItem";
 import AvatarPicker from "../../components/AvatarPicker";
 import { ScrollView } from "react-native-gesture-handler";
@@ -17,7 +17,7 @@ import {
   EvilIcons,
   SimpleLineIcons,
   Entypo,
-  Ionicons,
+  Octicons,
 } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -34,11 +34,11 @@ function ReaderDetailScreen({ route, navigation }) {
 
   const [isLoading, setIsLoading] = useState(false);
   const [resultStatus, setResultStatus] = useState({ isSuccess: false, visible: false });
-  const [status, setStatus] = useState(true);
+  const [status, setStatus] = useState(false);
   const [readerInfo, setReaderInfo] = useState({});
 
   useEffect(() => {
-    if (new Date(expire_date) <= new Date()) {
+    if (new Date(expire_date) < new Date()) {
       setStatus(0);
     } else {
       setStatus(1);
@@ -150,83 +150,99 @@ function ReaderDetailScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} resizeMode="cover" style={styles.wrapper}>
       <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
-        <View style={[styles.avatarContainer]}>
-          <View>
-            <Image source={{ uri: `http://10.0.2.2:5000${user_avatar}` }} style={styles.avatarPreview} />
-          </View>
-          {!status && <FlatButton _styles={styles.activeBtn} text="Active" onPress={handleActiveReader} />}
-          <Text
-            style={[
-              styles.status,
-              { color: status ? "#6ec531" : "#f02849", borderColor: status ? "#6ec531" : "#f02849" },
-            ]}
+        <ImageBackground
+          source={require("../../assets/images/page_bg.jpg")}
+          resizeMode="cover"
+          imageStyle={{ borderRadius: normalize(10) }}
+          style={[styles.headerContainer]}
+        >
+          <TouchableOpacity
+            activeOpacity={0.5}
+            style={styles.avatarContainer}
+            onPress={() => navigation.navigate("Edit Reader", { reader_info: readerInfo })}
           >
-            {status ? "Active" : "Expired"}
-          </Text>
-        </View>
+            <Image source={{ uri: `http://10.0.2.2:5000${user_avatar}` }} style={styles.avatarPreview} />
+            <View
+              style={[
+                styles.status,
+                { color: status ? "#6ec531" : "#f02849", borderColor: status ? "#6ec531" : "#f02849" },
+              ]}
+            >
+              <FontAwesome6 name="check" size={normalize(16)} color="#fff" />
+            </View>
+            <FlatButton _styles={styles.editBtn} text="Edit">
+              <AntDesign name="edit" size={normalize(12)} color="#fff" />
+            </FlatButton>
+          </TouchableOpacity>
+          {!status && (
+            <FlatButton _styles={styles.activeBtn} text="Active" onPress={handleActiveReader}>
+              <FontAwesome6 name="check" size={normalize(12)} color="#fff" />
+            </FlatButton>
+          )}
+        </ImageBackground>
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="User Name"
+          lableTitle="Tên đăng nhập"
           value={user_name}
-          icon={<AntDesign name="user" size={normalize(18)} color="#6fa4f8" />}
+          icon={<AntDesign name="user" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Phone Number"
+          lableTitle="Số điện thoại"
           value={phone_num}
-          icon={<AntDesign name="phone" size={normalize(18)} color="#6fa4f8" />}
+          icon={<AntDesign name="phone" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Gender"
+          lableTitle="Giới tính"
           value={gender ? "Male" : "Female"}
-          icon={<FontAwesome name="transgender" size={normalize(18)} color="#6fa4f8" />}
+          icon={<FontAwesome name="transgender" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Reader type"
+          lableTitle="Loại độc giả"
           value={reader_type === "lecturer" ? "Lecturer" : "Student"}
-          icon={<Feather name="users" size={normalize(18)} color="#6fa4f8" />}
+          icon={<Feather name="users" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Birth Date"
+          lableTitle="Ngày sinh"
           value={birth_date ? new Date(birth_date).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(18)} color="#6fa4f8" />}
+          icon={<Fontisto name="date" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Start Date"
+          lableTitle="Ngày tạo"
           value={created_at ? new Date(created_at).toISOString().split("T")[0] : ""}
-          icon={<FontAwesome name="hourglass-1" size={normalize(16)} color="#6fa4f8" />}
+          icon={<FontAwesome name="hourglass-1" size={normalize(15)} color="#3c3c3c" />}
           read_only
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="End Date"
+          lableTitle="Ngày hết hạn"
           value={expire_date ? new Date(expire_date).toISOString().split("T")[0] : ""}
-          icon={<FontAwesome name="hourglass-end" size={normalize(16)} color="#6fa4f8" />}
+          icon={<FontAwesome name="hourglass-end" size={normalize(15)} color="#3c3c3c" />}
           read_only
         />
 
@@ -235,25 +251,27 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Email"
           value={email_address}
-          icon={<Fontisto name="email" size={normalize(18)} color="#6fa4f8" />}
+          icon={<Fontisto name="email" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Address"
+          lableTitle="Địa chỉ"
           value={address}
-          icon={<EvilIcons name="location" size={normalize(22)} color="#6fa4f8" />}
+          icon={<EvilIcons name="location" size={normalize(22)} color="#3c3c3c" />}
           read_only
+          numberOfLines={4}
+          multiline
         />
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
-          lableTitle="Full Name"
+          lableTitle="Họ và tên"
           value={full_name}
-          icon={<MaterialIcons name="drive-file-rename-outline" size={normalize(18)} color="#6fa4f8" />}
+          icon={<MaterialIcons name="drive-file-rename-outline" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
       </ScrollView>
@@ -261,15 +279,12 @@ function ReaderDetailScreen({ route, navigation }) {
       <View style={styles.options}>
         <FlatButton
           _styles={styles.changePasswordBtn}
-          text="Change Password"
+          text="Đổi mật khẩu"
           onPress={() => navigation.navigate("Change Password", { user_id: reader_info?.user_id })}
-        />
-        <FlatButton _styles={styles.deleteBtn} text="Delete Reader" onPress={handleDeleteReader} />
-        <FlatButton
-          _styles={styles.editBtn}
-          text="Edit"
-          onPress={() => navigation.navigate("Edit Reader", { reader_info: readerInfo })}
-        />
+        >
+          <FontAwesome6 name="key" size={normalize(12)} color="#fff" />
+        </FlatButton>
+        <FlatButton _styles={styles.deleteBtn} text="Xóa độc giả" onPress={handleDeleteReader} />
       </View>
       <LoadingModal visible={isLoading} />
       <AlertModal
@@ -277,7 +292,7 @@ function ReaderDetailScreen({ route, navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -288,31 +303,48 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: normalize(20),
   },
 
-  avatarContainer: {
+  headerContainer: {
+    marginTop: normalize(10),
     position: "relative",
     with: "100%",
     minHeight: normalize(50),
-    backgroundColor: "#eee",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: "#ced0d4",
     justifyContent: "center",
     alignItems: "center",
     padding: normalize(12),
     marginBottom: normalize(20),
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(100),
+
+    elevation: 400,
+    shadowColor: "#6c60ff",
+
+    marginHorizontal: normalize(10),
   },
 
-  avatarPreview: { width: normalize(120), height: normalize(120), borderRadius: 99999 },
+  editBtn: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#1e74fd",
+    position: "absolute",
+    padding: normalize(6),
+    left: normalize(-8),
+  },
 
-  headerTitle: {
-    fontFamily: "nunito-medium",
-    fontSize: normalize(18),
+  readerName: {
     width: "100%",
-    marginLeft: normalize(40),
+    textAlign: "center",
+    fontSize: normalize(11),
+    letterSpacing: 1,
+    color: "#fff",
+    fontFamily: "nunito-bold",
+    marginTop: normalize(10),
   },
+
+  avatarPreview: { width: normalize(100), height: normalize(100), borderRadius: 99999 },
 
   avatarPicker: {
     width: "100%",
@@ -327,7 +359,7 @@ const styles = StyleSheet.create({
   },
 
   formContainer: {
-    width: "90%",
+    width: "100%",
     height: normalize(420),
     flex: 1,
     flexGrow: 1,
@@ -336,9 +368,10 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    marginBottom: normalize(20),
     width: "100%",
-    marginBottom: normalize(30),
+    marginBottom: normalize(20),
+    paddingLeft: normalize(20),
+    paddingRight: normalize(20),
   },
 
   changePasswordBtn: {
@@ -347,9 +380,11 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     marginRight: normalize(10),
     display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(40),
   },
 
   deleteBtn: {
@@ -361,40 +396,35 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f02849",
-  },
-
-  editBtn: {
-    height: normalize(32),
-    width: "100%",
-    paddingVertical: 0,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1e74fd",
-    marginTop: normalize(10),
+    borderRadius: normalize(40),
   },
 
   activeBtn: {
     position: "absolute",
     bottom: normalize(10),
-    right: normalize(10),
-    width: normalize(80),
+    left: normalize(10),
     zIndex: normalize(10),
     backgroundColor: "#6ec531",
     paddingVertical: normalize(8),
+    paddingHorizontal: normalize(10),
+    borderRadius: normalize(4),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
 
   status: {
     position: "absolute",
-    top: normalize(10),
-    left: normalize(14),
     zIndex: 10,
     fontSize: normalize(14),
-    fontStyle: "italic",
-    borderWidth: 1,
-    borderStyle: "dashed",
-    paddingHorizontal: normalize(10),
-    borderRadius: 4,
+    borderRadius: 1000,
+    bottom: normalize(4),
+    right: normalize(4),
+    width: normalize(20),
+    height: normalize(20),
+    backgroundColor: "#6ec531",
+    alignItems: "center",
+    justifyContent: "center",
   },
 
   options: {

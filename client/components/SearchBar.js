@@ -15,7 +15,7 @@ function SearchBar({ placeholder, onChange, value, textStyles, onSearch, _styles
         placeholderTextColor={"#ced0d4"}
       />
       <TouchableOpacity style={styles.searchBtn} activeOpacity={0} onPress={onSearch}>
-        <AntDesign name="search1" size={normalize(16)} color="#3c3c3c" />
+        <AntDesign name="search1" size={normalize(16)} color="#8c8c8d" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   searchBtn: {
     width: normalize(40),
     height: normalize(40),
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
   },

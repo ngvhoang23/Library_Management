@@ -5,17 +5,17 @@ import { useAuthContext } from "../../context/roleContext";
 import { useUserInfoContext } from "../../context/userInfoContext";
 import axios from "axios";
 import { SCREEN_HEIGHT, SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function/index";
-import {
-  BookBorrowingTabNavigation,
-  BookTabNavigation,
-  NotificationTabNavigation,
-  ProfileTabNavigation,
-} from "./TabNavigation";
+import { BookBorrowingTabNavigation } from "./TabNavigation";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { AntDesign, MaterialCommunityIcons, Feather, MaterialIcons, Entypo, FontAwesome } from "@expo/vector-icons";
-import ProfileScreen from "../../screens/ReaderScreens/ProfileScreen";
-import BookBorrowingManDashBoard from "../../screens/ReaderScreens/BookBorrowingManDashBoard";
-import NotificationScreen from "../../screens/ReaderScreens/NotificationScreen";
+import {
+  BookStackNavigation,
+  HomeStackNavigation,
+  NotificationStackNavigation,
+  ProfileStackNavigation,
+} from "./StackNavigator";
+import { useNotiContext } from "../../context/notiContext";
+import socket from "../../socket";
 
 const Drawer = createDrawerNavigator();
 
@@ -24,27 +24,35 @@ const ReaderDrawerNavigator = () => {
 
   const { user, setUser } = useUserInfoContext();
 
-  useEffect(() => {
-    _retrieveData("ACCESS_TOKEN")
-      .then((access_token) => {
-        const config = {
-          headers: { Authorization: `Bearer ${access_token}` },
-        };
+  const { notiQuantity, setNotiQuantity } = useNotiContext();
 
-        axios
-          .get(`http://10.0.2.2:5000/users/user-info`, config)
-          .then((result) => {
-            console.log("result.data", result.data);
-            setUser(result.data);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  useEffect(() => {
+    _retrieveData("ACCESS_TOKEN").then((access_token) => {
+      const config = {
+        headers: { Authorization: `Bearer ${access_token}` },
+      };
+
+      axios
+        .get(`http://10.0.2.2:5000/users/user-info`, config)
+        .then((result) => {
+          setUser(result.data);
+          socket.emit("addUser", result.data.user_id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    });
   }, []);
+
+  useEffect(() => {
+    socket.on("borrow-book", (borrow_info) => {
+      setNotiQuantity((prev) => prev + 1);
+    });
+
+    socket.on("pay-fine", (pay_info) => {
+      setNotiQuantity((prev) => prev + 1);
+    });
+  }, [socket]);
 
   return user ? (
     <Drawer.Navigator
@@ -76,7 +84,7 @@ const ReaderDrawerNavigator = () => {
             <DrawerItemList {...props} />
             <View style={styles.bottomDrawerSection}>
               <DrawerItem
-                label={"Logout"}
+                label={"Đăng xuất"}
                 onPress={() => setAuth(null)}
                 labelStyle={{
                   fontSize: normalize(12),
@@ -94,24 +102,36 @@ const ReaderDrawerNavigator = () => {
       }}
     >
       <Drawer.Screen
-        name={user.full_name}
-        component={ProfileTabNavigation}
+        name={user?.full_name || "user_name"}
+        drawerItemPress={() => {}}
+        component={ProfileStackNavigation}
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
+            color: "#3c3c3c",
           },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.profileInfo}>
+              <Text style={styles.userName}>{user?.full_name}</Text>
+              <Text style={styles.role}>{user?.reader_type == "student" ? "Sinh viên" : "Giảng viên"}</Text>
+            </View>
+          ),
           drawerIcon: ({ focused, color, size }) => (
-            <Image source={{ uri: `http://10.0.2.2:5000${user?.user_avatar}` }} style={styles.userAvatar} />
+            <View style={styles.userAvatarContainer}>
+              <Image source={{ uri: `http://10.0.2.2:5000${user?.user_avatar}` }} style={styles.userAvatar} />
+            </View>
           ),
         }}
       />
 
       <Drawer.Screen
-        name="Books"
-        component={BookTabNavigation}
+        name="Home"
+        component={HomeStackNavigation}
         options={{
           headerShown: false,
           unmountOnBlur: true,
@@ -119,9 +139,33 @@ const ReaderDrawerNavigator = () => {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
-          drawerIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name="bookshelf" size={normalize(20)} color={color} />
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={styles.userName}>Trang chủ</Text>
+            </View>
           ),
+          drawerIcon: ({ focused, color, size }) => <AntDesign name="home" size={normalize(19)} color={color} />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Books"
+        component={BookStackNavigation}
+        options={{
+          headerShown: false,
+          unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
+          drawerLabelStyle: {
+            fontSize: normalize(11),
+            fontFamily: "nunito-bold",
+          },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={styles.userName}>Sách</Text>
+            </View>
+          ),
+          drawerIcon: ({ focused, color, size }) => <Feather name="book-open" size={normalize(19)} color={color} />,
         }}
       />
 
@@ -131,25 +175,49 @@ const ReaderDrawerNavigator = () => {
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
-          drawerIcon: ({ focused, color, size }) => <Entypo name="book" size={normalize(19)} color={color} />,
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={styles.userName}>Sách đang mượn</Text>
+            </View>
+          ),
+          drawerIcon: ({ focused, color, size }) => <AntDesign name="book" size={normalize(19)} color={color} />,
         }}
       />
 
       <Drawer.Screen
         name="Notifications"
-        component={NotificationTabNavigation}
+        component={NotificationStackNavigation}
         options={{
           headerShown: false,
           unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
           drawerLabelStyle: {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
+            backgroundColor: "yellow",
           },
-          drawerIcon: ({ focused, color, size }) => <FontAwesome name="bell-o" size={normalize(19)} color={color} />,
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={styles.userName}>Thông báo</Text>
+              {notiQuantity > 0 ? <View style={styles.notiDot}></View> : ""}
+            </View>
+          ),
+          drawerIcon: ({ focused, color, size }) =>
+            notiQuantity > 0 ? (
+              <Image
+                source={require("../../assets/images/noti_icon.gif")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            ) : (
+              <FontAwesome name="bell-o" size={normalize(19)} color={color} />
+            ),
         }}
       />
     </Drawer.Navigator>
@@ -171,11 +239,46 @@ const styles = StyleSheet.create({
     bottom: normalize(10),
   },
 
+  profileInfo: {},
+  userName: {
+    fontSize: normalize(11),
+    fontFamily: "nunito-bold",
+    color: "#3c3c3c",
+  },
+  role: {
+    fontSize: normalize(10),
+    fontFamily: "nunito-medium",
+    color: "#8c8c8d",
+  },
+
+  userAvatarContainer: {
+    elevation: 8,
+    shadowColor: "#000",
+    borderRadius: normalize(1000),
+    borderWidth: 2,
+    borderColor: "#6ec531",
+    padding: normalize(2),
+  },
+
   userAvatar: {
     aspectRatio: 1,
     height: normalize(30),
-    borderRadius: 900000,
+    borderRadius: normalize(1000),
+  },
+
+  notiTitleWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    // backgroundColor: "blue",
+    flex: 1,
+  },
+
+  notiDot: {
+    width: normalize(8),
+    height: normalize(8),
+    backgroundColor: "#f02849",
+    borderRadius: normalize(1000),
   },
 });
-
 export default ReaderDrawerNavigator;

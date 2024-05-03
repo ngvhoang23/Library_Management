@@ -5,6 +5,7 @@ import {
   AddReaderStackNavigation,
   BorrowBookDashboardStackNavigation,
   EmpManStackNavigator,
+  ProfileStackNavigation,
   ReaderManStackNavigation,
 } from "./StackNavigator";
 import AddBookGroupScreen from "../../screens/EmployeeScreens/AddBookGroupScreen";
@@ -25,11 +26,14 @@ const EmployeeManTabNavigation = () => {
           height: normalize(44),
           paddingTop: normalize(6),
           paddingBottom: normalize(4),
+          activeTintColor: "red",
         },
         tabBarLabelStyle: {
           fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
         tabBarLabelPosition: "below-icon",
       }}
     >
@@ -68,11 +72,14 @@ const ReaderManTabNavigation = () => {
           height: normalize(44),
           paddingTop: normalize(6),
           paddingBottom: normalize(4),
+          activeTintColor: "red",
         },
         tabBarLabelStyle: {
           fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
         tabBarLabelPosition: "below-icon",
       }}
     >
@@ -100,4 +107,40 @@ const ReaderManTabNavigation = () => {
   );
 };
 
-export { EmployeeManTabNavigation, ReaderManTabNavigation };
+const ProfileTabNavigation = () => {
+  return (
+    <Tab.Navigator
+      initialRouteName="Dashboard"
+      screenOptions={{
+        unmountOnBlur: true,
+        headerShown: false,
+        tabBarStyle: {
+          height: normalize(50),
+          paddingTop: normalize(8),
+          paddingBottom: normalize(4),
+          display: "none",
+        },
+        tabBarLabelStyle: {
+          fontSize: normalize(12),
+          fontFamily: "nunito-medium",
+        },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
+        tabBarLabelPosition: "below-icon",
+      }}
+    >
+      <Tab.Screen
+        name="Dashboard"
+        component={ProfileStackNavigation}
+        options={{
+          tabBarLabel: "Dashboard",
+          tabBarIcon: ({ focused, color, size }) => {
+            return <AntDesign name="home" size={normalize(16)} color={color} />;
+          },
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+export { EmployeeManTabNavigation, ReaderManTabNavigation, ProfileTabNavigation };

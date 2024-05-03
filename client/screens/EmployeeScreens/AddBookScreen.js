@@ -82,7 +82,9 @@ function AddBookScreen({ route, navigation }) {
           .catch((err) => {
             setResultStatus({ isSuccess: 0, visible: true });
             if (err?.response?.data?.code === "ER_DUP_ENTRY") {
-              alert("This position contained another book");
+              setResultStatus({ isSuccess: 0, visible: true, message: "Duplicate position" });
+            } else {
+              setResultStatus({ isSuccess: 0, visible: true });
             }
             console.log("err", err);
           })
@@ -147,7 +149,7 @@ function AddBookScreen({ route, navigation }) {
                 _styles={[styles.input]}
                 lableTitle="Import Date"
                 value={props.values.import_date}
-                errorText={props.errors.import_date}
+                errorText={props.touched.import_date ? props.errors.import_date : undefined}
                 onPress={() => setIsShowDatePicker(true)}
               />
               {isShowDatePicker && (
@@ -186,12 +188,12 @@ function AddBookScreen({ route, navigation }) {
                 value={props.values.position?.order}
               />
 
-              {props.errors.position && <Text style={styles.positionValidate}>{props.errors.position}</Text>}
+              {props.touched.position ? <Text style={styles.positionValidate}>{props.errors.position}</Text> : ""}
             </ScrollView>
             <FlatButton
               _styles={styles.submitBtn}
               onPress={props.handleSubmit}
-              text="submit"
+              text="Submit"
               fontSize={normalize(10)}
             />
           </TouchableOpacity>
@@ -202,6 +204,7 @@ function AddBookScreen({ route, navigation }) {
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
+        text={resultStatus?.message}
       />
     </TouchableOpacity>
   );
@@ -308,17 +311,23 @@ const styles = StyleSheet.create({
     width: "20%",
   },
 
-  submitBtn: {
-    width: "90%",
-    height: normalize(32),
+  positionValidate: {
+    marginLeft: normalize(10),
+    color: "#f02849",
+    fontSize: normalize(10),
+  },
 
+  submitBtn: {
+    width: "80%",
+    height: normalize(32),
     marginTop: normalize(6),
     marginBottom: normalize(16),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(1000),
   },
 });
 

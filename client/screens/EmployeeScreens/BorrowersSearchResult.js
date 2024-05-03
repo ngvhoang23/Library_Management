@@ -102,14 +102,14 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(14),
     paddingHorizontal: normalize(6),
     overflow: "scroll",
-    flexDirection: "row",
+    flexDirection: "column",
     justifyContent: "space-evenly",
     alignItems: "flex-start",
     flexWrap: "wrap",
   },
 
   readerItem: {
-    width: "44%",
+    width: "100%",
     padding: normalize(10),
     margin: normalize(8),
     borderRadius: normalize(10),

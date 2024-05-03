@@ -9,6 +9,7 @@ import {
   EmpManStackNavigator,
   NotificationStackNavigation,
   ReaderManStackNavigation,
+  StatisticStackNavigation,
 } from "./StackNavigator";
 import { useAuthContext } from "../../context/roleContext";
 import { useUserInfoContext } from "../../context/userInfoContext";
@@ -54,8 +55,6 @@ const EmployeeDrawerNavigator = () => {
     });
   }, []);
 
-  useEffect(() => {}, [socket]);
-
   useEffect(() => {
     socket.on("borrow-book", (borrow_info) => {
       setNotiQuantity((prev) => prev + 1);
@@ -96,7 +95,7 @@ const EmployeeDrawerNavigator = () => {
             <DrawerItemList {...props} />
             <View style={styles.bottomDrawerSection}>
               <DrawerItem
-                label={"Logout"}
+                label={"Đăng xuất"}
                 onPress={() => setAuth(null)}
                 labelStyle={{
                   fontSize: normalize(12),
@@ -129,7 +128,7 @@ const EmployeeDrawerNavigator = () => {
           drawerLabel: ({ focused, color, size }) => (
             <View style={styles.profileInfo}>
               <Text style={styles.userName}>{user?.full_name}</Text>
-              <Text style={styles.role}>Employee</Text>
+              <Text style={styles.role}>Nhân viên</Text>
             </View>
           ),
           drawerIcon: ({ focused, color, size }) => (
@@ -152,6 +151,11 @@ const EmployeeDrawerNavigator = () => {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={[styles.userName, { color: color }]}>Quản lý độc giả</Text>
+            </View>
+          ),
           drawerIcon: ({ focused, color, size }) => <Feather name="users" size={normalize(19)} color={color} />,
         }}
       />
@@ -167,6 +171,11 @@ const EmployeeDrawerNavigator = () => {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={[styles.userName, { color: color }]}>Quản lý sách</Text>
+            </View>
+          ),
           drawerIcon: ({ focused, color, size }) => <Feather name="book-open" size={normalize(19)} color={color} />,
         }}
       />
@@ -182,6 +191,11 @@ const EmployeeDrawerNavigator = () => {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={[styles.userName, { color: color }]}>Quản lý người mượn</Text>
+            </View>
+          ),
           drawerIcon: ({ focused, color, size }) => (
             <MaterialCommunityIcons name="smart-card-reader-outline" size={normalize(19)} color={color} />
           ),
@@ -199,7 +213,33 @@ const EmployeeDrawerNavigator = () => {
             fontSize: normalize(11),
             fontFamily: "nunito-bold",
           },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={[styles.userName, { color: color }]}>Quản lý sách mượn</Text>
+            </View>
+          ),
           drawerIcon: ({ focused, color, size }) => <AntDesign name="book" size={normalize(19)} color={color} />,
+        }}
+      />
+
+      <Drawer.Screen
+        name="Statistic"
+        component={StatisticStackNavigation}
+        options={{
+          headerShown: false,
+          unmountOnBlur: true,
+          drawerActiveTintColor: "#6c60ff",
+          drawerInactiveTintColor: "#3c3c3c",
+          drawerLabelStyle: {
+            fontSize: normalize(11),
+            fontFamily: "nunito-bold",
+          },
+          drawerLabel: ({ focused, color, size }) => (
+            <View style={styles.notiTitleWrapper}>
+              <Text style={[styles.userName, { color: color }]}>Phân tích</Text>
+            </View>
+          ),
+          drawerIcon: ({ focused, color, size }) => <AntDesign name="linechart" size={normalize(19)} color={color} />,
         }}
       />
 
@@ -218,7 +258,7 @@ const EmployeeDrawerNavigator = () => {
           },
           drawerLabel: ({ focused, color, size }) => (
             <View style={styles.notiTitleWrapper}>
-              <Text style={styles.userName}>Notifications</Text>
+              <Text style={styles.userName}>Thông báo</Text>
               {notiQuantity > 0 ? <View style={styles.notiDot}></View> : ""}
             </View>
           ),
@@ -283,7 +323,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // backgroundColor: "blue",
     flex: 1,
   },
 

@@ -3,14 +3,23 @@ import { normalize } from "../defined_function";
 import MarqueeView from "react-native-marquee-view";
 
 function BookGroupItem({ _style, cover_photo, borrowed_books, total_books, book_name, author, onPress }) {
+  const percent = borrowed_books / total_books;
+
   return (
     <TouchableOpacity activeOpacity={0.4} style={[styles.wrapper, _style]} onPress={onPress}>
       <View style={styles.container}>
         <Image style={styles.coverPhoto} source={{ uri: `http://10.0.2.2:5000${cover_photo}` }} />
         <View style={styles.progress}>
-          <View style={[styles.completedProgress, { width: `${(borrowed_books * 100) / total_books}%` }]}>
-            <Text style={styles.borrowedBooks}>{`${borrowed_books} / ${total_books}`}</Text>
-          </View>
+          <View
+            style={[
+              styles.completedProgress,
+              {
+                width: `${(borrowed_books * 100) / total_books}%`,
+                backgroundColor: percent == 1 ? "#f03958" : percent < 0.6 ? "#6ec531" : "#FFCC00",
+              },
+            ]}
+          ></View>
+          <Text style={styles.borrowedBooks}>{`${borrowed_books} / ${total_books}`}</Text>
         </View>
         <View style={styles.bookInfo}>
           <MarqueeView style={styles.marqueeView} autoPlay={book_name.length > 20}>
@@ -50,6 +59,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: normalize(-44),
     borderRadius: normalize(10),
+    borderWidth: 1,
+    borderColor: "#ced0d4",
   },
 
   progress: {

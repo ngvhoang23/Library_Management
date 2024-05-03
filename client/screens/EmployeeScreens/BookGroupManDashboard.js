@@ -17,8 +17,6 @@ import { faLayerGroup } from "@fortawesome/free-solid-svg-icons";
 import { Picker } from "@react-native-picker/picker";
 import SlideDownAnimation from "../../components/SlideDownAnimation";
 
-const titles = ["123", "1234", "123 55555555555554 5", "12"];
-
 function BookGroupManDashboard({ navigation }) {
   const authorPickerRef = useRef();
   const categoryPickerRef = useRef();
@@ -45,8 +43,6 @@ function BookGroupManDashboard({ navigation }) {
 
   const [isShowFilter, setIsShowFilter] = useState(false);
 
-  const [s_title, sets_title] = useState(0);
-
   useEffect(() => {
     setSearchValue("");
 
@@ -59,7 +55,9 @@ function BookGroupManDashboard({ navigation }) {
           axios
             .get(`http://10.0.2.2:5000/books/book-groups`, config)
             .then((result) => {
-              setBooks([...result.data]);
+              console.log(result.data);
+
+              setBooks(result.data);
             })
             .catch((error) => {
               console.log(error);
@@ -162,7 +160,7 @@ function BookGroupManDashboard({ navigation }) {
     <View style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search books..."
+        placeholder="Tìm kiếm sách..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
@@ -171,7 +169,7 @@ function BookGroupManDashboard({ navigation }) {
       <View style={styles.filterBtnContainer}>
         <FilterItem
           _styles={styles.openFilterBtn}
-          title={`Filter (${(selectedAuthorFilter?.id !== -1 ? 1 : 0) + (selectedCategoryFilter?.id !== -1 ? 1 : 0)})`}
+          title={`Lọc (${(selectedAuthorFilter?.id !== -1 ? 1 : 0) + (selectedCategoryFilter?.id !== -1 ? 1 : 0)})`}
           onPress={() => setIsShowFilter((prev) => !prev)}
           icon={<AntDesign name="filter" size={normalize(16)} color={"#6c60ff"} />}
           right_icon={
@@ -191,7 +189,7 @@ function BookGroupManDashboard({ navigation }) {
               _styles={styles.filterBtn}
               title={selectedCategoryFilter?.title}
               onPress={openCategoryPicker}
-              subTitle={`${getBookQuantityByCategory(selectedCategoryFilter?.id)} books`}
+              subTitle={`${getBookQuantityByCategory(selectedCategoryFilter?.id)} cuốn sách`}
               icon={<FontAwesomeIcon icon={faLayerGroup} size={normalize(16)} color={"#6c60ff"} />}
               right_icon={<Entypo name="chevron-thin-right" size={normalize(16)} color={"#8c8c8d"} />}
             />
@@ -200,7 +198,7 @@ function BookGroupManDashboard({ navigation }) {
               _styles={styles.filterBtn}
               title={selectedAuthorFilter?.title}
               onPress={openAuthorPicker}
-              subTitle={`${getBookQuantityByAuthor(selectedAuthorFilter?.id)} books`}
+              subTitle={`${getBookQuantityByAuthor(selectedAuthorFilter?.id)} cuốn sách`}
               icon={<Feather name="user" size={normalize(16)} color={"#6c60ff"} />}
               right_icon={<Entypo name="chevron-thin-right" size={normalize(16)} color={"#8c8c8d"} />}
             />
@@ -243,7 +241,7 @@ function BookGroupManDashboard({ navigation }) {
       )}
 
       <View style={styles.titleLine}>
-        <Text style={styles.title}>Book Groups</Text>
+        <Text style={styles.title}>Các nhóm sách</Text>
         <Text style={styles.line}></Text>
       </View>
 
@@ -257,8 +255,8 @@ function BookGroupManDashboard({ navigation }) {
                 cover_photo={book.cover_photo}
                 book_name={book.book_name}
                 author={book.author_name}
-                borrowed_books={5}
-                total_books={12}
+                borrowed_books={book.total_book - book.available}
+                total_books={book.total_book}
                 onPress={() =>
                   navigation.navigate("Book Group Detail", {
                     book_info: book,

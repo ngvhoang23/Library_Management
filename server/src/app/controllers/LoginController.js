@@ -52,8 +52,11 @@ class LoginController {
                 });
               } else {
                 if (result.length === 0) {
-                  return res.status(400).send({
-                    message: "log in failed",
+                  return res.status(200).send({
+                    message: "user info is null",
+                    code: "USER_INFO_NULL",
+                    access_token,
+                    user_info: { user_id: user.user_id, user_name: user.user_name, role: user.role },
                   });
                 }
                 res.status(200).send({

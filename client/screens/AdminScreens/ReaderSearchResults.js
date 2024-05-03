@@ -15,6 +15,7 @@ function ReaderSearchResults({ route, navigation }) {
 
   const [results, setResults] = useState([]);
   const [searchValue, setSearchValue] = useState(search_value);
+
   useEffect(() => {
     handleSearch(search_value);
   }, [search_value]);
@@ -94,8 +95,8 @@ const styles = StyleSheet.create({
   readerList: {
     width: SCREEN_WIDTH,
     flex: 1,
-    paddingVertical: normalize(14),
-    paddingHorizontal: normalize(6),
+    paddingVertical: normalize(6),
+    paddingHorizontal: normalize(12),
     overflow: "scroll",
     flexDirection: "row",
     justifyContent: "space-evenly",
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
   },
 
   readerItem: {
-    width: "44%",
+    width: "100%",
     padding: normalize(10),
     margin: 10,
     borderRadius: normalize(10),

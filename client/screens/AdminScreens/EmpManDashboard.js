@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, Button, Image, FlatList, SafeAreaView, ImageBackground } from "react-native";
 import { globalStyles } from "../../styles/global";
 import axios from "axios";
 import EmployeeItem from "../../components/EmployeeItem";
@@ -13,6 +13,7 @@ function EmpManDashboard({ navigation }) {
   const [employees, setEmployees] = useState([]);
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
+
   useEffect(() => {
     setSearchValue("");
 
@@ -41,32 +42,37 @@ function EmpManDashboard({ navigation }) {
   const onSearch = () => {
     navigation.navigate("Search Results", {
       search_value: searchValue,
-      placeholder: "search employees...",
+      placeholder: "Tìm kiếm nhân viên...",
       type: "employees",
     });
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} resizeMode="cover" style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search employees..."
+        placeholder="Tìm kiếm nhân viên..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
       />
 
-      <ScrollView>
+      <View style={styles.titleLine}>
+        <Text style={styles.title}>Nhân viên</Text>
+        <Text style={styles.line}></Text>
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.empList}>
-          {employees.map((employee, index) => {
+          {employees.map((emp, index) => {
             return (
               <EmployeeItem
                 key={index}
                 _style={[styles.empItem]}
-                data={employee}
+                data={emp}
                 onPress={() =>
                   navigation.navigate("Employee Detail", {
-                    emp_info: employee,
+                    emp_info: emp,
                   })
                 }
               />
@@ -74,7 +80,7 @@ function EmpManDashboard({ navigation }) {
           })}
         </View>
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -84,11 +90,15 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "center",
-  },
-  empList: {
-    width: SCREEN_WIDTH,
     flex: 1,
-    paddingVertical: normalize(14),
+  },
+
+  searchBar: {},
+
+  empList: {
+    width: SCREEN_WIDTH - normalize(20),
+    flex: 1,
+    paddingVertical: normalize(6),
     paddingHorizontal: normalize(6),
     overflow: "scroll",
     flexDirection: "row",
@@ -96,11 +106,34 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     flexWrap: "wrap",
   },
+
   empItem: {
-    width: "44%",
+    width: "100%",
     padding: normalize(10),
     margin: 10,
     borderRadius: normalize(10),
+  },
+
+  titleLine: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingHorizontal: normalize(10),
+    marginTop: normalize(8),
+    marginBottom: normalize(8),
+  },
+  title: {
+    fontFamily: "nunito-bold",
+    color: "#8c8c8d",
+    fontSize: normalize(9),
+    marginRight: normalize(6),
+  },
+  line: {
+    width: "100%",
+    height: normalize(1.3),
+    borderBottomWidth: 0.5,
+    borderColor: "#ced0d4",
   },
 });
 

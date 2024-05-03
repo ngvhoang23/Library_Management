@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { globalStyles } from "../../styles/global.js";
 import { Formik } from "formik";
@@ -51,11 +52,14 @@ const formSchema = yup.object({
     if (!val) {
       return true;
     } else {
-      return validateEmail(val);
+      return validateEmail(val.trim());
     }
   }),
   phone_num: yup.string().test("phone number pattern", "Invalid phone number", (val) => {
-    return new RegExp(/(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/).test(val);
+    if (!val) {
+      return true;
+    }
+    return new RegExp(/(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/).test(val.trim());
   }),
 });
 
@@ -79,8 +83,7 @@ function AddEmployeScreen({ navigation }) {
   };
 
   const trySubmit = (empInfo) => {
-    const { user_name, password, phone_num, birth_date, email_address, gender, first_name, last_name, address } =
-      empInfo;
+    const { user_name, password, phone_num, birth_date, gender, first_name, last_name, address } = empInfo;
     setIsLoading(true);
     const formData = new FormData();
 
@@ -95,7 +98,6 @@ function AddEmployeScreen({ navigation }) {
     formData.append("password", password.trim());
     phone_num && formData.append("phone_num", phone_num.trim());
     birth_date && formData.append("birth_date", birth_date);
-    email_address && formData.append("email_address", email_address.trim());
     address && formData.append("address", address.trim());
     formData.append("gender", gender.value);
     first_name && formData.append("first_name", first_name.trim());
@@ -121,7 +123,7 @@ function AddEmployeScreen({ navigation }) {
             })
             .catch((err) => {
               if (err?.response?.data?.code === "ER_DUP_ENTRY") {
-                alert("Duplicate User Name");
+                setResultStatus({ isSuccess: 0, visible: true, message: "Duplicate user name" });
                 setIsLoading(false);
               } else {
                 reject(err);
@@ -146,10 +148,10 @@ function AddEmployeScreen({ navigation }) {
         if (err?.message === "Network Error") {
           trySubmit(readerInfo)
             .then((result) => {
+              setResultStatus({ isSuccess: 1, visible: true });
               navigation.navigate("Dashboard", {
                 screen: "Employees",
               });
-              setResultStatus({ isSuccess: 1, visible: true });
             })
             .catch((err) => {
               setResultStatus({ isSuccess: 0, visible: true });
@@ -165,13 +167,12 @@ function AddEmployeScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           user_name: "",
           password: "",
           phone_num: "",
-          email_address: "",
           birth_date: new Date().toISOString().split("T")[0],
           gender: { value: 1, index: 0 },
           first_name: "",
@@ -185,43 +186,56 @@ function AddEmployeScreen({ navigation }) {
       >
         {(props) => (
           <TouchableOpacity style={styles.formWrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
-            <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              style={styles.formContainer}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <AvatarPicker
                 _styles={styles.avatarPicker}
                 avatar={avatar}
                 setAvatar={setAvatar}
                 onPickImage={pickImage}
-                title={"Select Avatar"}
+                title={"Chọn ảnh đại diện"}
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="User Name"
-                lableTitle="User Name"
+                placeholder="Tên đăng nhập"
+                lableTitle="Tên đăng nhập"
                 onChange={props.handleChange("user_name")}
                 value={props.values.user_name}
-                errorText={props.errors.user_name}
+                errorText={props.touched.user_name ? props.errors.user_name : undefined}
+                border
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Password"
-                lableTitle="Password"
+                placeholder="Mật khẩu"
+                lableTitle="Mật khẩu"
                 onChange={props.handleChange("password")}
                 value={props.values.password}
-                errorText={props.errors.password}
+                errorText={props.touched.password ? props.errors.password : undefined}
+                border
+                secureTextEntry={true}
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Phone Number"
-                lableTitle="Phone Number"
+                placeholder="Số điện thoại"
+                lableTitle="Số điện thoại"
                 onChange={props.handleChange("phone_num")}
                 value={props.values.phone_num}
-                errorText={props.errors.phone_num}
+                errorText={props.touched.phone_num ? props.errors.phone_num : undefined}
+                border
               />
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="Birth Date"
+                lableTitle="Ngày sinh"
                 value={props.values.birth_date}
-                errorText={props.errors.birth_date}
+                errorText={props.touched.birth_date ? props.errors.birth_date : undefined}
+                border
                 onPress={() => setIsShowDatePicker(true)}
               />
               {isShowDatePicker && (
@@ -238,31 +252,27 @@ function AddEmployeScreen({ navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Email"
-                lableTitle="Email"
-                onChange={props.handleChange("email_address")}
-                value={props.values.email_address}
-                errorText={props.errors.email_address}
-              />
-
-              <InputItem
-                _styles={[styles.input]}
-                placeholder="Address"
-                lableTitle="Address"
+                placeholder="Địa chỉ"
+                lableTitle="Địa chỉ"
                 onChange={props.handleChange("address")}
                 value={props.values.address}
-                errorText={props.errors.address}
+                errorText={props.touched.address ? props.errors.address : undefined}
+                border
+                numberOfLines={4}
+                multiline
               />
 
               <MenuPickers
                 _styles={[styles.input]}
-                lableTitle="Gender"
+                lableTitle="Giới tính"
+                initIndex={0}
                 value={props.values.gender}
-                errorText={props.errors.gender}
+                errorText={props.touched.gender ? props.errors.gender : undefined}
                 options={[
-                  { title: "Male", value: 1 },
-                  { title: "Female", value: 0 },
+                  { title: "Nam", value: 1 },
+                  { title: "Nữ", value: 0 },
                 ]}
+                border
                 onChange={(selectedValue, selectedIndex) =>
                   props.setFieldValue("gender", { value: selectedValue, index: selectedIndex })
                 }
@@ -270,24 +280,26 @@ function AddEmployeScreen({ navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="First Name"
-                lableTitle="First Name"
+                placeholder="Họ"
+                lableTitle="Họ"
                 onChange={props.handleChange("first_name")}
                 value={props.values.first_name}
-                errorText={props.errors.first_name}
+                errorText={props.touched.first_name ? props.errors.first_name : undefined}
+                border
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Last Name"
-                lableTitle="Last Name"
+                placeholder="Tên và tên đệm"
+                lableTitle="Tên và tên đệm"
                 onChange={props.handleChange("last_name")}
                 value={props.values.last_name}
-                errorText={props.errors.last_name}
+                errorText={props.touched.last_name ? props.errors.last_name : undefined}
+                border
               />
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="submit"
+                text="Tạo nhân viên"
                 fontSize={normalize(10)}
               />
             </ScrollView>
@@ -299,8 +311,9 @@ function AddEmployeScreen({ navigation }) {
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
+        text={resultStatus?.message}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -310,6 +323,13 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+
+  headerTitle: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(18),
+    width: "100%",
+    marginLeft: normalize(40),
   },
 
   avatarPicker: {
@@ -328,7 +348,6 @@ const styles = StyleSheet.create({
 
   formContainer: {
     width: "90%",
-    height: normalize(720),
   },
 
   input: {
@@ -337,7 +356,7 @@ const styles = StyleSheet.create({
   },
 
   submitBtn: {
-    width: "100%",
+    width: "90%",
     height: normalize(32),
     marginTop: normalize(6),
     marginBottom: normalize(16),
@@ -345,7 +364,8 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
+    borderRadius: normalize(1000),
   },
 });
 

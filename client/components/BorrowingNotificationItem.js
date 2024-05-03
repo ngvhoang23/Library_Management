@@ -13,6 +13,7 @@ function BorrowingNotificationItem({
   cover_photo,
   created_at,
   borrow_date,
+  is_reader,
   onPress,
 }) {
   return (
@@ -23,9 +24,9 @@ function BorrowingNotificationItem({
       </View>
       <View style={styles.content}>
         <Text style={styles.title} numberOfLines={2}>
-          {full_name} <Text style={{ fontFamily: "nunito-medium" }}>has just borrowed</Text> {book_name}
+          {full_name} <Text style={{ fontFamily: "nunito-medium" }}>đã mượn sách</Text> {book_name}
         </Text>
-        <Text style={styles.subTitle}>Borrow Date: {new Date(borrow_date).toLocaleDateString("en-GB")}</Text>
+        <Text style={styles.subTitle}>Ngày mượn: {new Date(borrow_date).toLocaleDateString("en-GB")}</Text>
       </View>
 
       <View style={styles.timeContainer}>
@@ -49,6 +50,8 @@ const styles = StyleSheet.create({
     width: normalize(42),
     height: normalize(42),
     marginRight: normalize(20),
+    alignItems: "center",
+    justifyContent: "center",
   },
   userAvatar: {
     width: normalize(33),

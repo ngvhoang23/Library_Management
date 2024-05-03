@@ -20,12 +20,17 @@ function AlertModal({ visible, isSuccess, onClose, text }) {
       <View style={styles.centeredView}>
         {isSuccess ? (
           <View style={styles.modalView}>
-            <AntDesign name="checkcircleo" size={40} color="#5cb85c" />
+            <View style={styles.successIconWrapper}>
+              <AntDesign name="checkcircle" size={normalize(20)} color="#6ec531" />
+            </View>
             <Text style={styles.modalText}>{text || "Success"}</Text>
           </View>
         ) : (
           <View style={styles.modalView}>
-            <AntDesign name="closecircleo" size={40} color="#ff3333" />
+            <View style={styles.errIconWrapper}>
+              <AntDesign name="closecircle" size={normalize(20)} color="#f03958" />
+            </View>
+
             <Text style={styles.modalText}>{text || "Failed"}</Text>
           </View>
         )}
@@ -43,13 +48,12 @@ const styles = StyleSheet.create({
   },
 
   modalView: {
-    margin: normalize(20),
-    paddingHorizontal: normalize(20),
-    paddingVertical: normalize(0),
+    marginHorizontal: normalize(40),
+    paddingRight: normalize(20),
     backgroundColor: "white",
     borderRadius: normalize(5),
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -59,6 +63,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    minHeight: normalize(50),
+  },
+
+  errIconWrapper: {
+    backgroundColor: "rgba(240, 40, 73, 0.2)",
+    width: normalize(60),
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopStartRadius: normalize(5),
+    borderBottomStartRadius: normalize(5),
+    height: "100%",
+  },
+
+  successIconWrapper: {
+    backgroundColor: "rgba(110, 197, 49, 0.2)",
+    width: normalize(50),
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderTopStartRadius: normalize(5),
+    borderBottomStartRadius: normalize(5),
+    height: "100%",
   },
 
   modalText: {
@@ -67,7 +94,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(14),
     marginLeft: normalize(15),
     fontFamily: "nunito-medium",
-    letterSpacing: normalize(4),
+    letterSpacing: normalize(2),
   },
 });
 

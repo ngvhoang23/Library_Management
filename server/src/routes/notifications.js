@@ -6,6 +6,7 @@ const { reader_auth, emp_auth, admin_auth } = require("../auth/auth");
 
 // reader role
 
-router.get("/by-employee", NotificationController.getNotificationsByEmployee);
+router.get("/by-employee", emp_auth, NotificationController.getNotificationsByEmployee);
+router.get("/by-reader", reader_auth, NotificationController.getNotificationsByReader);
 
 module.exports = router;

@@ -11,6 +11,8 @@ const validateEmail = (email) => {
 
 const _retrieveData = (key) => AsyncStorage.getItem(key);
 
+const _storeData = (key, value) => AsyncStorage.setItem(key, value);
+
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // based on iphone 5s's scale
@@ -28,4 +30,4 @@ function addDays(date, days) {
   return result;
 }
 
-export { validateEmail, _retrieveData, normalize, SCREEN_WIDTH, SCREEN_HEIGHT, addDays };
+export { validateEmail, _retrieveData, _storeData, normalize, SCREEN_WIDTH, SCREEN_HEIGHT, addDays };

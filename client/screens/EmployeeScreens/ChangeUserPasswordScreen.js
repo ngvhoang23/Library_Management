@@ -20,7 +20,7 @@ const formSchema = yup.object({
       return new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/).test(val);
     }),
 
-  retype_password: yup.string().test("", "New password does not match", (val, form) => {
+  retype_password: yup.string().test("", "passwords do not match", (val, form) => {
     return val == form.parent.new_password;
   }),
 });
@@ -84,34 +84,37 @@ function ChangeUserPasswordScreen({ route, navigation }) {
             <View style={styles.formWrapper}>
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Current Password"
-                lableTitle="Current Password"
+                placeholder="Mật khẩu hiện tại"
+                lableTitle="Mật khẩu hiện tại"
                 onChange={props.handleChange("old_password")}
                 value={props.values.old_password}
                 errorText={props.errors.old_password}
+                secureTextEntry={true}
               />
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="New Password"
-                lableTitle="New Password"
+                placeholder="Mật khẩu mới"
+                lableTitle="Mật khẩu mới"
                 onChange={props.handleChange("new_password")}
                 value={props.values.new_password}
                 errorText={props.errors.new_password}
+                secureTextEntry={true}
               />
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Re-type New Password"
-                lableTitle="Re-type New Password"
+                placeholder="Nhập lại mật khẩu mới"
+                lableTitle="Nhập lại mật khẩu mới"
                 onChange={props.handleChange("retype_password")}
                 value={props.values.retype_password}
                 errorText={props.errors.retype_password}
+                secureTextEntry={true}
               />
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="Submit"
+                text="Đổi mật khẩu"
                 fontSize={normalize(10)}
               />
             </View>

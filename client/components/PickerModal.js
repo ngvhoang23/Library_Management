@@ -18,7 +18,17 @@ import { useIsFocused } from "@react-navigation/native";
 import { SCREEN_WIDTH, normalize } from "../defined_function";
 import FlatButton from "../shared/FlatButton";
 
-function PickerModal({ value, setValue, options, searchResult, setSearchResult, visible, setVisible, onSearch }) {
+function PickerModal({
+  value,
+  setValue,
+  placeholder,
+  options,
+  searchResult,
+  setSearchResult,
+  visible,
+  setVisible,
+  onSearch,
+}) {
   const [searchValue, setSearchValue] = useState("");
   const isFocused = useIsFocused();
 
@@ -36,19 +46,19 @@ function PickerModal({ value, setValue, options, searchResult, setSearchResult, 
           key={option.id}
           activeOpacity={0.4}
           onPress={() => {
-            setValue(option.id);
+            setValue({ id: option.id, title: option.title });
             setVisible(false);
           }}
           style={styles.item}
         >
-          <Image source={{ uri: option.photo }} style={styles.photoPreview} />
+          {/* <Image source={{ uri: option.photo }} style={styles.photoPreview} /> */}
           <View style={styles.content}>
             <Text style={styles.title} numberOfLines={1}>
               {option.title}
             </Text>
-            <Text style={styles.description} numberOfLines={1}>
+            {/* <Text style={styles.description} numberOfLines={1}>
               {option.description}
-            </Text>
+            </Text> */}
           </View>
         </TouchableOpacity>
       );
@@ -73,7 +83,7 @@ function PickerModal({ value, setValue, options, searchResult, setSearchResult, 
             )}
             <SearchBar
               _styles={[styles.searchBar]}
-              placeholder={"search books..."}
+              placeholder={placeholder}
               value={searchValue}
               onChange={(value) => setSearchValue(value)}
               onSearch={() => {
@@ -138,6 +148,9 @@ const styles = StyleSheet.create({
   },
 
   searchBar: {
+    borderWidth: 1,
+    borderRadius: normalize(6),
+    borderColor: "#ced0d4",
     flex: 1,
   },
 

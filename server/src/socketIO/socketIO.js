@@ -23,6 +23,7 @@ function socketInit(io) {
 
     socket.on("borrow-book", (borrow_info) => {
       const { emp_id } = borrow_info;
+      console.log(users);
       users.forEach((user) => {
         if (emp_id !== user.user_id) {
           io.to(user.socket_id).emit("borrow-book", { borrow_info });
@@ -32,10 +33,7 @@ function socketInit(io) {
 
     socket.on("pay-fine", (pay_info) => {
       const { emp_id } = pay_info;
-      console.log("pay_info", pay_info);
-      console.log(users);
       users.forEach((user) => {
-        console.log("user", user);
         if (emp_id !== user.user_id) {
           io.to(user.socket_id).emit("pay-fine", { pay_info });
         }

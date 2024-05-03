@@ -56,6 +56,9 @@ const styles = StyleSheet.create({
   bookItem: {
     width: "100%",
     marginBottom: normalize(6),
+    borderBottomWidth: 1,
+    borderColor: "#d8dde7",
+    paddingBottom: normalize(14),
   },
 });
 

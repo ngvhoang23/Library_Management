@@ -23,16 +23,16 @@ function ProfileScreen({ navigation }) {
         <OptionProfileItem
           _styles={styles.optionItem}
           icon={<Ionicons name="settings-outline" size={normalize(20)} color="#6c60ff" />}
-          title={"Settings"}
-          description={"Change your passowrd, email,..."}
+          title={"Cài đặt"}
+          description={"Đổi mật khẩu, email,..."}
           onPress={() => navigation.navigate("Settings")}
         />
 
         <OptionProfileItem
           _styles={styles.optionItem}
           icon={<SimpleLineIcons name="bell" size={normalize(20)} color="#6c60ff" />}
-          title={"Notifications"}
-          description={"Change your passowrd, email,..."}
+          title={"Thông báo"}
+          description={"Thông báo mượn trả sách, thanh toán nợ,.."}
           onPress={() => navigation.navigate("Notifications", { screen: "Notifications" })}
         />
       </View>

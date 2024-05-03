@@ -17,12 +17,52 @@ class BorrowedBooksController {
           a.author_name,
           bb.borrow_date, bb.return_date, bb.actual_return_date
           from borrowed_books bb
-            inner join user_info ui1 on ui1.user_id = bb.reader_id
+            left join user_info ui1 on ui1.user_id = bb.reader_id
             inner join books b on b.book_id = bb.book_id
-            inner join user_info ui2 on ui2.user_id = bb.emp_id
+            left join user_info ui2 on ui2.user_id = bb.emp_id
             inner join book_detail bd on bd.book_detail_id = b.book_detail_id
             inner join authors a on a.author_id = bd.author_id
         `,
+          (err, result) => {
+            if (err) {
+              reject(err);
+            } else {
+              resolve(result);
+            }
+          },
+        );
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /popular-books
+  getPopularBooks(req, res) {
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        db.query(
+          `
+          with rm as (
+            select bd.book_detail_id, count(bd.book_detail_id) from borrowed_books bb
+            inner join books b on b.book_id = bb.book_id
+            inner join book_detail bd on b.book_detail_id = bd.book_detail_id
+            where DATE_ADD(bb.borrow_date, INTERVAL 7 DAY) >= CURDATE()
+            group by bd.book_detail_id
+          ) 
+          select * from rm
+          inner join book_detail bd on bd.book_detail_id = rm.book_detail_id
+          inner join authors on bd.author_id = authors.author_id
+          inner join categories on bd.category_id = categories.category_id
+          LIMIT 6
+          `,
           (err, result) => {
             if (err) {
               reject(err);
@@ -57,9 +97,9 @@ class BorrowedBooksController {
           a.author_name,
           bb.borrow_date, bb.return_date, bb.actual_return_date
           from borrowed_books bb
-            inner join user_info ui1 on ui1.user_id = bb.reader_id
+            left join user_info ui1 on ui1.user_id = bb.reader_id
             inner join books b on b.book_id = bb.book_id
-            inner join user_info ui2 on ui2.user_id = bb.emp_id
+            left join user_info ui2 on ui2.user_id = bb.emp_id
             inner join book_detail bd on bd.book_detail_id = b.book_detail_id
             inner join authors a on a.author_id = bd.author_id
           where bb.actual_return_date is null
@@ -91,9 +131,9 @@ class BorrowedBooksController {
 
     const promise = () => {
       const sql = `
-      select user_id, getDept(user_id) as overdue_days, getBorrowingBookQuantity(user_id) as borrowing_books, expire_date < curdate() is_expired 
+      select user_id, getDept(user_id) as fine, getOverdueBookQuantity(user_id) as overdue_books, getBorrowingBookQuantity(user_id) as borrowing_books, expire_date < curdate() is_expired 
       from user_info
-      where user_id = ${reader_id} and (getDept(user_id) > 0 or expire_date < curdate() or getBorrowingBookQuantity(user_id) >= 4)
+      where user_id = ${reader_id} and (getOverdueBookQuantity(user_id) > 0 or expire_date < curdate() or getBorrowingBookQuantity(user_id) >= 4 or getDept(user_id) < 0)
       `;
 
       return new Promise((resolve, reject) => {
@@ -135,9 +175,9 @@ class BorrowedBooksController {
         a.author_name,
         bb.borrow_date, bb.return_date, bb.actual_return_date
         from borrowed_books bb
-          inner join user_info ui1 on ui1.user_id = bb.reader_id
+          left join user_info ui1 on ui1.user_id = bb.reader_id
           inner join books b on b.book_id = bb.book_id
-          inner join user_info ui2 on ui2.user_id = bb.emp_id
+          left join user_info ui2 on ui2.user_id = bb.emp_id
           inner join book_detail bd on bd.book_detail_id = b.book_detail_id
           inner join authors a on a.author_id = bd.author_id
         where bb.actual_return_date is null and b.position like ?
@@ -745,12 +785,12 @@ class BorrowedBooksController {
             a.author_name,
             bb.borrow_date, bb.return_date, bb.actual_return_date
         from borrowed_books bb
-        inner join user_info ui1 on bb.reader_id = ui1.user_id
-        inner join user_info ui2 on bb.emp_id = ui2.user_id
+        left join user_info ui1 on bb.reader_id = ui1.user_id
+        left join user_info ui2 on bb.emp_id = ui2.user_id
         inner join books b on b.book_id = bb.book_id
         inner join book_detail bd on bd.book_detail_id = b.book_detail_id
         inner join authors a on a.author_id = bd.author_id
-      where CURDATE() > bb.return_date and bb.actual_return_date is null or bb.actual_return_date > bb.return_date
+      where CURDATE() > bb.return_date 
       `;
 
       return new Promise((resolve, reject) => {
@@ -768,12 +808,25 @@ class BorrowedBooksController {
                 reader_phone_num: value[0].reader_phone_num,
               };
               const total_fine = value.reduce((fine, book) => {
-                return (
-                  fine + Math.abs(Math.floor((new Date(book.return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)
-                );
+                if (book?.actual_return_date) {
+                  return (
+                    fine +
+                    Math.abs(
+                      Math.floor(
+                        (new Date(book.return_date) - new Date(book.actual_return_date)) / (1000 * 60 * 60 * 24),
+                      ) * 1000,
+                    )
+                  );
+                } else {
+                  return (
+                    fine +
+                    Math.abs(Math.floor((new Date(book.return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)
+                  );
+                }
               }, 0);
               data.push({ reader_info, total_fine: total_fine, borrowed_books: value });
             }
+            console.log(data);
             resolve(data);
           }
         });
@@ -846,12 +899,12 @@ class BorrowedBooksController {
             a.author_name,
             bb.borrow_date, bb.return_date, bb.actual_return_date
         from borrowed_books bb
-        inner join user_info ui1 on bb.reader_id = ui1.user_id
-        inner join user_info ui2 on bb.emp_id = ui2.user_id
+        left join user_info ui1 on bb.reader_id = ui1.user_id
+        left join user_info ui2 on bb.emp_id = ui2.user_id
         inner join books b on b.book_id = bb.book_id
         inner join book_detail bd on bd.book_detail_id = b.book_detail_id
         inner join authors a on a.author_id = bd.author_id
-      where CURDATE() > bb.return_date and bb.actual_return_date is null or bb.actual_return_date > bb.return_date and bb.reader_id = ${reader_id}
+      where CURDATE() > bb.return_date and bb.reader_id = ${reader_id}
       `;
 
       return new Promise((resolve, reject) => {
@@ -863,9 +916,21 @@ class BorrowedBooksController {
             const groupByBooks = groupBy(result, "reader_id");
             for (const [key, value] of Object.entries(groupByBooks)) {
               const total_fine = value.reduce((fine, book) => {
-                return (
-                  fine + Math.abs(Math.floor((new Date(book.return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)
-                );
+                if (book?.actual_return_date) {
+                  return (
+                    fine +
+                    Math.abs(
+                      Math.floor(
+                        (new Date(book.return_date) - new Date(book.actual_return_date)) / (1000 * 60 * 60 * 24),
+                      ) * 1000,
+                    )
+                  );
+                } else {
+                  return (
+                    fine +
+                    Math.abs(Math.floor((new Date(book.return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)
+                  );
+                }
               }, 0);
 
               data = { total_fine: total_fine, borrowed_books: value };
@@ -928,8 +993,8 @@ class BorrowedBooksController {
             a.author_name,
             bb.borrow_date, bb.return_date, bb.actual_return_date
         from borrowed_books bb
-        inner join user_info ui1 on bb.reader_id = ui1.user_id
-        inner join user_info ui2 on bb.emp_id = ui2.user_id
+        left join user_info ui1 on bb.reader_id = ui1.user_id
+        left join user_info ui2 on bb.emp_id = ui2.user_id
         inner join books b on b.book_id = bb.book_id
         inner join book_detail bd on bd.book_detail_id = b.book_detail_id
         inner join authors a on a.author_id = bd.author_id
@@ -999,6 +1064,130 @@ class BorrowedBooksController {
             }
           },
         );
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /statistic/books-borrowed
+  getBooksBorrowedStatisticByCategory(req, res) {
+    const { month } = req.query;
+
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        const sql = `
+        with rm as (
+          select c.category_id, count(bb.borrow_id) as count from borrowed_books bb
+          inner join books b
+          on bb.book_id = b.book_id
+          inner join book_detail bd
+          on bd.book_detail_id = b.book_detail_id
+          inner join categories c
+          on c.category_id = bd.category_id
+            where month(borrow_date) = ${month} 
+          group by c.category_id
+        )
+        select c.*, rm.count from rm
+        inner join categories c
+        on c.category_id = rm.category_id
+        `;
+
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /statistic/overdue-books
+  getOverdueBooksStatistic(req, res) {
+    const { date } = req.query;
+
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        const sql = `
+        select bb.*, bd.book_name, DATEDIFF(DATE('${date}'), bb.return_date) as overdue_days from borrowed_books bb
+        inner join books b
+        on b.book_id = bb.book_id
+        inner join book_detail bd
+        on bd.book_detail_id = b.book_detail_id
+        where bb.return_date < DATE('${date}') and bb.actual_return_date is null;
+        with rm as (
+          select bd.book_detail_id, count(*) as count from borrowed_books bb
+          inner join books b
+          on b.book_id = bb.book_id
+          inner join book_detail bd
+          on bd.book_detail_id = b.book_detail_id
+          where bb.return_date < DATE('${date}') and bb.actual_return_date is null
+          group by bd.book_detail_id
+        )
+        select * from rm
+        inner join book_detail bd 
+        on rm.book_detail_id = bd.book_detail_id
+          `;
+
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        console.log(result);
+        const data = {
+          overdue_data: result[0],
+          overdue_book_detail: result[1],
+        };
+        res.status(200).send(data);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
+  // [GET] /statistic/book-status
+  getBookStatusStatistic(req, res) {
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        const sql = `
+        select b.status, count(*) as count from books b
+        group by b.status
+        `;
+
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
       });
     };
 

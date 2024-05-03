@@ -47,7 +47,6 @@ function ReaderManDashboard({ navigation }) {
 
   useEffect(() => {
     if (filter == 1) {
-      console.log(filter);
       const readerFiltered = readers.filter((reader) => reader.reader_type === "student");
       setFilteredReaders(readerFiltered);
     } else {
@@ -65,10 +64,10 @@ function ReaderManDashboard({ navigation }) {
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} resizeMode="cover" style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} resizeMode="cover" style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search readers..."
+        placeholder="Tìm kiếm độc giả..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
@@ -77,17 +76,17 @@ function ReaderManDashboard({ navigation }) {
       <View style={styles.filterWrapper}>
         <FilterItem
           _styles={styles.filterBtn}
-          title={"Students"}
+          title={"Sinh viên"}
           onPress={() => setFilter(1)}
-          subTitle={`${filter === 1 ? filteredReaders.length : readers.length - filteredReaders.length} students`}
+          subTitle={`${filter === 1 ? filteredReaders.length : readers.length - filteredReaders.length} sinh viên`}
           active={filter === 1}
           icon={<Feather name="user-plus" size={normalize(16)} color={filter === 1 ? "#fff" : "#3c3c3c"} />}
         />
 
         <FilterItem
           _styles={styles.filterBtn}
-          title={"Lecturers"}
-          subTitle={`${filter === 2 ? filteredReaders.length : readers.length - filteredReaders.length} lecturers`}
+          title={"Giảng viên"}
+          subTitle={`${filter === 2 ? filteredReaders.length : readers.length - filteredReaders.length} giảng viên`}
           onPress={() => setFilter(2)}
           active={filter === 2}
           icon={<Feather name="user-plus" size={normalize(16)} color={filter === 2 ? "#fff" : "#3c3c3c"} />}
@@ -95,7 +94,7 @@ function ReaderManDashboard({ navigation }) {
       </View>
 
       <View style={styles.titleLine}>
-        <Text style={styles.title}>Readers</Text>
+        <Text style={styles.title}>Độc giả</Text>
         <Text style={styles.line}></Text>
       </View>
 

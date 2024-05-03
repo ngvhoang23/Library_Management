@@ -42,7 +42,6 @@ function NotificationsScreen({ navigation }) {
         axios
           .get(`http://10.0.2.2:5000/notifications/by-employee`, config)
           .then((result) => {
-            console.log(result.data);
             setNotifications(result.data);
           })
           .catch((error) => {
@@ -96,12 +95,6 @@ function NotificationsScreen({ navigation }) {
 
   return (
     <View style={styles.wrapper}>
-      {/* <FlatButton
-        _styles={{ backgroundColor: "#ccc", padding: 10 }}
-        text={"Get Notificaitons"}
-        onPress={getNotifications}
-      /> */}
-
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>{renderNotifications()}</View>
       </ScrollView>

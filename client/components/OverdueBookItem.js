@@ -30,10 +30,10 @@ function OverdueBookItem({ _style, book_name, cover_photo, position, total_fine,
         </Text>
 
         <Text style={styles.position} numberOfLines={1}>
-          Position: {renderPosition()}
+          Vị trí: {renderPosition()}
         </Text>
 
-        <Text style={[styles.fine, { color: "#f02849" }]}>{`Fine: ${total_fine}`}</Text>
+        <Text style={[styles.fine, { color: "#f02849" }]}>{`Tiền phạt: ${total_fine}`}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     padding: normalize(6),
-    borderBottomWidth: 0,
+    borderBottomWidth: 0.5,
     borderColor: "#ced0d4",
   },
 
@@ -61,12 +61,14 @@ const styles = StyleSheet.create({
     width: normalize(48),
     height: normalize(48),
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ced0d4",
   },
   bookName: {
     width: "90%",
     fontFamily: "nunito-medium",
     color: "#676768",
-    fontSize: normalize(11),
+    fontSize: normalize(10),
   },
 
   fine: {

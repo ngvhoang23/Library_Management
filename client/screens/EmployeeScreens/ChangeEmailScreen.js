@@ -43,8 +43,7 @@ function ChangeEmailScreen({ route, navigation }) {
 
         axios(configurations)
           .then((result) => {
-            console.log(result.data);
-            navigation.navigate("Enter Email Code", { duration: result?.data?.duration || 0 });
+            navigation.navigate("Enter Email Code", { duration: result?.data?.duration || 0, email_address });
           })
           .catch((err) => {
             console.log("err", err);
@@ -76,8 +75,8 @@ function ChangeEmailScreen({ route, navigation }) {
             <View style={styles.formWrapper}>
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Enter Email Address"
-                lableTitle="Enter Email Address"
+                placeholder="Nhập địa chỉ email mới"
+                lableTitle="Nhập địa chỉ email mới"
                 onChange={props.handleChange("email_address")}
                 value={props.values.email_address}
                 errorText={props.errors.email_address}
@@ -85,7 +84,7 @@ function ChangeEmailScreen({ route, navigation }) {
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="Submit"
+                text="Đổi email"
                 fontSize={normalize(10)}
               />
             </View>

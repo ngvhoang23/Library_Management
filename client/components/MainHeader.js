@@ -5,12 +5,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { SimpleLineIcons, AntDesign } from "@expo/vector-icons";
 import { normalize } from "../defined_function";
 
-function MainHeader({ title, navigation, is_stack, back_key }) {
+function MainHeader({ title, navigation, is_stack, transparent }) {
   const openMenu = () => {
     navigation.openDrawer();
   };
 
-  return (
+  return transparent ? (
+    <View
+      source={require("../assets/images/page_bg2.jpg")}
+      style={[styles.header, { backgroundColor: "transparent", borderBottomWidth: 0 }]}
+    >
+      {is_stack ? (
+        <Pressable onPress={() => navigation.goBack()} style={styles.icon}>
+          <AntDesign name="left" size={normalize(16)} color="#3c3c3c" />
+        </Pressable>
+      ) : (
+        <Pressable onPress={openMenu} style={styles.icon}>
+          <SimpleLineIcons name="menu" size={normalize(15)} color="#3c3c3c" />
+        </Pressable>
+      )}
+      <View style={styles.headerTitle}>
+        <Text style={styles.headerText}>{title}</Text>
+      </View>
+    </View>
+  ) : (
     <ImageBackground source={require("../assets/images/page_bg2.jpg")} style={styles.header}>
       {is_stack ? (
         <Pressable onPress={() => navigation.goBack()} style={styles.icon}>

@@ -50,15 +50,15 @@ function SelectBookGroupScreen({ route, navigation }) {
       search_value: searchValue,
       reader_type,
       reader_info,
-      placeholder: "search books by name...",
+      placeholder: "Tìm kiếm sách...",
     });
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search books by name..."
+        placeholder="Tìm kiếm sách..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
@@ -68,22 +68,6 @@ function SelectBookGroupScreen({ route, navigation }) {
         <View style={styles.bookList}>
           {books.map((book, index) => {
             return (
-              // <BookItem
-              //   key={book.book_detail_id}
-              //   _style={[styles.bookItem]}
-              //   data={book}
-              //   remaining={book.remaining || 0}
-              //   onPress={() => {
-              //     if (book.remaining <= 0) {
-              //       alert("There are no books available for borrowing");
-              //     }
-              //     navigation.navigate("Select Borrowed Book", {
-              //       book_group_info: book,
-              //       reader_info,
-              //     });
-              //   }}
-              // />
-
               <BookGroupItem
                 key={book.book_detail_id}
                 _style={[styles.bookItem]}

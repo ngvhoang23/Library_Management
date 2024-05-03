@@ -9,16 +9,16 @@ function SettingScreen({ navigation }) {
       <OptionProfileItem
         _styles={styles.optionItem}
         icon={<Entypo name="key" size={normalize(20)} color="#6c60ff" />}
-        title={"Change Password"}
-        description={"Change your passowrd"}
+        title={"Đổi mật khẩu"}
+        description={"Đổi mật khẩu"}
         onPress={() => navigation.navigate("Change Password")}
       />
 
       <OptionProfileItem
         _styles={styles.optionItem}
         icon={<MaterialIcons name="email" size={normalize(20)} color="#6c60ff" />}
-        title={"Change Email Address"}
-        description={"Change your email address"}
+        title={"Đổi địa chỉ email"}
+        description={"Đổi địa chỉ email"}
         onPress={() => navigation.navigate("Change Email")}
       />
     </View>

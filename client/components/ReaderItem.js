@@ -34,11 +34,11 @@ function ReaderItem({ _style, data, borrowed_books, onPress }) {
             {full_name}
           </Text>
           <Text style={[styles.readerType]}>
-            {reader_type === "student" ? "Student" : reader_type === "lecturer" ? "Lecturer" : ""}
+            {reader_type === "student" ? "Sinh viên" : reader_type === "lecturer" ? "Giảng viên" : ""}
           </Text>
           {borrowed_books != null && (
             <Text style={[styles.borrowedBookQuantity, { color: borrowed_books >= 4 ? "#f02849" : "#1e74fd" }]}>
-              borrowed books: {borrowed_books}
+              Sách đã mượn: {borrowed_books}
             </Text>
           )}
         </View>

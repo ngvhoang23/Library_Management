@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   Image,
   Pressable,
+  ImageBackground,
 } from "react-native";
 import { globalStyles } from "../../styles/global.js";
 import { Formik } from "formik";
@@ -166,7 +167,7 @@ function EditEmployeeScreen({ route, navigation }) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           phone_num: phone_num || "",
@@ -185,7 +186,15 @@ function EditEmployeeScreen({ route, navigation }) {
       >
         {(props) => (
           <TouchableOpacity style={styles.formWrapper} activeOpacity={1.0} onPress={Keyboard.dismiss}>
-            <ScrollView style={styles.formContainer} showsVerticalScrollIndicator={false}>
+            <ScrollView
+              style={styles.formContainer}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <AvatarPicker
                 _styles={styles.avatarPicker}
                 avatar={avatar}
@@ -196,18 +205,20 @@ function EditEmployeeScreen({ route, navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Phone Number"
-                lableTitle="Phone Number"
+                placeholder="Số điện thoại"
+                lableTitle="Số điện thoại"
                 onChange={props.handleChange("phone_num")}
                 value={props.values.phone_num}
                 errorText={props.errors.phone_num}
+                border
               />
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="Birth Date"
+                lableTitle="Ngày sinh"
                 value={props.values.birth_date}
                 errorText={props.errors.birth_date}
                 onPress={() => setIsShowDatePicker(true)}
+                border
               />
               {isShowDatePicker && (
                 <DateTimePicker
@@ -223,10 +234,11 @@ function EditEmployeeScreen({ route, navigation }) {
 
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="First Working Day"
+                lableTitle="Ngày vào làm"
                 value={props.values.first_work_date}
                 errorText={props.errors.first_work_date}
                 onPress={() => setIsShowWorkDatePicker(true)}
+                border
               />
               {isShowWorkDatePicker && (
                 <DateTimePicker
@@ -247,20 +259,24 @@ function EditEmployeeScreen({ route, navigation }) {
                 onChange={props.handleChange("email_address")}
                 value={props.values.email_address}
                 errorText={props.errors.email_address}
+                border
               />
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Address"
-                lableTitle="Address"
+                placeholder="Địa chỉ"
+                lableTitle="Địa chỉ"
                 onChange={props.handleChange("address")}
                 value={props.values.address}
                 errorText={props.errors.address}
+                border
+                numberOfLines={4}
+                multiline
               />
 
               <MenuPickers
                 _styles={[styles.input]}
-                lableTitle="Gender"
+                lableTitle="Giới tính"
                 initIndex={gender === 0 ? 1 : 0}
                 value={props.values.gender}
                 errorText={props.errors.gender}
@@ -271,28 +287,31 @@ function EditEmployeeScreen({ route, navigation }) {
                 onChange={(selectedValue, selectedIndex) => {
                   props.setFieldValue("gender", { value: selectedValue, index: selectedIndex });
                 }}
+                border
               />
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="First Name"
-                lableTitle="First Name"
+                placeholder="Họ"
+                lableTitle="Họ"
                 onChange={props.handleChange("first_name")}
                 value={props.values.first_name}
                 errorText={props.errors.first_name}
+                border
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Last Name"
-                lableTitle="Last Name"
+                placeholder="Tên và tên đệm"
+                lableTitle="Tên và tên đệm"
                 onChange={props.handleChange("last_name")}
                 value={props.values.last_name}
                 errorText={props.errors.last_name}
+                border
               />
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="submit"
+                text="Sửa nhân viên"
                 fontSize={normalize(10)}
               />
             </ScrollView>
@@ -305,7 +324,7 @@ function EditEmployeeScreen({ route, navigation }) {
         isSuccess={resultStatus?.isSuccess}
         visible={resultStatus?.visible ? true : false}
       />
-    </View>
+    </ImageBackground>
   );
 }
 
@@ -318,21 +337,31 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  headerTitle: {
+    fontFamily: "nunito-medium",
+    fontSize: normalize(18),
+    width: "100%",
+    marginLeft: normalize(40),
+  },
+
   avatarPicker: {
     width: "100%",
-    marginBottom: normalize(20),
+    borderRadius: normalize(10),
+    marginBottom: normalize(10),
   },
 
   formWrapper: {
     width: "100%",
-    marginTop: normalize(20),
+    marginTop: normalize(10),
     justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
+    paddingLeft: normalize(20),
+    paddingRight: normalize(20),
   },
 
   formContainer: {
-    width: "90%",
+    width: "100%",
     height: normalize(640),
     flex: 1,
   },
@@ -343,14 +372,15 @@ const styles = StyleSheet.create({
   },
 
   submitBtn: {
-    width: "100%",
+    width: "90%",
     height: normalize(32),
+    borderRadius: normalize(40),
     marginBottom: normalize(12),
     paddingVertical: 0,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#1e74fd",
+    backgroundColor: "#6c60ff",
   },
 });
 

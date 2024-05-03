@@ -36,6 +36,8 @@ const BorrowerManTabNavigation = () => {
           fontSize: normalize(12),
           fontFamily: "nunito-medium",
         },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
         tabBarLabelPosition: "below-icon",
       }}
     >
@@ -80,6 +82,8 @@ const ReaderManTabNavigation = () => {
           fontSize: normalize(10),
           fontFamily: "nunito-medium",
         },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
         tabBarLabelPosition: "below-icon",
       }}
     >
@@ -89,7 +93,6 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            console.log(focused);
             return <AntDesign name="home" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
           },
         }}
@@ -169,6 +172,8 @@ const BorrowedBookManTabNavigation = () => {
           fontSize: normalize(12),
           fontFamily: "nunito-medium",
         },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
         tabBarLabelPosition: "below-icon",
       }}
     >
@@ -213,6 +218,8 @@ const ProfileTabNavigation = () => {
           fontSize: normalize(12),
           fontFamily: "nunito-medium",
         },
+        tabBarInactiveTintColor: "#3c3c3c",
+        tabBarActiveTintColor: "#6c60ff",
         tabBarLabelPosition: "below-icon",
       }}
     >

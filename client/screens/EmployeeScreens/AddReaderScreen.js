@@ -29,7 +29,9 @@ import AlertModal from "../../components/AlertModal.js";
 import { _retrieveData, normalize, validateEmail } from "../../defined_function/index.js";
 
 const formSchema = yup.object({
-  user_name: yup.string().trim().required(),
+  user_name: yup.string().test("email pattern", "User Name must be an email", (val) => {
+    return validateEmail(val);
+  }),
   password: yup
     .string()
     .trim()
@@ -56,6 +58,9 @@ const formSchema = yup.object({
     }
   }),
   phone_num: yup.string().test("phone number pattern", "Invalid phone number", (val) => {
+    if (!val) {
+      return true;
+    }
     return new RegExp(/(((\+|)84)|0)(3|5|7|8|9)+([0-9]{8})\b/).test(val);
   }),
 });
@@ -189,14 +194,13 @@ function AddReaderScreen({ navigation }) {
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg2.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           user_name: "",
           password: "",
           phone_num: "",
-          email_address: "",
-          birth_date: new Date().toISOString().split("T")[0],
+          birth_date: new Date("2000-12-12").toISOString().split("T")[0],
           start_date: new Date().toISOString().split("T")[0],
           gender: { value: 1, index: 0 },
           reader_type: { value: "student", index: 0 },
@@ -225,33 +229,34 @@ function AddReaderScreen({ navigation }) {
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="User Name"
-                lableTitle="User Name"
+                placeholder="Tên đăng nhập"
+                lableTitle="Tên đăng nhập"
                 onChange={props.handleChange("user_name")}
                 value={props.values.user_name}
-                errorText={props.errors.user_name}
+                errorText={props.touched.user_name ? props.errors.user_name : undefined}
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Password"
-                lableTitle="Password"
+                placeholder="Mật khẩu"
+                lableTitle="Mật khẩu"
                 onChange={props.handleChange("password")}
                 value={props.values.password}
-                errorText={props.errors.password}
+                errorText={props.touched.password ? props.errors.password : undefined}
+                secureTextEntry={true}
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Phone Number"
-                lableTitle="Phone Number"
+                placeholder="Số điện thoại"
+                lableTitle="Số điện thoại"
                 onChange={props.handleChange("phone_num")}
                 value={props.values.phone_num}
-                errorText={props.errors.phone_num}
+                errorText={props.touched.phone_num ? props.errors.phone_num : undefined}
               />
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="Birth Date"
+                lableTitle="Ngày sinh"
                 value={props.values.birth_date}
-                errorText={props.errors.birth_date}
+                errorText={props.touched.birth_date ? props.errors.birth_date : undefined}
                 onPress={() => setIsShowDatePicker(true)}
               />
               {isShowDatePicker && (
@@ -268,9 +273,9 @@ function AddReaderScreen({ navigation }) {
 
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="Start Date"
+                lableTitle="Ngày tạo"
                 value={props.values.start_date}
-                errorText={props.errors.start_date}
+                errorText={props.touched.start_date ? props.errors.start_date : undefined}
                 onPress={() => setIsShowStartDatePicker(true)}
               />
               {isShowStartDatePicker && (
@@ -287,28 +292,19 @@ function AddReaderScreen({ navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Email"
-                lableTitle="Email"
-                onChange={props.handleChange("email_address")}
-                value={props.values.email_address}
-                errorText={props.errors.email_address}
-              />
-
-              <InputItem
-                _styles={[styles.input]}
-                placeholder="Address"
-                lableTitle="Address"
+                placeholder="Địa chỉ"
+                lableTitle="Địa chỉ"
                 onChange={props.handleChange("address")}
                 value={props.values.address}
-                errorText={props.errors.address}
+                errorText={props.touched.address ? props.errors.address : undefined}
               />
 
               <MenuPickers
                 _styles={[styles.input]}
-                lableTitle="Gender"
+                lableTitle="Giới tính"
                 initIndex={0}
                 value={props.values.gender}
-                errorText={props.errors.gender}
+                errorText={props.touched.gender ? props.errors.gender : undefined}
                 options={[
                   { title: "Male", value: 1 },
                   { title: "Female", value: 0 },
@@ -320,10 +316,10 @@ function AddReaderScreen({ navigation }) {
 
               <MenuPickers
                 _styles={[styles.input]}
-                lableTitle="Reader type"
+                lableTitle="Loại độc giả"
                 initIndex={0}
                 value={props.values.reader_type}
-                errorText={props.errors.reader_type}
+                errorText={props.touched.reader_type ? props.errors.reader_type : undefined}
                 options={[
                   { title: "Student", value: "student" },
                   { title: "Lecturer", value: "lecturer" },
@@ -335,24 +331,24 @@ function AddReaderScreen({ navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="First Name"
-                lableTitle="First Name"
+                placeholder="Họ"
+                lableTitle="Họ"
                 onChange={props.handleChange("first_name")}
                 value={props.values.first_name}
-                errorText={props.errors.first_name}
+                errorText={props.touched.first_name ? props.errors.first_name : undefined}
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Last Name"
-                lableTitle="Last Name"
+                placeholder="Tên và tên đệm"
+                lableTitle="Tên và tên đệm"
                 onChange={props.handleChange("last_name")}
                 value={props.values.last_name}
-                errorText={props.errors.last_name}
+                errorText={props.touched.last_name ? props.errors.last_name : undefined}
               />
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="Submit"
+                text="Tạo độc giả"
                 fontSize={normalize(10)}
               />
             </ScrollView>

@@ -3,34 +3,15 @@ import { StyleSheet, View, Text, ScrollView, Keyboard, TouchableOpacity, unstabl
 import { Formik } from "formik";
 import FlatButton from "../../shared/FlatButton.js";
 import * as yup from "yup";
-import InputItem from "../../components/InputItem.js";
 import axios from "axios";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import MyDateTimePicker from "../../components/MyDateTimePicker.js";
 import LoadingModal from "../../components/LoadingModal.js";
 import AlertModal from "../../components/AlertModal.js";
 import { _retrieveData, addDays, normalize } from "../../defined_function/index.js";
 import { useIsFocused } from "@react-navigation/native";
-import BriefBookInfoPreview from "../../components/BriefBookInfoPreview.js";
-import BriefUserInfoPreview from "../../components/BriefUserInfoPreview.js";
-import PickerBtn from "../../components/PickerBtn.js";
 import PreviewInfoItem from "../../components/PreviewInfoItem.js";
 import PickerModal from "../../components/PickerModal.js";
 import BriefBorrowingInfoPreview from "../../components/BriefBorrowingInfoPreview.js";
-import {
-  FontAwesome,
-  MaterialIcons,
-  Feather,
-  Fontisto,
-  FontAwesome5,
-  MaterialCommunityIcons,
-  AntDesign,
-  FontAwesome6,
-  EvilIcons,
-  SimpleLineIcons,
-  Entypo,
-  Ionicons,
-} from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 import socket from "../../socket.js";
 
@@ -158,41 +139,6 @@ function AddBorrowBookScreen({ route, navigation }) {
       });
   };
 
-  const handleSearch = (search_value) => {
-    if (search_value) {
-      _retrieveData("ACCESS_TOKEN")
-        .then((access_token) => {
-          const config = {
-            params: {
-              search_value,
-            },
-            headers: { Authorization: `Bearer ${access_token}` },
-          };
-          axios
-            .get(`http://10.0.2.2:5000/books/book-groups/searching/${search_value}`, config)
-            .then((result) => {
-              const books = result.data;
-              setSearchResult(
-                books.map((book) => {
-                  return {
-                    id: book?.book_detail_id,
-                    photo: `http://10.0.2.2:5000${book?.cover_photo}`,
-                    title: book?.book_name,
-                    description: book?.author_name,
-                  };
-                }),
-              );
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  };
-
   return (
     <View style={styles.wrapper}>
       <Formik
@@ -211,12 +157,7 @@ function AddBorrowBookScreen({ route, navigation }) {
             <ScrollView
               style={styles.formContainer}
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
+              contentContainerStyle={{ flexDirection: "column", justifyContent: "space-between", alignItems: "center" }}
             >
               <BriefBorrowingInfoPreview
                 _styles={styles.borrowingInfo}
@@ -227,50 +168,35 @@ function AddBorrowBookScreen({ route, navigation }) {
                 phone_num={phone_num}
                 user_avatar={`http://10.0.2.2:5000${user_avatar}`}
               />
-
               <PreviewInfoItem
                 _styles={[styles.input]}
                 textStyles={{ color: "#676768" }}
-                lableTitle="Borrow Date"
+                lableTitle="Ngày mượn"
                 value={props.values.borrow_date}
                 icon={<FontAwesome name="hourglass-1" size={normalize(15)} color="#3c3c3c" />}
                 read_only
+                border
               />
 
               <PreviewInfoItem
                 _styles={[styles.input]}
                 textStyles={{ color: "#676768" }}
-                lableTitle="Return Date"
+                lableTitle="Ngày trả"
                 value={props.values.return_date}
                 icon={<FontAwesome name="hourglass-end" size={normalize(15)} color="#3c3c3c" />}
                 read_only
+                border
               />
             </ScrollView>
             <FlatButton
               _styles={styles.submitBtn}
               onPress={props.handleSubmit}
-              text="Submit"
+              text="Mượn sách"
               fontSize={normalize(10)}
             />
           </TouchableOpacity>
         )}
       </Formik>
-      <PickerModal
-        visible={showModal}
-        setVisible={setShowModal}
-        setValue={setSelectedId}
-        searchResult={searchResult}
-        setSearchResult={setSearchResult}
-        onSearch={handleSearch}
-        options={books.map((book) => {
-          return {
-            id: book?.book_detail_id,
-            photo: `http://10.0.2.2:5000${book?.cover_photo}`,
-            title: book?.book_name,
-            description: book?.author_name,
-          };
-        })}
-      />
       <LoadingModal visible={isLoading} />
       <AlertModal
         onClose={() => setResultStatus({ isSuccess: 0, visible: false })}
@@ -289,42 +215,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  userInfoContainer: {
-    width: "100%",
-    marginBottom: normalize(0),
-    paddingHorizontal: normalize(10),
-  },
-
-  bookInfoContainer: {
-    width: "100%",
-    marginBottom: normalize(0),
-    paddingHorizontal: normalize(10),
-  },
-
   borrowingInfo: {
-    width: "100%",
-    marginBottom: normalize(30),
-    marginTop: normalize(20),
-    paddingHorizontal: normalize(10),
+    marginBottom: normalize(20),
   },
 
   formWrapper: {
     width: "100%",
-    marginTop: normalize(10),
+    flex: 1,
+    flexDirection: "column",
     justifyContent: "space-between",
     alignItems: "center",
-    flex: 1,
   },
 
   formContainer: {
-    width: "90%",
-    // height: normalize(640),
+    width: "100%",
     flex: 1,
   },
 
   input: {
-    marginBottom: normalize(20),
-    width: "100%",
+    width: "94%",
+    padding: normalize(10),
+    marginBottom: normalize(8),
   },
 
   submitBtn: {
@@ -337,23 +248,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#6c60ff",
     borderRadius: normalize(100),
-  },
-
-  positionValidate: {
-    marginBottom: normalize(6),
-    marginLeft: normalize(6),
-    color: "#f02849",
-    fontSize: normalize(10),
-  },
-
-  position: {
-    marginRight: normalize(20),
-    width: "20%",
-  },
-
-  selectBookBtn: {
-    borderRadius: 0,
-    height: normalize(100),
   },
 });
 

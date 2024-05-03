@@ -66,7 +66,6 @@ function BorrowingBooksByBorrowersScreen({ route, navigation }) {
       <ScrollView style={styles.listWrapper}>
         <View style={styles.bookList}>
           {books.map((book, index) => {
-            console.log(book);
             return (
               <BookItem
                 key={book.book_id}

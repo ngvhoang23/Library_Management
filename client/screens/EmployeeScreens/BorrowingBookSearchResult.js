@@ -9,15 +9,20 @@ import SearchBar from "../../components/SearchBar";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import { ScrollView } from "react-native-gesture-handler";
 import BookItem from "../../components/BookItem";
+import BookBorrowedHorizontal from "../../components/BookBorrowedHorizontal";
 
 function BorrowingBookSearchResult({ route, navigation }) {
   const { search_value, placeholder } = route.params;
 
   const [results, setResults] = useState([]);
   const [searchValue, setSearchValue] = useState(search_value);
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    handleSearch(search_value);
-  }, [search_value]);
+    if (isFocused) {
+      handleSearch(search_value);
+    }
+  }, [search_value, isFocused]);
 
   const handleSearch = (search_value) => {
     _retrieveData("ACCESS_TOKEN")
@@ -56,18 +61,25 @@ function BorrowingBookSearchResult({ route, navigation }) {
       />
       <ScrollView style={styles.resultContainer}>
         {results?.length > 0 ? (
-          <View style={styles.empList}>
-            {results.map((item, index) => {
+          <View style={styles.bookList}>
+            {results.map((book, index) => {
+              const total_day = Math.round(
+                (new Date(book.return_date) - new Date(book.borrow_date)) / (1000 * 3600 * 24),
+              );
+              const remain_day = Math.round((new Date(book.return_date) - new Date()) / (1000 * 3600 * 24));
               return (
-                <BookItem
-                  key={item.book_id}
-                  _style={[styles.bookItem]}
-                  have_position
-                  overdue={new Date() > new Date(item.return_date)}
-                  data={item}
+                <BookBorrowedHorizontal
+                  key={book.borrow_id}
+                  _styles={[styles.bookItem]}
+                  cover_photo={book.cover_photo}
+                  book_name={book.book_name}
+                  position={book.position}
+                  total_day={total_day}
+                  remain_day={remain_day}
+                  book_detail_id={book.book_detail_id}
                   onPress={() =>
                     navigation.navigate("Borrowing Book Detail", {
-                      borrowing_book_info: item,
+                      borrow_id: book.borrow_id,
                     })
                   }
                 />
@@ -84,32 +96,42 @@ function BorrowingBookSearchResult({ route, navigation }) {
 
 const styles = StyleSheet.create({
   wrapper: {
+    width: "100%",
     flexDirection: "column",
     justifyContent: "flex-end",
     alignItems: "center",
+    flex: 1,
   },
 
   searchBar: {
     width: "100%",
   },
 
-  empList: {
-    width: SCREEN_WIDTH,
+  resultContainer: {
     flex: 1,
+    width: "100%",
+  },
+
+  bookList: {
+    flex: 1,
+    width: "100%",
+    height: "100%",
     paddingVertical: normalize(14),
-    paddingHorizontal: normalize(6),
-    overflow: "scroll",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "flex-start",
+    paddingRight: normalize(14),
+    paddingLeft: normalize(14),
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
     flexWrap: "wrap",
   },
 
   bookItem: {
     width: "100%",
-    padding: normalize(10),
-    borderRadius: normalize(10),
-    marginBottom: normalize(14),
+    paddingTop: normalize(10),
+    marginBottom: normalize(10),
+    borderBottomWidth: 0.5,
+    borderColor: "#ced0d4",
+    borderStyle: "solid",
   },
 
   messageText: {
@@ -118,6 +140,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(14),
     letterSpacing: 4,
     color: "#aaabaf",
+    textAlign: "center",
   },
 });
 

@@ -38,6 +38,7 @@ function FineManDashBoard({ navigation }) {
           axios
             .get(`http://10.0.2.2:5000/borrowed-books/fine`, config)
             .then((result) => {
+              console.log(result.data);
               setBorrowers(result.data);
             })
             .catch((error) => {
@@ -53,7 +54,7 @@ function FineManDashBoard({ navigation }) {
   const onSearch = () => {
     navigation.navigate("Fine Search Result", {
       search_value: searchValue,
-      placeholder: "search borrowers...",
+      placeholder: "Tìm kiếm độc giả...",
     });
   };
 
@@ -61,7 +62,7 @@ function FineManDashBoard({ navigation }) {
     <ImageBackground source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
       <SearchBar
         _styles={styles.searchBar}
-        placeholder="search borrowers..."
+        placeholder="Tìm kiếm độc giả..."
         value={searchValue}
         onChange={(value) => setSearchValue(value)}
         onSearch={onSearch}
@@ -80,10 +81,6 @@ function FineManDashBoard({ navigation }) {
                 total_fine={borrowing.total_fine - borrowing.amount_collected}
                 onPress={() =>
                   navigation.navigate("Fine Detail", {
-                    // reader_info: borrowing.reader_info,
-                    // borrowed_books: borrowing.borrowed_books,
-                    // total_fine: borrowing.total_fine,
-                    // total_amount_collected: borrowing.amount_collected,
                     reader_id: borrowing?.reader_info?.reader_id,
                   })
                 }

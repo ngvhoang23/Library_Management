@@ -34,7 +34,7 @@ function BookToBorrowSearchResult({ route, navigation }) {
           axios
             .get(`http://10.0.2.2:5000/borrowed-books/available-books/searching/${search_value}`, config)
             .then((result) => {
-              setResults([...result.data]);
+              setResults(result.data);
             })
             .catch((error) => {
               console.log(error);

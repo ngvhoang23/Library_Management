@@ -63,7 +63,7 @@ function EditProfileScreen({ route, navigation }) {
 
   const { user, setUser } = useUserInfoContext();
 
-  const { user_avatar, phone_num, birth_date, address, gender, first_name, last_name } = user;
+  const { user_avatar, phone_num, birth_date, address, gender, first_name, last_name, email_address } = user;
 
   const pickImage = async () => {
     setIsLoading(true);
@@ -183,7 +183,7 @@ function EditProfileScreen({ route, navigation }) {
   };
 
   return (
-    <ImageBackground source={require("../../assets/images/page_bg3.jpg")} style={styles.wrapper}>
+    <ImageBackground source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
       <Formik
         initialValues={{
           phone_num: phone_num || "",
@@ -192,6 +192,7 @@ function EditProfileScreen({ route, navigation }) {
           gender: { value: gender, index: gender === 0 ? 1 : 0 },
           first_name: first_name || "",
           last_name: last_name || "",
+          email_address: email_address || "",
         }}
         validationSchema={formSchema}
         onSubmit={(values, actions) => {
@@ -211,18 +212,26 @@ function EditProfileScreen({ route, navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Phone Number"
-                lableTitle="Phone Number"
+                placeholder="Số điện thoại"
+                lableTitle="Số điện thoại"
                 onChange={props.handleChange("phone_num")}
                 value={props.values.phone_num}
-                errorText={props.errors.phone_num}
+                errorText={props.touched.phone_num ? props.errors.phone_num : undefined}
+              />
+
+              <InputItem
+                _styles={[styles.input]}
+                placeholder="Địa chỉ email"
+                lableTitle="Địa chỉ email"
+                value={props.values.email_address}
+                read_only
               />
 
               <MyDateTimePicker
                 _styles={[styles.input]}
-                lableTitle="Birth Date"
+                lableTitle="Ngày sinh"
                 value={props.values.birth_date}
-                errorText={props.errors.birth_date}
+                errorText={props.touched.birth_date ? props.errors.birth_date : undefined}
                 onPress={() => setIsShowDatePicker(true)}
               />
               {isShowDatePicker && (
@@ -239,19 +248,19 @@ function EditProfileScreen({ route, navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Address"
-                lableTitle="Address"
+                placeholder="Địa chỉ"
+                lableTitle="Địa chỉ"
                 onChange={props.handleChange("address")}
                 value={props.values.address}
-                errorText={props.errors.address}
+                errorText={props.touched.address ? props.errors.address : undefined}
               />
 
               <MenuPickers
                 _styles={[styles.input]}
-                lableTitle="Gender"
+                lableTitle="Giới tính"
                 initIndex={gender === 0 ? 1 : 0}
                 value={props.values.gender}
-                errorText={props.errors.gender}
+                errorText={props.touched.gender ? props.errors.gender : undefined}
                 options={[
                   { title: "Male", value: 1 },
                   { title: "Female", value: 0 },
@@ -263,25 +272,25 @@ function EditProfileScreen({ route, navigation }) {
 
               <InputItem
                 _styles={[styles.input]}
-                placeholder="First Name"
-                lableTitle="First Name"
+                placeholder="Họ"
+                lableTitle="Họ"
                 onChange={props.handleChange("first_name")}
                 value={props.values.first_name}
-                errorText={props.errors.first_name}
+                errorText={props.touched.first_name ? props.errors.first_name : undefined}
               />
               <InputItem
                 _styles={[styles.input]}
-                placeholder="Last Name"
-                lableTitle="Last Name"
+                placeholder="Tên và tên đệm"
+                lableTitle="Tên và tên đệm"
                 onChange={props.handleChange("last_name")}
                 value={props.values.last_name}
-                errorText={props.errors.last_name}
+                errorText={props.touched.last_name ? props.errors.last_name : undefined}
               />
             </ScrollView>
             <FlatButton
               _styles={styles.submitBtn}
               onPress={props.handleSubmit}
-              text="Submit"
+              text="Sửa profile"
               fontSize={normalize(10)}
             />
           </TouchableOpacity>

@@ -17,7 +17,7 @@ function DebtorItem({ _style, debtor_name, debtor_avatar, debtor_phone_num, onPr
           </Text>
 
           {total_fine != null && total_fine != undefined && (
-            <Text style={[styles.totalFine, { color: "#f02849" }]}>{`Fine: ${total_fine}`}</Text>
+            <Text style={[styles.totalFine, { color: "#f02849" }]}>{`Tiền phạt: ${total_fine}`}</Text>
           )}
         </View>
       </View>
