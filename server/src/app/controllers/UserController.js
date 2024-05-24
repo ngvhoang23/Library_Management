@@ -411,8 +411,9 @@ class UserController {
           } else {
             if (result.length == 0) {
               reject({ message: "user does not exists", code: "USER_NONEXISTENT" });
+            } else {
+              resolve(result[0]);
             }
-            resolve(result[0]);
           }
         });
       });

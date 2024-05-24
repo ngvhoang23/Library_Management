@@ -42,6 +42,7 @@ router.post("/", emp_auth, BorrowedBooksController.postBorrowedBooks);
 router.post("/fine/", emp_auth, BorrowedBooksController.payFine);
 
 router.put("/return-book/:borrow_id", emp_auth, BorrowedBooksController.returnBook);
+router.put("/extend-book/:borrow_id", emp_auth, BorrowedBooksController.extendBook);
 
 router.delete("/:borrow_id", emp_auth, BorrowedBooksController.deleteBorrowedBook);
 

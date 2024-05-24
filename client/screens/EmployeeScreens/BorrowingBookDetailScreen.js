@@ -5,7 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import FlatButton from "../../shared/FlatButton";
 import LoadingModal from "../../components/LoadingModal";
 import PreviewInfoItem from "../../components/PreviewInfoItem";
-import { Entypo, FontAwesome, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, FontAwesome, MaterialCommunityIcons, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faMoneyBill1, faCalendarCheck } from "@fortawesome/free-regular-svg-icons";
 import { faArrowRightFromBracket, faHandHoldingHand, faArrowRotateLeft } from "@fortawesome/free-solid-svg-icons";
@@ -111,6 +111,36 @@ function BorrowingBookDetailScreen({ route, navigation }) {
       });
   };
 
+  const extendBook = () => {
+    _retrieveData("ACCESS_TOKEN")
+      .then((access_token) => {
+        const config = {
+          headers: { Authorization: `Bearer ${access_token}` },
+        };
+
+        const payload = {
+          borrow_id,
+        };
+
+        axios
+          .put(`http://10.0.2.2:5000/borrowed-books/extend-book/${borrow_id}`, payload, config)
+          .then((result) => {
+            setResultStatus({ isSuccess: 1, visible: true });
+            navigation.goBack();
+          })
+          .catch((err) => {
+            setResultStatus({ isSuccess: 0, visible: true });
+            console.log("err", err);
+          })
+          .finally((result) => {
+            setIsLoading(false);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const {
     book_id,
     book_name,
@@ -184,11 +214,16 @@ function BorrowingBookDetailScreen({ route, navigation }) {
         )}
       </ScrollView>
 
-      <View style={styles.options}>
+      <View style={[styles.options, { marginBottom: new Date() < new Date(return_date) ? 0 : normalize(6) }]}>
         <FlatButton _styles={styles.deleteBtn} text="Xóa" onPress={deleteBorrowedBook} />
         <FlatButton _styles={styles.returnBookBtn} text="Trả sách" onPress={returnBook}>
           <MaterialCommunityIcons name="update" size={normalize(16)} color="#fff" />
         </FlatButton>
+        {new Date() < new Date(return_date) && (
+          <FlatButton _styles={styles.extendBtn} text="Gia hạn" onPress={extendBook}>
+            <Ionicons name="time-outline" size={normalize(16)} color="#fff" />
+          </FlatButton>
+        )}
       </View>
       <LoadingModal visible={isLoading} />
       <AlertModal
@@ -241,6 +276,19 @@ const styles = StyleSheet.create({
     borderRadius: normalize(100),
   },
 
+  extendBtn: {
+    height: normalize(32),
+    width: "86%",
+    paddingVertical: 0,
+    backgroundColor: "#6ec531",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: normalize(100),
+    marginTop: normalize(10),
+  },
+
   returnBookBtn: {
     height: normalize(32),
     width: "40%",
@@ -259,8 +307,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: normalize(10),
-    marginTop: normalize(10),
+    flexWrap: "wrap",
+    marginTop: normalize(6),
   },
 });
 

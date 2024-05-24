@@ -711,6 +711,33 @@ class BorrowedBooksController {
       });
   }
 
+  // [PUT] /extend-book/:borrow_id
+  extendBook(req, res) {
+    const { borrow_id } = req.body;
+
+    const promise = () => {
+      return new Promise((resolve, reject) => {
+        const sql = `update borrowed_books set return_date = DATE_ADD(return_date, INTERVAL 4 DAY) where borrow_id = ${borrow_id}`;
+        db.query(sql, (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+    };
+
+    promise()
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).send(err);
+      });
+  }
+
   // [DELETE] /borrowed-books/:borrow_id
   deleteBorrowedBook(req, res) {
     const { book_id, borrow_id } = req.query;

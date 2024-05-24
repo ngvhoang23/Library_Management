@@ -1,8 +1,6 @@
 const transporter = require("../config/nodemailer/nodemailer");
 
 const sendVerificationEmail = (user, token) => {
-  console.log(user.email);
-
   const mailOptions = {
     from: "phuoclongahi@gmail.com",
     to: user.email,

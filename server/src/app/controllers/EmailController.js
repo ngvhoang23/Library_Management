@@ -59,6 +59,8 @@ class EmailController {
   sendTokenToEmail(req, res) {
     const { email_address } = req.query;
 
+    console.log(email_address);
+
     EmailController.sendToken(email_address)
       .then((duration) => {
         res.status(200).send({ status: 200, message: "successfull", duration });

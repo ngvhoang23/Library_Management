@@ -37,7 +37,7 @@ function EnterEmailToResetPasswordScreen({ route, navigation }) {
         const { email_address } = result.data;
         setResultStatus({ isSuccess: 1, visible: true });
         navigation.navigate("EnterEmailVerifyCode", {
-          email_address: email_address,
+          email_address: email_address || user_name,
           handleSubmit: (token) => handleOpenResetPasswordScreen(user_name, token),
         });
       })
