@@ -23,20 +23,16 @@ function socketInit(io) {
 
     socket.on("borrow-book", (borrow_info) => {
       const { emp_id } = borrow_info;
-      console.log(users);
       users.forEach((user) => {
-        if (emp_id !== user.user_id) {
-          io.to(user.socket_id).emit("borrow-book", { borrow_info });
-        }
+        console.log(user);
+        io.to(user.socket_id).emit("borrow-book", { borrow_info });
       });
     });
 
     socket.on("pay-fine", (pay_info) => {
       const { emp_id } = pay_info;
       users.forEach((user) => {
-        if (emp_id !== user.user_id) {
-          io.to(user.socket_id).emit("pay-fine", { pay_info });
-        }
+        io.to(user.socket_id).emit("pay-fine", { pay_info });
       });
     });
 

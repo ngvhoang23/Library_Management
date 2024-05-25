@@ -61,6 +61,7 @@ const EmployeeDrawerNavigator = () => {
     });
 
     socket.on("pay-fine", (pay_info) => {
+      console.log(pay_info);
       setNotiQuantity((prev) => prev + 1);
     });
   }, [socket]);

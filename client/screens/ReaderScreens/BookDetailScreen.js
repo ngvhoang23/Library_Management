@@ -25,7 +25,6 @@ function BookDetailScreen({ route, navigation }) {
           axios
             .get(`http://10.0.2.2:5000/books/book-groups/${book_detail_id}`, config)
             .then((result) => {
-              console.log(result.data);
               setBookInfo(result.data[0]);
             })
             .catch((error) => {

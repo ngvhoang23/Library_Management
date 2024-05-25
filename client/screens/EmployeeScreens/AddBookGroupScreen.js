@@ -68,7 +68,6 @@ function AddBookGroupScreen({ navigation }) {
           axios
             .get(`http://10.0.2.2:5000/books/authors`, author_config)
             .then((result) => {
-              console.log(result.data);
               setAuthors(result.data);
               setPickedAuthor({ id: result.data[0].author_id, title: result.data[0].author_name });
             })
@@ -209,11 +208,11 @@ function AddBookGroupScreen({ navigation }) {
         <Formik
           initialValues={{
             book_name: "",
-            price: "1",
+            price: "",
             // published_date: new Date().toISOString().split("T")[0],
             published_date: new Date(randomDate(new Date(2019, 0, 1), new Date())).toISOString().split("T")[0],
             description: "",
-            publish_com: "12",
+            publish_com: "",
             category: categories[0],
             for_reader: 1,
           }}

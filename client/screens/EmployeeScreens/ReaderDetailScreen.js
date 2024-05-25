@@ -206,7 +206,7 @@ function ReaderDetailScreen({ route, navigation }) {
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
           lableTitle="Giới tính"
-          value={gender ? "Male" : "Female"}
+          value={gender ? "Nam" : "Nữ"}
           icon={<FontAwesome name="transgender" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />
@@ -215,7 +215,7 @@ function ReaderDetailScreen({ route, navigation }) {
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
           lableTitle="Lọai độc giả"
-          value={reader_type === "lecturer" ? "Lecturer" : "Student"}
+          value={reader_type === "lecturer" ? "Giảng viên" : "Sinh viên"}
           icon={<Feather name="users" size={normalize(16)} color="#3c3c3c" />}
           read_only
         />

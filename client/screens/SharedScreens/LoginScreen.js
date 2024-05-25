@@ -153,7 +153,7 @@ function LoginScreen({ navigation, handleSubmit }) {
               <FlatButton
                 _styles={styles.submitBtn}
                 onPress={props.handleSubmit}
-                text="Sign up"
+                text="Sign in"
                 fontSize={normalize(12)}
               />
             </TouchableOpacity>

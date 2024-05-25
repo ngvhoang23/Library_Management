@@ -1,5 +1,5 @@
 import { Image, ImageBackground, StatusBar, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { _retrieveData, normalize } from "../../defined_function";
+import { _retrieveData, getWelcomeTitle, normalize } from "../../defined_function";
 import FlatButton from "../../shared/FlatButton";
 import SearchBox from "../../components/SearchBox";
 import { Entypo } from "@expo/vector-icons";
@@ -108,7 +108,6 @@ function HomeScreen({ navigation }) {
           axios
             .get(`http://10.0.2.2:5000/borrowed-books/borrowing-books/${user.user_id}`, config)
             .then((result) => {
-              console.log(result.data);
               setBorrowingBooks(result.data);
             })
             .catch((error) => {
@@ -136,7 +135,9 @@ function HomeScreen({ navigation }) {
         }
       >
         <Image source={{ uri: `http://10.0.2.2:5000${item?.background}` }} style={styles.categoryBg}></Image>
-        <Text style={styles.categoryTitle}>{item?.category_name}</Text>
+        <View style={{ backgroundColor: "#fff", borderRadius: normalize(10), paddingHorizontal: normalize(10) }}>
+          <Text style={styles.categoryTitle}>{item?.category_name}</Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -151,14 +152,14 @@ function HomeScreen({ navigation }) {
   return (
     <ImageBackground
       source={require("../../assets/images/page_bg1.jpg")}
-      style={{ flex: 1, backgroundColor: "red", marginTop: normalize(-50) }}
+      style={{ flex: 1, marginTop: normalize(-50) }}
     >
       <ScrollView style={{}}>
         <View source={require("../../assets/images/page_bg1.jpg")} style={styles.wrapper}>
           <View style={styles.introContainer}>
             <View style={styles.intoText}>
-              <Text style={styles.welcom}>Good Afternoon,</Text>
-              <Text style={styles.userName}>Viet Hoang</Text>
+              <Text style={styles.welcom}>{getWelcomeTitle()},</Text>
+              <Text style={styles.userName}>{user.full_name}</Text>
             </View>
             <View style={styles.intoImgContainer}>
               <Image source={require("../../assets/images/reading_img.png")} style={styles.introImg} />
@@ -313,6 +314,7 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(16),
     flex: 1,
+    width: "100%",
   },
 
   categoriesContainer: {
@@ -357,6 +359,7 @@ const styles = StyleSheet.create({
   popularBookItem: {
     paddingHorizontal: normalize(10),
   },
+
   categoryItem: {
     flex: 1,
     height: normalize(130),
@@ -365,7 +368,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
-    marginHorizontal: normalize(8),
+    marginHorizontal: normalize(4),
   },
 
   categoryBg: {
@@ -373,13 +376,11 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: normalize(10),
     position: "absolute",
-    opacity: 0.5,
   },
 
   categoryTitle: {
     fontFamily: "nunito-bold",
-    fontSize: normalize(24),
-    color: "#5b4cfd",
+    fontSize: normalize(20),
     opacity: 1,
   },
 });

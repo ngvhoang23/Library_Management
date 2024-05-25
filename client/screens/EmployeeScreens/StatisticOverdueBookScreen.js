@@ -47,8 +47,6 @@ function StatisticOverdueBookScreen() {
         .then((result) => {
           const { overdue_book_detail, overdue_data } = result.data;
 
-          console.log(result.data);
-
           const _legends = [];
 
           const data = overdue_book_detail?.map((item) => {

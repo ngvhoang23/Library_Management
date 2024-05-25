@@ -43,7 +43,6 @@ function UsersStatistic() {
               data.unavailable = item.count;
             }
           });
-          console.log(data);
           setBookStatusData(data);
         })
         .catch((error) => {

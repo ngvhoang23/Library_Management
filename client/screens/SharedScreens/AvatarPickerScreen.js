@@ -25,7 +25,6 @@ function AvatarPickerScreen({ route, navigation }) {
 
     if (!result.canceled) {
       setAvatar(result.assets[0]);
-      console.log(result.assets[0]);
     }
   };
 

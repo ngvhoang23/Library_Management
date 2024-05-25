@@ -249,8 +249,8 @@ function EditReaderScreen({ route, navigation }) {
                 value={props.values.gender}
                 errorText={props.errors.gender}
                 options={[
-                  { title: "Male", value: 1 },
-                  { title: "Female", value: 0 },
+                  { title: "Nam", value: 1 },
+                  { title: "Nữ", value: 0 },
                 ]}
                 onChange={(selectedValue, selectedIndex) => {
                   props.setFieldValue("gender", { value: selectedValue, index: selectedIndex });

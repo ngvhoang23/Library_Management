@@ -204,15 +204,14 @@ class UserController {
 
   // [POST] /email/
   changeEmail(req, res) {
-    const user_id = req.userInfo;
+    const { user_id } = req.userInfo;
     const { email_address, token } = req.body;
 
     const promise = () => {
       const data = [email_address, user_id];
 
       const sql = `
-        update user_info set email_address = ? where user_id = ?
-      `;
+        update user_info set email_address = ? where user_id = ?`;
 
       return new Promise((resolve, reject) => {
         if (!EmailController.validateToken(token)) {

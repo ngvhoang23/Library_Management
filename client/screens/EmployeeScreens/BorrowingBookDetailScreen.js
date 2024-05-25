@@ -38,7 +38,6 @@ function BorrowingBookDetailScreen({ route, navigation }) {
         axios
           .get(`http://10.0.2.2:5000/borrowed-books/borrowing-books/detail/${borrow_id}`, config)
           .then((result) => {
-            console.log(result.data);
             setBorrowInfo(result.data);
           })
           .catch((error) => {

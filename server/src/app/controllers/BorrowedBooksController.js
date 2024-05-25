@@ -853,7 +853,6 @@ class BorrowedBooksController {
               }, 0);
               data.push({ reader_info, total_fine: total_fine, borrowed_books: value });
             }
-            console.log(data);
             resolve(data);
           }
         });
@@ -962,7 +961,6 @@ class BorrowedBooksController {
 
               data = { total_fine: total_fine, borrowed_books: value };
             }
-            console.log(data);
             resolve(data);
           }
         });
@@ -1186,7 +1184,6 @@ class BorrowedBooksController {
 
     promise()
       .then((result) => {
-        console.log(result);
         const data = {
           overdue_data: result[0],
           overdue_book_detail: result[1],

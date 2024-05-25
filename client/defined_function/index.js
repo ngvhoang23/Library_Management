@@ -30,4 +30,17 @@ function addDays(date, days) {
   return result;
 }
 
-export { validateEmail, _retrieveData, _storeData, normalize, SCREEN_WIDTH, SCREEN_HEIGHT, addDays };
+const getWelcomeTitle = () => {
+  var today = new Date();
+  var curHr = today.getHours();
+
+  if (curHr < 12) {
+    return "Good Morning";
+  } else if (curHr < 18) {
+    return "Good Afternoon";
+  } else {
+    return "Good Evening";
+  }
+};
+
+export { validateEmail, _retrieveData, _storeData, normalize, SCREEN_WIDTH, SCREEN_HEIGHT, addDays, getWelcomeTitle };

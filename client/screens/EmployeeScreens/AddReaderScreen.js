@@ -306,8 +306,8 @@ function AddReaderScreen({ navigation }) {
                 value={props.values.gender}
                 errorText={props.touched.gender ? props.errors.gender : undefined}
                 options={[
-                  { title: "Male", value: 1 },
-                  { title: "Female", value: 0 },
+                  { title: "Nam", value: 1 },
+                  { title: "Nữ", value: 0 },
                 ]}
                 onChange={(selectedValue, selectedIndex) =>
                   props.setFieldValue("gender", { value: selectedValue, index: selectedIndex })
@@ -321,8 +321,8 @@ function AddReaderScreen({ navigation }) {
                 value={props.values.reader_type}
                 errorText={props.touched.reader_type ? props.errors.reader_type : undefined}
                 options={[
-                  { title: "Student", value: "student" },
-                  { title: "Lecturer", value: "lecturer" },
+                  { title: "Sinh viên", value: "student" },
+                  { title: "Giảng viên", value: "lecturer" },
                 ]}
                 onChange={(selectedValue, selectedIndex) =>
                   props.setFieldValue("reader_type", { value: selectedValue, index: selectedIndex })

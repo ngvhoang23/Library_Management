@@ -19,17 +19,7 @@ function BorrowerItem({ _style, data, onPress, borrowing_progress, borrowing_boo
 
           {borrowing_progress && (
             <View style={styles.progress}>
-              <View
-                style={[
-                  styles.completedProgress,
-                  {
-                    width: `${(borrowing_books * 100) / 4}%`,
-                    backgroundColor: borrowing_books == 4 ? "#f02849" : "#6ec531",
-                  },
-                ]}
-              >
-                <Text style={styles.borrowedBooks}>{`${borrowing_books} / ${4}`}</Text>
-              </View>
+              <Text style={styles.borrowedBooks}>Đã mượn {borrowing_books} cuốn</Text>
             </View>
           )}
 
@@ -98,27 +88,14 @@ const styles = StyleSheet.create({
   },
 
   progress: {
-    width: "80%",
-    backgroundColor: "#ced0d4",
-    borderRadius: normalize(10),
-    marginBottom: normalize(6),
-    position: "relative",
-    marginTop: normalize(14),
+    marginTop: normalize(8),
   },
 
   borrowedBooks: {
     fontFamily: "nunito-bold",
-    color: "#8c8c8d",
-    fontSize: normalize(8),
-    position: "absolute",
+    color: "#1e74fd",
+    fontSize: normalize(10),
     bottom: normalize(4),
-    left: normalize(4),
-  },
-
-  completedProgress: {
-    borderRadius: normalize(10),
-    paddingLeft: normalize(8),
-    height: normalize(4),
   },
 });
 

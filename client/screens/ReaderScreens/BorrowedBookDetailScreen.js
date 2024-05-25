@@ -28,8 +28,6 @@ function BorrowedBookDetailScreen({ route, navigation }) {
 
   const [borrowInfo, setBorrowInfo] = useState();
 
-  console.log(borrow_id);
-
   useEffect(() => {
     if (!borrow_id) return;
     _retrieveData("ACCESS_TOKEN")

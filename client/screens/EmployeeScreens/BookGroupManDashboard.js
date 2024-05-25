@@ -55,8 +55,6 @@ function BookGroupManDashboard({ navigation }) {
           axios
             .get(`http://10.0.2.2:5000/books/book-groups`, config)
             .then((result) => {
-              console.log(result.data);
-
               setBooks(result.data);
             })
             .catch((error) => {
