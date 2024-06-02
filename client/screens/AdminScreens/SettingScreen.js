@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 import OptionProfileItem from "../../components/OptionProfileItem";
 import { Ionicons, Octicons, SimpleLineIcons, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { normalize } from "../../defined_function";
@@ -8,7 +8,12 @@ function SettingScreen({ navigation }) {
     <View style={styles.optionContainer}>
       <OptionProfileItem
         _styles={styles.optionItem}
-        icon={<Entypo name="key" size={normalize(20)} color="#6c60ff" />}
+        icon={
+          <Image
+            source={require("../../assets/images/key_icon.png")}
+            style={{ height: normalize(24), width: normalize(24) }}
+          />
+        }
         title={"Đổi mật khẩu"}
         description={"Change your passowrd"}
         onPress={() => navigation.navigate("Change Password")}
@@ -16,7 +21,12 @@ function SettingScreen({ navigation }) {
 
       <OptionProfileItem
         _styles={styles.optionItem}
-        icon={<MaterialIcons name="email" size={normalize(20)} color="#6c60ff" />}
+        icon={
+          <Image
+            source={require("../../assets/images/email_icon.png")}
+            style={{ height: normalize(24), width: normalize(24) }}
+          />
+        }
         title={"Đổi Email"}
         description={"Change your email address"}
         onPress={() => navigation.navigate("Change Email")}

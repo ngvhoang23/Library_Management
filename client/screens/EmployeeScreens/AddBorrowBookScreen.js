@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, ScrollView, Keyboard, TouchableOpacity, unstable_batchedUpdates } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Keyboard,
+  TouchableOpacity,
+  unstable_batchedUpdates,
+  Image,
+} from "react-native";
 import { Formik } from "formik";
 import FlatButton from "../../shared/FlatButton.js";
 import * as yup from "yup";
@@ -173,7 +182,12 @@ function AddBorrowBookScreen({ route, navigation }) {
                 textStyles={{ color: "#676768" }}
                 lableTitle="Ngày mượn"
                 value={props.values.borrow_date}
-                icon={<FontAwesome name="hourglass-1" size={normalize(15)} color="#3c3c3c" />}
+                icon={
+                  <Image
+                    source={require("../../assets/images/calendar_dur_icon.png")}
+                    style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+                  />
+                }
                 read_only
                 border
               />
@@ -183,7 +197,12 @@ function AddBorrowBookScreen({ route, navigation }) {
                 textStyles={{ color: "#676768" }}
                 lableTitle="Ngày trả"
                 value={props.values.return_date}
-                icon={<FontAwesome name="hourglass-end" size={normalize(15)} color="#3c3c3c" />}
+                icon={
+                  <Image
+                    source={require("../../assets/images/calendar_dur_icon.png")}
+                    style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+                  />
+                }
                 read_only
                 border
               />

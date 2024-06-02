@@ -25,7 +25,17 @@ function BookGroupItem({ _style, cover_photo, borrowed_books, total_books, book_
           <MarqueeView style={styles.marqueeView} autoPlay={book_name.length > 20}>
             <Text style={styles.bookName}>{book_name}</Text>
           </MarqueeView>
-          <Text style={styles.author}>{author}</Text>
+          <View style={styles.author}>
+            <Image
+              source={require("./../assets/images/author_icon2.png")}
+              style={{
+                width: normalize(14),
+                height: normalize(14),
+                backgroundColor: "transparent",
+              }}
+            />
+            <Text style={styles.authorText}>{author}</Text>
+          </View>
         </View>
       </View>
     </TouchableOpacity>
@@ -107,9 +117,17 @@ const styles = StyleSheet.create({
     color: "#3c3c3c",
   },
   author: {
-    fontFamily: "nunito-bold",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+  },
+
+  authorText: {
     color: "#8c8c8d",
     fontSize: normalize(9),
+    fontFamily: "nunito-bold",
+    marginLeft: normalize(6),
   },
 });
 

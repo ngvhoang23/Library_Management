@@ -19,14 +19,16 @@ function UserInfoTag({ full_name, role, user_avatar, onEdit, email, reader_type 
             ? "Sinh viên"
             : "Giảng viên"}
         </Text>
-        {/* {email && <Text style={styles.emailContent}>Email: {email}</Text>} */}
       </View>
       <View style={styles.righSide}>
         <View style={styles.avatarContainer}>
           <Image source={{ uri: `http://10.0.2.2:5000/${user_avatar}` }} style={styles.avatarItem} />
         </View>
         <FlatButton text={"Chỉnh sửa"} _styles={styles.editBtn} textColor="#5b4cfd" onPress={onEdit}>
-          <AntDesign name="edit" size={normalize(14)} color="#5b4cfd" />
+          <Image
+            source={require("./../assets/images/edit_icon.png")}
+            style={{ width: normalize(14), height: normalize(14), backgroundColor: "transparent" }}
+          />
         </FlatButton>
       </View>
     </ImageBackground>

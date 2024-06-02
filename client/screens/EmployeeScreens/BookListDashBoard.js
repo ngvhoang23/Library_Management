@@ -160,7 +160,10 @@ function BookListDashBoard({ route, navigation }) {
           fontSize={normalize(10)}
           onPress={() => navigation.navigate("Add Books", { book_detail_info: book_info })}
         >
-          <AntDesign name="book" size={normalize(14)} color="#fff" />
+          <Image
+            source={require("../../assets/images/books_icon2.png")}
+            style={{ width: normalize(18), height: normalize(18), backgroundColor: "transparent" }}
+          />
         </FlatButton>
       )}
       <LoadingModal visible={isLoading} />

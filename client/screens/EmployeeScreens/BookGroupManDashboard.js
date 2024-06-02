@@ -169,7 +169,12 @@ function BookGroupManDashboard({ navigation }) {
           _styles={styles.openFilterBtn}
           title={`Lọc (${(selectedAuthorFilter?.id !== -1 ? 1 : 0) + (selectedCategoryFilter?.id !== -1 ? 1 : 0)})`}
           onPress={() => setIsShowFilter((prev) => !prev)}
-          icon={<AntDesign name="filter" size={normalize(16)} color={"#6c60ff"} />}
+          icon={
+            <Image
+              source={require("../../assets/images/filter_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           right_icon={
             isShowFilter ? (
               <Entypo name="chevron-thin-down" size={normalize(16)} color={"#8c8c8d"} />
@@ -188,7 +193,12 @@ function BookGroupManDashboard({ navigation }) {
               title={selectedCategoryFilter?.title}
               onPress={openCategoryPicker}
               subTitle={`${getBookQuantityByCategory(selectedCategoryFilter?.id)} cuốn sách`}
-              icon={<FontAwesomeIcon icon={faLayerGroup} size={normalize(16)} color={"#6c60ff"} />}
+              icon={
+                <Image
+                  source={require("../../assets/images/category_icon.png")}
+                  style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+                />
+              }
               right_icon={<Entypo name="chevron-thin-right" size={normalize(16)} color={"#8c8c8d"} />}
             />
 
@@ -197,7 +207,12 @@ function BookGroupManDashboard({ navigation }) {
               title={selectedAuthorFilter?.title}
               onPress={openAuthorPicker}
               subTitle={`${getBookQuantityByAuthor(selectedAuthorFilter?.id)} cuốn sách`}
-              icon={<Feather name="user" size={normalize(16)} color={"#6c60ff"} />}
+              icon={
+                <Image
+                  source={require("../../assets/images/author_icon2.png")}
+                  style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+                />
+              }
               right_icon={<Entypo name="chevron-thin-right" size={normalize(16)} color={"#8c8c8d"} />}
             />
 

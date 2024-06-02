@@ -292,7 +292,12 @@ function EditProfileScreen({ route, navigation }) {
               onPress={props.handleSubmit}
               text="Sửa Profile"
               fontSize={normalize(10)}
-            />
+            >
+              <Image
+                source={require("../../assets/images/edit_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            </FlatButton>
           </TouchableOpacity>
         )}
       </Formik>
@@ -359,6 +364,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    flexDirection: "row",
     backgroundColor: "#6c60ff",
     marginTop: normalize(10),
   },

@@ -23,10 +23,19 @@ function EmployeeItem({ _style, data, onPress }) {
           <Text style={styles.empName} numberOfLines={1}>
             {full_name}
           </Text>
-          <Text style={[styles.empType]}>Nhân viên</Text>
+          <View style={[styles.empType]}>
+            <Image
+              source={require("./../assets/images/emp_icon.png")}
+              style={{ height: normalize(20), width: normalize(20), marginRight: normalize(4) }}
+            />
+            <Text style={[styles.empTypeTitle]}>Nhân viên</Text>
+          </View>
         </View>
       </View>
-      <Feather name="chevron-right" size={normalize(18)} color="#8c8c8d" />
+      <Image
+        source={require("./../assets/images/right_icon.png")}
+        style={{ height: normalize(14), width: normalize(14), marginRight: normalize(4) }}
+      />
     </TouchableOpacity>
   );
 }
@@ -70,6 +79,12 @@ const styles = StyleSheet.create({
   },
 
   empType: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  empTypeTitle: {
     fontFamily: "nunito-bold",
     color: "#8c8c8d",
     fontSize: normalize(9),

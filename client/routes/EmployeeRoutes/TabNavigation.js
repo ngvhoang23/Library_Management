@@ -17,6 +17,7 @@ import { normalize } from "../../defined_function";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBook, faBookMedical, faChartLine, faCommentDollar, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { AntDesign, Feather, MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { Image } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +48,12 @@ const BorrowerManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={color} />;
+            return (
+              <Image
+                source={require("../../assets/images/home_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -57,7 +63,12 @@ const BorrowerManTabNavigation = () => {
         options={{
           tabBarLabel: "Borrow Book",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialCommunityIcons name="book-plus-outline" size={normalize(16)} color={color} />;
+            return (
+              <Image
+                source={require("../../assets/images/book_icon2.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -93,7 +104,12 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
+            return (
+              <Image
+                source={require("../../assets/images/home_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -103,7 +119,12 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Reader",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name="user-plus" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
+            return (
+              <Image
+                source={require("../../assets/images/user_plus_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -138,7 +159,12 @@ const BookManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
+            return (
+              <Image
+                source={require("../../assets/images/home_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -148,7 +174,12 @@ const BookManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Book Group",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Ionicons name="book-outline" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
+            return (
+              <Image
+                source={require("../../assets/images/books_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -183,7 +214,12 @@ const BorrowedBookManTabNavigation = () => {
         options={{
           tabBarLabel: "Borrowed Books",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
+            return (
+              <Image
+                source={require("../../assets/images/home_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -193,7 +229,12 @@ const BorrowedBookManTabNavigation = () => {
         options={{
           tabBarLabel: "Fine Management",
           tabBarIcon: ({ focused, color, size }) => {
-            return <MaterialIcons name="attach-money" size={normalize(16)} color={focused ? "#6c60ff" : "#3c3c3c"} />;
+            return (
+              <Image
+                source={require("../../assets/images/money_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />

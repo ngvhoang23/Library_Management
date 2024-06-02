@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { normalize } from "../../defined_function";
 import UsersStatistic from "../../components/UsersStatistic";
 import FlatButton from "../../shared/FlatButton";
@@ -26,7 +26,10 @@ function StatisticScreen({ navigation }) {
           textColor={"#5b4cfd"}
           onPress={() => navigation.navigate("Statistic By Category")}
         >
-          <AntDesign name="linechart" size={normalize(19)} color={"#5b4cfd"} />
+          <Image
+            source={require("../../assets/images/statistic_icon.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
         </FlatButton>
         <FlatButton
           _styles={styles.createStatisticBtn}
@@ -35,7 +38,10 @@ function StatisticScreen({ navigation }) {
           textColor={"#5b4cfd"}
           onPress={() => navigation.navigate("Statistic Overdue Books")}
         >
-          <AntDesign name="linechart" size={normalize(19)} color={"#5b4cfd"} />
+          <Image
+            source={require("../../assets/images/statistic_icon.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
         </FlatButton>
         <FlatButton
           _styles={styles.createStatisticBtn}
@@ -44,7 +50,10 @@ function StatisticScreen({ navigation }) {
           textColor={"#5b4cfd"}
           onPress={() => navigation.navigate("Statistic Book Status")}
         >
-          <AntDesign name="linechart" size={normalize(19)} color={"#5b4cfd"} />
+          <Image
+            source={require("../../assets/images/statistic_icon.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
         </FlatButton>
       </View>
     </View>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { useUserInfoContext } from "../../context/userInfoContext";
 import UserInfoTag from "../../components/UserInfoTag";
 import OptionProfileItem from "../../components/OptionProfileItem";
@@ -23,7 +23,12 @@ function ProfileScreen({ navigation }) {
       <View style={styles.optionContainer}>
         <OptionProfileItem
           _styles={styles.optionItem}
-          icon={<Ionicons name="settings-outline" size={normalize(20)} color="#6c60ff" />}
+          icon={
+            <Image
+              source={require("../../assets/images/setting_icon.png")}
+              style={{ width: normalize(24), height: normalize(24), backgroundColor: "transparent" }}
+            />
+          }
           title={"Cài đặt"}
           description={"Đổi mật khẩu, email,..."}
           onPress={() => navigation.navigate("Settings")}
@@ -31,7 +36,12 @@ function ProfileScreen({ navigation }) {
 
         <OptionProfileItem
           _styles={styles.optionItem}
-          icon={<SimpleLineIcons name="bell" size={normalize(20)} color="#6c60ff" />}
+          icon={
+            <Image
+              source={require("../../assets/images/bell_icon.png")}
+              style={{ width: normalize(24), height: normalize(24), backgroundColor: "transparent" }}
+            />
+          }
           title={"Thông báo"}
           description={"Thông báo mượn trả sách, thanh toán phí phạt,..."}
           onPress={() => navigation.navigate("Notifications", { screen: "Notifications" })}

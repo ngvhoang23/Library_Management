@@ -140,7 +140,10 @@ function FineDetailScreen({ route, navigation }) {
           }
         />
         <FlatButton _styles={styles.payFineBtn} text="Thanh toán tiền phạt" onPress={() => setIsShowPayDeptModal(true)}>
-          <MaterialIcons name="attach-money" size={normalize(15)} color="#fff" />
+          <Image
+            source={require("../../assets/images/money_icon.png")}
+            style={{ width: normalize(18), height: normalize(18), backgroundColor: "transparent" }}
+          />
         </FlatButton>
       </View>
       <LoadingModal visible={isLoading} />

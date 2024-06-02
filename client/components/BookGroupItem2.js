@@ -7,7 +7,14 @@ function BookGroupItem2({ _styles, cover_photo, author_name, book_name, descript
     <TouchableOpacity style={[styles.wrapper, _styles]} onPress={onPress}>
       <Image source={{ uri: `http://10.0.2.2:5000${cover_photo}` }} style={styles.coverPhoto} />
       <View style={styles.content}>
-        <Text style={styles.authorName}>{author_name}</Text>
+        <Text style={styles.authorName}>
+          <Image
+            source={require("./../assets/images/author_icon2.png")}
+            style={{ width: normalize(18), height: normalize(18), backgroundColor: "transparent" }}
+          />
+          {"  "}
+          {author_name}
+        </Text>
         <Text style={styles.bookName} numberOfLines={1}>
           {book_name}
         </Text>
@@ -51,7 +58,7 @@ const styles = StyleSheet.create({
   bookName: {
     fontFamily: "nunito-bold",
     color: "#292929",
-    fontSize: normalize(13),
+    fontSize: normalize(12),
     marginBottom: normalize(2),
     width: "90%",
   },

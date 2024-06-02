@@ -126,7 +126,12 @@ const AdminDrawerNavigator = () => {
               <Text style={styles.userName}>Quản lý nhân viên</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <Feather name="users" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/emp_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
       <Drawer.Screen
@@ -146,7 +151,12 @@ const AdminDrawerNavigator = () => {
               <Text style={styles.userName}>Quản lý độc giả</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <Feather name="users" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/reader_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
     </Drawer.Navigator>

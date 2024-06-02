@@ -34,7 +34,32 @@ function ReaderItem({ _style, data, borrowed_books, onPress }) {
             {full_name}
           </Text>
           <Text style={[styles.readerType]}>
-            {reader_type === "student" ? "Sinh viên" : reader_type === "lecturer" ? "Giảng viên" : ""}
+            {reader_type === "student" ? (
+              <Image
+                source={require("./../assets/images/student_icon.png")}
+                style={{
+                  width: normalize(14),
+                  height: normalize(14),
+                  backgroundColor: "transparent",
+                }}
+              />
+            ) : (
+              <Image
+                source={require("./../assets/images/teacher_icon.png")}
+                style={{
+                  width: normalize(14),
+                  height: normalize(14),
+                  backgroundColor: "transparent",
+                }}
+              />
+            )}
+            <Text
+              style={{
+                marginLeft: normalize(8),
+              }}
+            >
+              {reader_type === "student" ? "Sinh viên" : reader_type === "lecturer" ? "Giảng viên" : ""}
+            </Text>
           </Text>
           {borrowed_books != null && (
             <Text style={[styles.borrowedBookQuantity, { color: borrowed_books >= 4 ? "#f02849" : "#1e74fd" }]}>
@@ -45,7 +70,10 @@ function ReaderItem({ _style, data, borrowed_books, onPress }) {
       </View>
       <Text style={[styles.status, { color: status ? "#6ec531" : "#f02849" }]}>{status ? "active" : "expired"}</Text>
 
-      <Feather name="chevron-right" size={normalize(18)} color="#8c8c8d" />
+      <Image
+        source={require("./../assets/images/right_icon.png")}
+        style={{ width: normalize(14), height: normalize(14), backgroundColor: "transparent" }}
+      />
     </TouchableOpacity>
   );
 }
@@ -92,6 +120,7 @@ const styles = StyleSheet.create({
     fontFamily: "nunito-bold",
     color: "#8c8c8d",
     fontSize: normalize(9),
+    marginBottom: normalize(2),
   },
 
   status: {

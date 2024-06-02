@@ -144,7 +144,12 @@ const ReaderDrawerNavigator = () => {
               <Text style={styles.userName}>Trang chủ</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <AntDesign name="home" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/home_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
 
@@ -165,7 +170,12 @@ const ReaderDrawerNavigator = () => {
               <Text style={styles.userName}>Sách</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <Feather name="book-open" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/books_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
 
@@ -186,7 +196,12 @@ const ReaderDrawerNavigator = () => {
               <Text style={styles.userName}>Sách đang mượn</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <AntDesign name="book" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/book_icon2.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
 
@@ -212,11 +227,14 @@ const ReaderDrawerNavigator = () => {
           drawerIcon: ({ focused, color, size }) =>
             notiQuantity > 0 ? (
               <Image
-                source={require("../../assets/images/noti_icon.gif")}
-                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+                source={require("../../assets/images/bell_ani_icon.gif")}
+                style={{ width: normalize(24), height: normalize(24), backgroundColor: "transparent" }}
               />
             ) : (
-              <FontAwesome name="bell-o" size={normalize(19)} color={color} />
+              <Image
+                source={require("../../assets/images/bell_icon.png")}
+                style={{ width: normalize(24), height: normalize(24), backgroundColor: "transparent" }}
+              />
             ),
         }}
       />

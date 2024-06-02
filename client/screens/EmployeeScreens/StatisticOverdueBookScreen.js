@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SCREEN_WIDTH, _retrieveData, normalize } from "../../defined_function";
 import UsersStatistic from "../../components/UsersStatistic";
 import FlatButton from "../../shared/FlatButton";
@@ -278,7 +278,10 @@ function StatisticOverdueBookScreen() {
             handleSubmit();
           }}
         >
-          <AntDesign name="linechart" size={normalize(19)} color={"#5b4cfd"} />
+          <Image
+            source={require("../../assets/images/statistic_icon.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
         </FlatButton>
 
         {statisticData?.length > 0 && (
@@ -291,7 +294,10 @@ function StatisticOverdueBookScreen() {
               generatePdf("export");
             }}
           >
-            <AntDesign name="export" size={normalize(16)} color={"#fff"} />
+            <Image
+              source={require("../../assets/images/pdf_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
           </FlatButton>
         )}
       </View>

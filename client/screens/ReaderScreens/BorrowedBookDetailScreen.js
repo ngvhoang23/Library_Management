@@ -119,7 +119,12 @@ function BorrowedBookDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Ngày mượn"
           value={borrow_date ? new Date(borrow_date).toISOString().split("T")[0] : " "}
-          icon={<FontAwesome name="hourglass-1" size={normalize(13)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/calendar_dur_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           border
           read_only
         />
@@ -129,7 +134,12 @@ function BorrowedBookDetailScreen({ route, navigation }) {
           textStyles={{ color: new Date() > new Date(return_date) ? "#f02849" : "#676768" }}
           lableTitle="Ngày trả"
           value={return_date ? new Date(return_date).toISOString().split("T")[0] : " "}
-          icon={<FontAwesome name="hourglass-end" size={normalize(13)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/calendar_dur_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           border
           read_only
         />
@@ -140,7 +150,12 @@ function BorrowedBookDetailScreen({ route, navigation }) {
             textStyles={{ color: "#f02849", fontFamily: "nunito-bold" }}
             lableTitle="Số ngày muộn"
             value={`${Math.round((new Date() - new Date(return_date)) / (1000 * 3600 * 24))} days overdue`}
-            icon={<MaterialCommunityIcons name="update" size={normalize(16)} color="#f02849" />}
+            icon={
+              <Image
+                source={require("../../assets/images/calendar_dur_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            }
             border
             read_only
           />
@@ -152,7 +167,12 @@ function BorrowedBookDetailScreen({ route, navigation }) {
             textStyles={{ color: "#f02849", fontFamily: "nunito-bold" }}
             lableTitle="Tiền phạt"
             value={`${Math.abs(Math.floor((new Date(return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)} VNĐ`}
-            icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#f02849" />}
+            icon={
+              <Image
+                source={require("../../assets/images/clock_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            }
             border
             read_only
           />

@@ -142,7 +142,12 @@ function BookGroupDetailScreen({ route, navigation }) {
           lableTitle="Tên sách"
           value={book_name}
           multiline
-          icon={<Ionicons name="book-outline" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/book_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -151,7 +156,12 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Giá"
           value={price?.toString()}
-          icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/price_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -160,25 +170,35 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Ngày xuất bản"
           value={published_date ? new Date(published_date).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/calendar_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
-        <PreviewInfoItem
+        {/* <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
           lableTitle="Mô tá"
           value={description}
           multiline
           read_only
-        />
+        /> */}
 
         <PreviewInfoItem
           _styles={[styles.input]}
           textStyles={{ color: "#676768" }}
           lableTitle="Nhà xuất bản"
           value={publish_com}
-          icon={<SimpleLineIcons name="cloud-upload" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/com_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -187,7 +207,12 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Dành cho"
           value={`${for_reader == 1 ? "Sinh viên" : for_reader == 2 ? "Giảng viên" : "Tất cả"}`}
-          icon={<AntDesign name="user" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/student_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -196,7 +221,12 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Tác giả"
           value={author_name}
-          icon={<AntDesign name="user" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/author_icon2.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -205,7 +235,12 @@ function BookGroupDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Danh mục"
           value={category_name}
-          icon={<MaterialIcons name="checklist-rtl" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/category_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
       </ScrollView>
@@ -216,7 +251,10 @@ function BookGroupDetailScreen({ route, navigation }) {
           text="Danh sách các sách"
           onPress={() => navigation.navigate("Book List", { book_info: bookInfo })}
         >
-          <Entypo name="open-book" size={normalize(14)} color="#fff" />
+          <Image
+            source={require("../../assets/images/books_icon2.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
         </FlatButton>
         <FlatButton _styles={styles.deleteBtn} text="Xóa nhóm sách" onPress={handleDeleteBookGroup} />
       </View>

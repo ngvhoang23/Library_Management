@@ -76,7 +76,7 @@ const EmployeeDrawerNavigator = () => {
 
         drawerItemStyle: {
           marginBottom: normalize(10),
-          paddingVertical: normalize(6),
+          paddingVertical: normalize(4),
           paddingHorizontal: normalize(4),
         },
       }}
@@ -157,7 +157,13 @@ const EmployeeDrawerNavigator = () => {
               <Text style={[styles.userName, { color: color }]}>Quản lý độc giả</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <Feather name="users" size={normalize(19)} color={color} />,
+          // drawerIcon: ({ focused, color, size }) => <Feather name="users" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/reader_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
       <Drawer.Screen
@@ -177,7 +183,12 @@ const EmployeeDrawerNavigator = () => {
               <Text style={[styles.userName, { color: color }]}>Quản lý sách</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <Feather name="book-open" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/book_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
       <Drawer.Screen
@@ -198,7 +209,10 @@ const EmployeeDrawerNavigator = () => {
             </View>
           ),
           drawerIcon: ({ focused, color, size }) => (
-            <MaterialCommunityIcons name="smart-card-reader-outline" size={normalize(19)} color={color} />
+            <Image
+              source={require("../../assets/images/user_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
           ),
         }}
       />
@@ -219,7 +233,12 @@ const EmployeeDrawerNavigator = () => {
               <Text style={[styles.userName, { color: color }]}>Quản lý sách mượn</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <AntDesign name="book" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/book_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
 
@@ -240,7 +259,12 @@ const EmployeeDrawerNavigator = () => {
               <Text style={[styles.userName, { color: color }]}>Phân tích</Text>
             </View>
           ),
-          drawerIcon: ({ focused, color, size }) => <AntDesign name="linechart" size={normalize(19)} color={color} />,
+          drawerIcon: ({ focused, color, size }) => (
+            <Image
+              source={require("../../assets/images/statistic_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          ),
         }}
       />
 
@@ -266,11 +290,14 @@ const EmployeeDrawerNavigator = () => {
           drawerIcon: ({ focused, color, size }) =>
             notiQuantity > 0 ? (
               <Image
-                source={require("../../assets/images/noti_icon.gif")}
-                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+                source={require("../../assets/images/bell_ani_icon.gif")}
+                style={{ width: normalize(24), height: normalize(24), backgroundColor: "transparent" }}
               />
             ) : (
-              <FontAwesome name="bell-o" size={normalize(19)} color={color} />
+              <Image
+                source={require("../../assets/images/bell_icon.png")}
+                style={{ width: normalize(24), height: normalize(24), backgroundColor: "transparent" }}
+              />
             ),
         }}
       />

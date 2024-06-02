@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { useUserInfoContext } from "../../context/userInfoContext";
 import UserInfoTag from "../../components/UserInfoTag";
 import OptionProfileItem from "../../components/OptionProfileItem";
@@ -22,7 +22,12 @@ function ProfileScreen({ navigation }) {
       <View style={styles.optionContainer}>
         <OptionProfileItem
           _styles={styles.optionItem}
-          icon={<Ionicons name="settings-outline" size={normalize(20)} color="#6c60ff" />}
+          icon={
+            <Image
+              source={require("../../assets/images/setting_icon.png")}
+              style={{ height: normalize(24), width: normalize(24) }}
+            />
+          }
           title={"Cài đặt"}
           description={"Đổi mật khẩu, email,..."}
           onPress={() => navigation.navigate("Settings")}

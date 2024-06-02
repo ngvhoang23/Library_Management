@@ -531,15 +531,15 @@ class BorrowedBooksController {
 
     const promise = () => {
       const sql = `
-        with rm as (
-          select book_detail_id, count(*) as remaining from books
-          where status = 1
-          group by book_detail_id
-        )
-        select bd.*, a.author_name, c.category_name, rm.remaining from book_detail bd
-        left join rm on bd.book_detail_id = rm.book_detail_id
-        inner join authors a on a.author_id = bd.author_id
-        inner join categories c on c.category_id = bd.category_id
+      with rm as (
+        select book_detail_id, getTotalOfBookDetail(book_detail_id) as total, count(*) as remaining from books
+        where status = 1
+        group by book_detail_id
+      )
+      select bd.*, a.author_name, c.category_name, rm.total, rm.remaining from book_detail bd
+      inner join rm on bd.book_detail_id = rm.book_detail_id
+      inner join authors a on a.author_id = bd.author_id
+      inner join categories c on c.category_id = bd.category_id
         where for_reader = ${reader_type == "student" ? 1 : 2} or for_reader = 3
       `;
 

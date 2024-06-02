@@ -1,4 +1,4 @@
-import { StyleSheet, TextInput, View, TouchableOpacity } from "react-native";
+import { StyleSheet, TextInput, View, TouchableOpacity, Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { globalStyles } from "../styles/global";
 import { normalize } from "../defined_function";
@@ -15,7 +15,10 @@ function SearchBar({ placeholder, onChange, value, textStyles, onSearch, _styles
         placeholderTextColor={"#ced0d4"}
       />
       <TouchableOpacity style={styles.searchBtn} activeOpacity={0} onPress={onSearch}>
-        <AntDesign name="search1" size={normalize(16)} color="#8c8c8d" />
+        <Image
+          source={require("./../assets/images/search_icon.png")}
+          style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );

@@ -13,7 +13,14 @@ function BookGroupVertical({ _styles, cover_photo, author_name, book_name, book_
         <Text style={[styles.bookName]} numberOfLines={2}>
           {book_name}
         </Text>
-        <Text style={[styles.authorName]}>{author_name}</Text>
+        <Text style={[styles.authorName]}>
+          <Image
+            source={require("./../assets/images/author_icon2.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
+          {"   "}
+          {author_name}
+        </Text>
       </View>
     </TouchableOpacity>
   );

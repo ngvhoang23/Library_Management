@@ -119,7 +119,12 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Tên đăng nhập"
           value={user_name}
-          icon={<AntDesign name="user" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/user_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -128,7 +133,12 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Số điện thoại"
           value={phone_num}
-          icon={<AntDesign name="phone" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/phone_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -137,7 +147,12 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Giới tính"
           value={gender ? "Male" : "Female"}
-          icon={<FontAwesome name="transgender" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/gender_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -146,7 +161,12 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Ngày sinh"
           value={birth_date ? new Date(birth_date).toISOString().split("T")[0] : ""}
-          icon={<Fontisto name="date" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/calendar_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -155,7 +175,12 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Email"
           value={email_address}
-          icon={<Fontisto name="email" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/email_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
 
@@ -164,7 +189,12 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Địa chỉ"
           value={address}
-          icon={<EvilIcons name="location" size={normalize(22)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/location_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
           numberOfLines={4}
           multiline
@@ -175,7 +205,12 @@ function ReaderDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Họ và tên"
           value={full_name}
-          icon={<MaterialIcons name="drive-file-rename-outline" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/name_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
         />
       </ScrollView>
@@ -186,7 +221,10 @@ function ReaderDetailScreen({ route, navigation }) {
           text="Đổi mật khẩu"
           onPress={() => navigation.navigate("Change Password", { user_id: emp_info?.user_id })}
         >
-          <FontAwesome6 name="key" size={normalize(12)} color="#fff" />
+          <Image
+            source={require("../../assets/images/key_icon.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
         </FlatButton>
         <FlatButton _styles={styles.deleteBtn} text="Xóa nhân viên" onPress={handleDeleteEmployee} />
       </View>

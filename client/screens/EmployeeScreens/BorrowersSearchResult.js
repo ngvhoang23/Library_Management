@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(6),
     overflow: "scroll",
     flexDirection: "column",
-    justifyContent: "space-evenly",
+    justifyContent: "flex-start",
     alignItems: "flex-start",
     flexWrap: "wrap",
   },

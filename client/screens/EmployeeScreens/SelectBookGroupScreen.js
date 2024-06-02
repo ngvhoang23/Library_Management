@@ -34,6 +34,7 @@ function SelectBookGroupScreen({ route, navigation }) {
             .get(`http://10.0.2.2:5000/borrowed-books/book-groups`, config)
             .then((result) => {
               setBooks([...result.data]);
+              console.log(result.data);
             })
             .catch((error) => {
               console.log(error);
@@ -74,8 +75,8 @@ function SelectBookGroupScreen({ route, navigation }) {
                 cover_photo={book.cover_photo}
                 book_name={book.book_name}
                 author={book.author_name}
-                borrowed_books={5}
-                total_books={12}
+                borrowed_books={book.total - book.remaining}
+                total_books={book.total}
                 onPress={() => {
                   if (book.remaining <= 0) {
                     alert("There are no books available for borrowing");

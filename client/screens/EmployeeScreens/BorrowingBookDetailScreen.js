@@ -176,7 +176,12 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Ngày mượn"
           value={borrow_date ? new Date(borrow_date).toISOString().split("T")[0] : " "}
-          icon={<FontAwesome name="hourglass-1" size={normalize(14)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/calendar_dur_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
           border
         />
@@ -185,7 +190,12 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           textStyles={{ color: new Date() > new Date(return_date) ? "#f02849" : "#676768" }}
           lableTitle="Ngày trả"
           value={return_date ? new Date(return_date).toISOString().split("T")[0] : " "}
-          icon={<FontAwesome name="hourglass-end" size={normalize(14)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/calendar_dur_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
           border
         />
@@ -195,7 +205,12 @@ function BorrowingBookDetailScreen({ route, navigation }) {
           textStyles={{ color: "#676768" }}
           lableTitle="Ngày thực trả"
           value={actual_return_date ? new Date(actual_return_date).toISOString().split("T")[0] : ""}
-          icon={<MaterialCommunityIcons name="update" size={normalize(16)} color="#3c3c3c" />}
+          icon={
+            <Image
+              source={require("../../assets/images/calendar_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
           read_only
           border
         />
@@ -206,7 +221,12 @@ function BorrowingBookDetailScreen({ route, navigation }) {
             textStyles={{ color: "#f02849" }}
             lableTitle="Tiền phạt"
             value={`${Math.abs(Math.floor((new Date(return_date) - new Date()) / (1000 * 60 * 60 * 24)) * 1000)} VNĐ`}
-            icon={<MaterialIcons name="attach-money" size={normalize(16)} color="#3c3c3c" />}
+            icon={
+              <Image
+                source={require("../../assets/images/money_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            }
             read_only
             border
           />
@@ -216,11 +236,17 @@ function BorrowingBookDetailScreen({ route, navigation }) {
       <View style={[styles.options, { marginBottom: new Date() < new Date(return_date) ? 0 : normalize(6) }]}>
         <FlatButton _styles={styles.deleteBtn} text="Xóa" onPress={deleteBorrowedBook} />
         <FlatButton _styles={styles.returnBookBtn} text="Trả sách" onPress={returnBook}>
-          <MaterialCommunityIcons name="update" size={normalize(16)} color="#fff" />
+          <Image
+            source={require("../../assets/images/return_icon.png")}
+            style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+          />
         </FlatButton>
         {new Date() < new Date(return_date) && (
           <FlatButton _styles={styles.extendBtn} text="Gia hạn" onPress={extendBook}>
-            <Ionicons name="time-outline" size={normalize(16)} color="#fff" />
+            <Image
+              source={require("../../assets/images/clock_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
           </FlatButton>
         )}
       </View>

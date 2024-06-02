@@ -80,7 +80,12 @@ function ReaderManDashboard({ navigation }) {
           onPress={() => setFilter(1)}
           subTitle={`${filter === 1 ? filteredReaders.length : readers.length - filteredReaders.length} sinh viên`}
           active={filter === 1}
-          icon={<Feather name="user-plus" size={normalize(16)} color={filter === 1 ? "#fff" : "#3c3c3c"} />}
+          icon={
+            <Image
+              source={require("../../assets/images/student_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
         />
 
         <FilterItem
@@ -89,7 +94,12 @@ function ReaderManDashboard({ navigation }) {
           subTitle={`${filter === 2 ? filteredReaders.length : readers.length - filteredReaders.length} giảng viên`}
           onPress={() => setFilter(2)}
           active={filter === 2}
-          icon={<Feather name="user-plus" size={normalize(16)} color={filter === 2 ? "#fff" : "#3c3c3c"} />}
+          icon={
+            <Image
+              source={require("../../assets/images/teacher_icon.png")}
+              style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+            />
+          }
         />
       </View>
 

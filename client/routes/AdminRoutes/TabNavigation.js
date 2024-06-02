@@ -12,6 +12,7 @@ import AddBookGroupScreen from "../../screens/EmployeeScreens/AddBookGroupScreen
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
 import { normalize } from "../../defined_function";
 import { AntDesign, Feather, MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { Image } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -43,7 +44,12 @@ const EmployeeManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={color} />;
+            return (
+              <Image
+                source={require("../../assets/images/home_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -53,7 +59,12 @@ const EmployeeManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Employee",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name="user-plus" size={normalize(16)} color={color} />;
+            return (
+              <Image
+                source={require("../../assets/images/user_plus_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -89,7 +100,12 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={color} />;
+            return (
+              <Image
+                source={require("../../assets/images/home_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -99,7 +115,12 @@ const ReaderManTabNavigation = () => {
         options={{
           tabBarLabel: "Add Reader",
           tabBarIcon: ({ focused, color, size }) => {
-            return <Feather name="user-plus" size={normalize(16)} color={color} />;
+            return (
+              <Image
+                source={require("../../assets/images/user_plus_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
@@ -135,7 +156,12 @@ const ProfileTabNavigation = () => {
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ focused, color, size }) => {
-            return <AntDesign name="home" size={normalize(16)} color={color} />;
+            return (
+              <Image
+                source={require("../../assets/images/home_icon.png")}
+                style={{ width: normalize(20), height: normalize(20), backgroundColor: "transparent" }}
+              />
+            );
           },
         }}
       />
